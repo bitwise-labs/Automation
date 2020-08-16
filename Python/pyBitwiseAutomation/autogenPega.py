@@ -2007,8 +2007,7 @@ class BranchED(AutomationExtender):
         return None
 
     def Resync(self):
-        """Method for Manual Resync. Todo: add arguments if needed"""
-        print("BranchED:Resync(), Todo: add arguments if needed")
+        """Method for Manual Resync."""
         self.SendCommand("Resync\n")
         return None
 # EOF
