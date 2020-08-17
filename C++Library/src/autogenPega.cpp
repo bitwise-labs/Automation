@@ -318,9 +318,8 @@ void BranchED::AlignData(AlignBy alignType ) /* Perform data alignment, paramete
 	}
 }
 
-void BranchED::Resync() /* Manual Resync, Todo:add arguments */
+void BranchED::Resync() /* Manual Resync */
 {
-    fprintf(stderr,"BranchED::Resync(), Todo: add arguments if needed\n");
     SendCommand("Resync\n");
 }
 
@@ -1958,15 +1957,13 @@ char *BranchTub::FetchWkg() /* Fetch working values - Must free() return value, 
     return QueryBinaryResponse(0,"FetchWkg\n");
 }
 
-void BranchTub::Fit() /* PegaTub Chart Fit, Todo:add arguments */
+void BranchTub::Fit() /* PegaTub Chart Fit */
 {
-    fprintf(stderr,"BranchTub::Fit(), Todo: add arguments if needed\n");
     SendCommand("Fit\n");
 }
 
 void BranchTub::Reset() /* Reset position, Todo:add arguments */
 {
-    fprintf(stderr,"BranchTub::Reset(), Todo: add arguments if needed\n");
     SendCommand("Reset\n");
 }
 
