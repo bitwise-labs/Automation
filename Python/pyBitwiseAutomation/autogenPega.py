@@ -2004,6 +2004,8 @@ class BranchED(AutomationExtender):
 
         return None
 
+# DIFFERENT LINE TEST
+
     def Resync(self):
         """Method for Manual Resync."""
         self.SendCommand("Resync\n")
