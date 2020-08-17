@@ -384,14 +384,12 @@ class BranchTub(AutomationExtender):
         return str(self.QueryBinaryResponse("FetchWkg\n"),encoding='utf-8')
 
     def Fit(self):
-        """Method for PegaTub Chart Fit. Todo: add arguments if needed"""
-        print("BranchTub:Fit(), Todo: add arguments if needed")
+        """Method for PegaTub Chart Fit. """
         self.SendCommand("Fit\n")
         return None
 
     def Reset(self):
-        """Method for Reset position. Todo: add arguments if needed"""
-        print("BranchTub:Reset(), Todo: add arguments if needed")
+        """Method for Reset position."""
         self.SendCommand("Reset\n")
         return None
 
@@ -2010,4 +2008,5 @@ class BranchED(AutomationExtender):
         """Method for Manual Resync."""
         self.SendCommand("Resync\n")
         return None
+
 # EOF
