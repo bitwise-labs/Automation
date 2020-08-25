@@ -46,10 +46,10 @@ class PegaDevice(BitwiseDevice):
         self.Acc = BranchAcc(self, "Acc:")
         self.Acc2 = BranchAcc(self, "Clk:Acc:")
         self.ED = BranchED(self, "ED:")
-        self.Err = BranchED(self, "Err:")
-        self.Eye = BranchED(self, "Eye:")
+        self.Err = BranchErr(self, "Err:")
+        self.Eye = BranchEye(self, "Eye:")
         self.Patt = BranchPatt(self, "Patt:")
-        self.Syn = BranchSys(self, "Syn:")
+        self.Syn = BranchSyn(self, "Syn:")
 
 
     def __del__(self):

@@ -935,6 +935,27 @@ class BranchPG(AutomationExtender):
         """Get Readback rate """
         return self.QueryResponse_float("ReadRate?\n")
 
+        # Notice clock rate is 1/2 data rate
+    def WaitForClockToSettle(self, targetClockGHz: float, timeoutSec: float = 30.0, toleranceGHz: float = 0.002):
+        now = SocketDevice.timestamp()
+        timeout = now + timeoutSec
+        readGHz = self.getReadRateGHz()
+
+        while now < timeout:
+            if self.getDebugging():
+                print("Settle " + str(readGHz))
+
+            if abs(readGHz - targetClockGHz) <= toleranceGHz:
+                break
+            time.sleep(0.5)
+            now = SocketDevice.timestamp()
+            readGHz = self.getReadRateGHz()
+
+        if now >= timeout:
+            raise Exception("[Timeout_During_Clock_Settle]")
+
+        return None
+
     def getUseCombiner(self) -> bool:
         """Get Use PAM4 Combiner level settings """
         return self.QueryResponse_bool("UseCombiner?\n")
@@ -1984,13 +2005,14 @@ class BranchED(AutomationExtender):
         self.SendCommand("AlignData " + alignType.value + "\n")
 
         now = SocketDevice.timestamp()
+        begin_time = now
         timeout = now + 30.0
 
         while now < timeout:
             time.sleep(0.5)
             now = SocketDevice.timestamp()
             if self.getDebugging():
-                print("Aligning ...");
+                print("Aligning "+ "{:.1f}".format(now - begin_time))
 
             if not self.QueryResponse_bool("InProgress?\n"):
                 break

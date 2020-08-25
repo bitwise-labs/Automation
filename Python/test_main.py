@@ -31,8 +31,7 @@
 
 from pyBitwiseAutomation import *
 
-
-def test_main():
+def test_main_001():
     Pega = PegaDevice()
     try:
         Pega.Connect("192.168.1.176")
@@ -97,9 +96,134 @@ def test_main():
         Pega = None
     return None
 
+def test_main_002():
+    Pega = PegaDevice()
+    try:
+        Pega.Connect("192.168.1.176")
+        Pega.ED.setDebugging(True)
+        Pega.PG.setDebugging(True)
+
+        print("Serial number......." + Pega.Const.getSN())
+        print("Build..............." + Pega.Sys.getBuild())
+        print("Nickname............" + Pega.Sys.getNickname())
+
+        Pega.Stop()
+        Pega.RestoreConfiguration("[factory]")
+        Pega.App.setTab("BERT")
+        Pega.PG.Amp.setAmplMV(0, 500.0)
+        Pega.PG.Amp.setAmplMV(1, 500.0)
+
+        Pega.PG.setPattern(0, BranchPG.Pattern.Prbs7)
+        Pega.PG.setPattern(1, BranchPG.Pattern.Prbs31)
+
+        Pega.Syn.setSource(0, BranchSyn.Source.Internal)
+        Pega.Syn.setSource(1, BranchSyn.Source.Internal)
+
+        Pega.PG.setAllOn(True)
+
+        Pega.ED.setEnabled(True)
+        Pega.ED.Sampler.setMode(BranchEDSampler.Mode.CalInput)
+        Pega.ED.setEyeSubrate(BranchED.EyeSubrate.DivBy1)
+        Pega.ED.setAutoResync(True)
+        Pega.ED.setPatt(BranchED.Patt.Auto)
+
+        noSync = 0
+        nonZeroBER = 0
+        BERErrors = ""
+        SyncErrors = ""
+
+        STOP_ON_ERROR = False
+        STARTGHZ = 1.0
+        ENDGHZ = 28.0
+        STEPGHZ = 0.5
+        MAX_CALIB_GHZ = 3.0;
+
+        CALNUM = [2, 4, 8, 16, 0]
+        CALDIV = [BranchSyn.DivCalib.Div2, BranchSyn.DivCalib.Div4, BranchSyn.DivCalib.Div8, BranchSyn.DivCalib.Div16]
+
+        dataRateGHz = STARTGHZ
+        while dataRateGHz <= ENDGHZ:
+            print("=============================== Data Rate: " + str(dataRateGHz) + " GHz")
+
+            nIndex = 0;
+            while CALNUM[nIndex] != 0:
+                if dataRateGHz / CALNUM[nIndex] <= MAX_CALIB_GHZ:
+                    break
+                nIndex += 1
+
+            if CALNUM[nIndex] == 0:
+                raise Exception("[Unable_To_Find_Matching_Calib_GHz]")
+
+            clockRateGHz = dataRateGHz / 2.0
+
+            print("Set DDR Clock Rate to: "+str(clockRateGHz)+" GHz")
+
+            Pega.Syn.setClockRateGHz(clockRateGHz)
+
+            print("Set calib divider to: " +str(CALDIV[nIndex]))
+            Pega.Syn.setDivCalib(CALDIV[nIndex])
+
+            print("Wait for clock to settle")
+            Pega.PG.WaitForClockToSettle(clockRateGHz)
+
+            print("Read calib rate: "+str(Pega.ED.getCalibRateGHz())+" GHz")
+
+            print("Align Data")
+
+            Pega.ED.AlignData(BranchED.AlignBy.All)
+
+            print("Align status: " + Pega.ED.getAlignDataMsg() )
+
+            inSyncFlag = Pega.ED.getInSync()
+
+            if inSyncFlag:
+                print("Sync....Yes")
+                print("Patt...." + str(Pega.ED.getDetPatt()))
+
+                Pega.App.Clear()
+                Pega.App.Run()
+                time.sleep(5)
+                Pega.App.Stop()
+
+                print("Bits...."+ str(Pega.Err.getBits()))
+                print("Errors.."+ str(Pega.Err.getErrors()))
+
+                BER = Pega.Err.getABER()
+                print("BER..." + "{:.2e}".format(BER))
+                if BER != 0.0:
+                    print("ERR ERR ERR ERR ERR ERR ERR ERR ERR ERR ERR ERR ERR ERR ERR ERR ERR ERR ERR ERR ERR ERR ERR ERR")
+                    nonZeroBER += 1
+                    BERErrors += str(dataRateGHz) + " "
+
+                    if STOP_ON_ERROR:
+                        raise Exception("[Non_Zero_BER_Error]")
+            else:
+                print("Sync....No")
+                print("Patt...."+ str(Pega.ED.getDetPatt()) )
+                print("ERR ERR ERR ERR ERR ERR ERR ERR ERR ERR ERR ERR ERR ERR ERR ERR ERR ERR ERR ERR ERR ERR ERR ERR")
+                noSync += 1
+                SyncErrors += str(dataRateGHz) + " "
+                if STOP_ON_ERROR:
+                    raise Exception("[No_Syc_Error]")
+
+
+            dataRateGHz += STEPGHZ
+
+        print("===============================")
+        print("Tests complete.  NoSyncErrs="+str(noSync)+", NonZeroBER="+str(nonZeroBER))
+        if noSync > 0:
+            print("Sync Errors: " + SyncErrors)
+
+        if nonZeroBER > 0:
+            print("Non-zero BER Errors: " + BERErrors)
+
+    finally:
+        Pega.Disconnect()
+        Pega = None
+    return None
 
 if __name__ == '__main__':
     print("Test Main\n")
-    test_main()
+    test_main_002()
 
 # EOF

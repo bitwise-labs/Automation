@@ -833,6 +833,12 @@ class BranchPG: /* Pattern generator control */
     void setPattern(int index, Pattern newValue);
     int getPrbsBitOffset(int index); /* Pattern bit offset */
     void setPrbsBitOffset(int index, int newValue);
+
+
+	/* notice clock rate is 1/2 data rate */
+	void WaitForClockToSettle( double targetClockGHz, double timeoutSec=30.0, double toleranceGHz=0.002);
+
+
     double getReadRateGHz(); /* Readback rate */
     bool getUseCombiner(); /* Use PAM4 Combiner level settings */
     void setUseCombiner( bool newValue);

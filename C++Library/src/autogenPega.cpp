@@ -31,6 +31,7 @@
 
 #include <stdio.h> /* fprintf, stderr */
 #include <unistd.h> /* usleep */
+#include <math.h> /* fabs */
 
 #include "SocketDevice.h"
 #include "autogenPega.h"
@@ -268,6 +269,7 @@ bool BranchED::getUsingEye() /* Using Eye Diagramming */
     return QueryResponse_bool("UsingEye?\n");
 }
 
+
 const char *BranchED::AlignBy_Strings[] =
 { "Time","Volts","All","PrbsVolts","PrbsAll",0};
 
@@ -276,18 +278,16 @@ void BranchED::AlignData(AlignBy alignType ) /* Perform data alignment, paramete
     SendCommand("AlignData %s\n",AlignBy_Strings[(int)alignType] );
 
 	double now = SocketDevice::timestamp();
+	double begin_time = now;
 	double timeout = now + 30.0;
 
-	while( now < timeout )
+	while( now < timeout && QueryResponse_bool( "InProgress?\n")==true )
 	{
 		usleep(500*1000);
 		now = SocketDevice::timestamp();
 
-		//if(getDebugging())
-			fprintf(stderr,"Aligning...\n");
-
-		if( QueryResponse_bool( "InProgress?\n")==false )
-			break;
+		if(getDebugging())
+			fprintf(stderr,"Aligning %.1lf\n", now-begin_time);
 	}
 
 	if( now >=timeout )
@@ -1303,6 +1303,32 @@ void BranchPG::setPrbsBitOffset(int index,int newValue) /* Pattern bit offset */
 {
     if(index<0||index>=2) throw "[Index_Out_Of_Range]";
     SendCommand("PrbsBitOffset[%d] %d\n",index,newValue);
+}
+
+
+/* notice clock rate is 1/2 data rate */
+void BranchPG::WaitForClockToSettle( double targetClockGHz, double timeoutSec, double toleranceGHz )
+{
+	double now = SocketDevice::timestamp();
+	double timeout = now + timeoutSec;
+	double readGHz = getReadRateGHz();
+
+	while( now<timeout )
+	{
+		if(getDebugging())
+			fprintf(stderr,"Settle %.3lf GHz\n", readGHz );
+
+		if( fabs(readGHz-targetClockGHz) <= toleranceGHz )
+			break;
+
+		usleep(500*1000);
+		now = SocketDevice::timestamp();
+
+		readGHz = getReadRateGHz();
+	}
+
+	if( now >=timeout )
+		throw "[Timeout_During_Clock_Settle]";
 }
 
 double BranchPG::getReadRateGHz() /* Readback rate */

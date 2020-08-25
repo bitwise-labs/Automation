@@ -439,6 +439,8 @@ class BranchSyn(AutomationExtender):
     def setDataRateGbps(self, newvalue:float) :
         """Set Doubled clock rate """
         self.SendCommand("DataRate " + str(newvalue) + "\n")
+
+
         return None
 
     class Dest(Enum):

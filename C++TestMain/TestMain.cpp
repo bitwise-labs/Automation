@@ -35,7 +35,8 @@
 #include "PegaDevice.h"
 
 char *IPAddress = (char*) "192.168.1.176:923";
-void test_pega(char *ip_address );
+void test_001(char *ip_address );
+void test_002(char *ip_address );
 
 int main( int argc, char *argv[] )
 {
@@ -47,7 +48,8 @@ int main( int argc, char *argv[] )
 
 	try
 	{
-		test_pega(IPAddress);
+		//test_001(IPAddress);
+		test_002(IPAddress);
 	}
 	catch(const char*msg)
 	{
@@ -57,7 +59,7 @@ int main( int argc, char *argv[] )
 	return 0;
 }
 
-void test_pega(char *ip_address )
+void test_001(char *ip_address )
 {
 	printf("Test Main\n");
 
@@ -136,5 +138,154 @@ void test_pega(char *ip_address )
 
 	Pega.Disconnect();
 }
+
+
+void test_002(char *ip_address )
+{
+	printf("Pega Frequency Sweep\n");
+
+	PegaDevice Pega;
+
+	Pega.Connect( ip_address );
+	Pega.ED.setDebugging(true);
+	Pega.PG.setDebugging(true);
+
+	char buffer[4096];
+	printf("Serial number.....%s\n", Pega.Const.getSN( buffer, 4096 )) ;
+	printf("Build.............%s\n", Pega.Sys.getBuild( buffer, 4096 )) ;
+	printf("Nickname..........%s\n", Pega.Sys.getNickname( buffer, 4096 )) ;
+
+	//================================================================================
+	//================================================================================
+	Pega.Stop();
+
+	Pega.RestoreConfiguration("[factory]");
+	Pega.App.setTab("BERT");
+	Pega.PG.Amp.setAmplMV(0,500.0);
+	Pega.PG.Amp.setAmplMV(1,500.0);
+
+	Pega.PG.setPattern(0,BranchPG::Pattern::Prbs7);
+	Pega.PG.setPattern(1,BranchPG::Pattern::Prbs31);
+
+	Pega.Syn.setSource(0,BranchSyn::Source::Internal);
+	Pega.Syn.setSource(1,BranchSyn::Source::Internal);
+
+	Pega.PG.setAllOn(true);
+
+	Pega.ED.setEnabled(true);
+	Pega.ED.Sampler.setMode(BranchEDSampler::Mode::CalInput);
+	Pega.ED.setEyeSubrate(BranchED::EyeSubrate::DivBy1) ;
+	Pega.ED.setAutoResync(true);
+	Pega.ED.setPatt(BranchED::Patt::Auto);
+
+	static int CALNUM[] = {2,4,8,16,0};
+	static BranchSyn::DivCalib CALDIV[] = {
+		BranchSyn::DivCalib::Div2,
+		BranchSyn::DivCalib::Div4,
+		BranchSyn::DivCalib::Div8,
+		BranchSyn::DivCalib::Div16
+	};
+
+	static const bool STOP_ON_ERROR=false;
+	static const double STARTGHZ=1.0;
+	static const double ENDGHZ=28.0;
+	static const double STEPGHZ=0.5;
+	static const double MAX_CALIB_GHZ=3.0;
+
+	int noSync=0;
+	int nonZeroBER=0;
+	char SyncErrors[4096];
+	char BERErrors[4096];
+	SyncErrors[0]=0;
+	BERErrors[0]=0;
+
+	for( double dataRateGHz = STARTGHZ; dataRateGHz<=ENDGHZ; dataRateGHz += STEPGHZ )
+	{
+		printf("=============================== Test Data Rate: %.3lf GHz\n", dataRateGHz );
+
+		int nIndex=0;
+		while( CALNUM[nIndex]!=0 )
+		{
+			if( dataRateGHz/(double)CALNUM[nIndex] <= MAX_CALIB_GHZ )
+				break;
+			nIndex++;
+		}
+
+		if( CALNUM[nIndex]==0 )
+			throw "[Unable_To_Find_Matching_Calib_GHz]";
+
+		double clockRateGHz=dataRateGHz/2.0;
+		printf("Set DDR Clock Rate to: %.3lf GHz\n", clockRateGHz );
+		Pega.Syn.setClockRateGHz(clockRateGHz);
+
+		printf("Set calib divider to: %s\n", BranchSyn::DivCalib_Strings[nIndex] );
+		Pega.Syn.setDivCalib(CALDIV[nIndex]);
+
+		printf("Wait for clock to settle\n");
+		Pega.PG.WaitForClockToSettle(clockRateGHz);
+
+		printf("Read calib rate: %.3lf GHz\n", Pega.ED.getCalibRateGHz() );
+
+		printf("Align Data\n");
+
+		Pega.ED.AlignData(BranchED::AlignBy::All);
+		char buffer[1024];
+		Pega.ED.getAlignDataMsg( buffer, 1024 );
+		printf("Align status: %s\n", buffer );
+
+		bool inSyncFlag = Pega.ED.getInSync();
+
+		if( inSyncFlag )
+		{
+			printf("Sync....Yes\n");
+			printf("Patt....%s\n", BranchED::Patt_Strings[ (int)Pega.ED.getDetPatt() ] );
+
+			Pega.App.Clear();
+			Pega.App.Run();
+			usleep(5*1000*1000); // five seconds
+			Pega.App.Stop();
+
+			printf("Bits....%.0lf\n", (double)Pega.Err.getBits());
+			printf("Errors..%.0lf\n", (double)Pega.Err.getErrors());
+
+			double BER = Pega.Err.getABER();
+			printf("BER.....%.3le\n", BER );
+			if( BER!=0.0 )
+			{
+				printf("ERR ERR ERR ERR ERR ERR ERR ERR ERR ERR ERR ERR ERR ERR ERR ERR ERR ERR ERR ERR ERR ERR ERR ERR\n");
+				nonZeroBER++;
+				snprintf(BERErrors+strlen(BERErrors),4096-strlen(BERErrors),"%.3lf ", dataRateGHz );
+
+				if(STOP_ON_ERROR)
+					throw "[Non_Zero_BER_Error]";
+			}
+
+		}
+		else
+		{
+			printf("Sync....No\n");
+			printf("Patt....%s\n", BranchED::Patt_Strings[ (int)Pega.ED.getDetPatt() ] );
+			printf("ERR ERR ERR ERR ERR ERR ERR ERR ERR ERR ERR ERR ERR ERR ERR ERR ERR ERR ERR ERR ERR ERR ERR ERR\n");
+			noSync++;
+			snprintf(SyncErrors+strlen(SyncErrors),4096-strlen(SyncErrors),"%.3lf ", dataRateGHz );
+			if(STOP_ON_ERROR)
+				throw "[No_Syc_Error]";
+
+		}
+
+
+	}
+
+	printf("===============================\n");
+	printf("Tests complete.  NoSyncErrs=%d,  NonZeroBER=%d\n", noSync, nonZeroBER );
+	if( noSync>0 )
+		printf("Sync Errors: %s\n", SyncErrors );
+	if( nonZeroBER>0 )
+		printf("Non-zero BER Errors: %s\n", BERErrors );
+
+	Pega.Disconnect();
+}
+
+
 
 

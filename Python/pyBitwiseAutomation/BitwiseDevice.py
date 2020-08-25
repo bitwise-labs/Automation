@@ -113,7 +113,7 @@ class BitwiseDevice(SocketDevice):
         while now < timeout:
             time.sleep(0.5)
             now = SocketDevice.timestamp()
-            print("Restoring configuration " + str(now - begin_time) )
+            print("Restoring configuration " + "{:.1f}".format(now - begin_time) )
 
             response = super().QueryResponse("inprogress\n")
             if response == "F" or response == "0":
@@ -122,11 +122,8 @@ class BitwiseDevice(SocketDevice):
         if now >= timeout:
             raise Exception("[Timeout_Restoring_Configuration]")
 
-        print("Restoring configuration complete " + str(SocketDevice.timestamp()-begin_time))
-
         super().SendCommand( "stc\n")
         return None
-
 
     def getIsRunning(self) ->bool :
         response = self.QueryResponse("App:RunState?\n")
