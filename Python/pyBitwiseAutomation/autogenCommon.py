@@ -412,7 +412,6 @@ class BranchSys(AutomationExtender):
 
 # ================================ #
 
-
 class BranchSyn(AutomationExtender):
     """BranchSyn class.  Clock source control"""
 
@@ -575,48 +574,41 @@ class BranchFile(AutomationExtender):
         self.SendCommand("Dir " + "\""+newvalue+"\"" + "\n")
         return None
 
-    def Checksum(self) -> str:
-        """Response method for Checksum File. Todo: add arguments if needed"""
-        print("BranchFile:Checksum(), Todo: add arguments if needed")
-        return self.QueryResponse("Checksum\n")
+    def Checksum(self, filepath:str) -> str:
+        """Response method for Checksum File."""
+        return self.QueryResponse("Checksum " + "\""+filepath+"\"" + "\n")
 
-    def Copy(self):
-        """Method for Copy File. Todo: add arguments if needed"""
-        print("BranchFile:Copy(), Todo: add arguments if needed")
-        self.SendCommand("Copy\n")
+    def Copy(self,frompath:str, topath:str):
+        """Method for Copy File."""
+        self.SendCommand("Copy " + "\""+frompath+"\"" + " " +"\""+topath+"\"" + "\n")
         return None
 
-    def Del(self):
-        """Method for Delete File. Todo: add arguments if needed"""
+    def Del(self, filepath:str):
+        """Method for Delete File."""
         print("BranchFile:Del(), Todo: add arguments if needed")
-        self.SendCommand("Del\n")
+        self.SendCommand("Del " + "\""+filepath+"\"" + "\n")
         return None
 
-    def Exists(self) -> str:
-        """Response method for File Exists. Todo: add arguments if needed"""
-        print("BranchFile:Exists(), Todo: add arguments if needed")
-        return self.QueryResponse("Exists\n")
+    def Exists(self, filepath:str) -> str:
+        """Response method for File Exists."""
+        return self.QueryResponse("Exists " + "\""+filepath+"\"" + "\n")
 
-    def Fetch(self) -> bytes:
-        """Binary response method for Fetch File. Todo: add arguments if needed"""
-        print("BranchFile:Fetch(), Todo: add arguments if needed")
-        return self.QueryBinaryResponse("Fetch\n")
+    def Fetch(self, filepath:str) -> bytes:
+        """Binary response method for Fetch File."""
+        return self.QueryBinaryResponse("Fetch " + "\""+filepath+"\"" + "\n")
 
-    def Length(self):
-        """Method for File Length. Todo: add arguments if needed"""
-        print("BranchFile:Length(), Todo: add arguments if needed")
-        self.SendCommand("Length\n")
+    def Length(self, filepath:str):
+        """Method for File Length. """
+        self.SendCommand("Length " + "\""+filepath+"\"" + "\n")
         return None
 
-    def List(self) -> str:
-        """Binary string response method for List Directory. Todo: add arguments if needed"""
-        print("BranchFile:List(), Todo: add arguments if needed")
-        return str(self.QueryBinaryResponse("List\n"),encoding='utf-8')
+    def List(self,dirpath:str) -> str:
+        """Binary string response method for List Directory."""
+        return str(self.QueryBinaryResponse("List " + "\""+dirpath+"\"" + "\n"),encoding='utf-8')
 
-    def Rename(self):
-        """Method for Rename File. Todo: add arguments if needed"""
-        print("BranchFile:Rename(), Todo: add arguments if needed")
-        self.SendCommand("Rename\n")
+    def Rename(self,frompath:str, topath:str):
+        """Method for Rename File."""
+        self.SendCommand("Rename " + "\""+frompath+"\"" + " " +"\""+topath+"\"" + "\n")
         return None
 
     def XferBuffer(self):

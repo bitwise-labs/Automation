@@ -139,7 +139,6 @@ class BitwiseDevice(SocketDevice):
 
         return return_value
 
-
     def Run(self):
         """Initiate run operation and wait until started."""
 

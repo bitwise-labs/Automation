@@ -140,7 +140,6 @@ char* BranchConst::getSN(char *buffer,int buflen) /* Serial Number */
     return QueryResponse(buffer,buflen,"SN?\n");
 }
 
-
 /* ================================================================ */
 
 char* BranchFile::getDir(char *buffer,int buflen) /* Current Directory */
@@ -153,52 +152,45 @@ void BranchFile::setDir(const char* newValue) /* Current Directory */
     SendCommand("Dir \"%s\"\n",newValue);
 }
 
-char* BranchFile::Checksum(char *buffer,int buflen) /* Checksum File, Todo:add arguments */
+char* BranchFile::Checksum(char *buffer,int buflen, char *filepath) /* Checksum File */
 {
-    fprintf(stderr,"BranchFile::Checksum(), Todo: add arguments if needed\n");
-    return QueryResponse(buffer,buflen,"Checksum?\n");
+    return QueryResponse(buffer,buflen,"Checksum \"%s\"\n",filepath);
 }
 
-void BranchFile::Copy() /* Copy File, Todo:add arguments */
+void BranchFile::Copy(char *frompath, char *topath) /* Copy File */
 {
-    fprintf(stderr,"BranchFile::Copy(), Todo: add arguments if needed\n");
-    SendCommand("Copy\n");
+    SendCommand("Copy \"%s\" \"%s\"\n",frompath,topath);
 }
 
-void BranchFile::Del() /* Delete File, Todo:add arguments */
+void BranchFile::Del(char *filepath) /* Delete File, Todo:add arguments */
 {
-    fprintf(stderr,"BranchFile::Del(), Todo: add arguments if needed\n");
-    SendCommand("Del\n");
+    SendCommand("Del \"%s\"\n",filepath);
 }
 
-char* BranchFile::Exists(char *buffer,int buflen) /* File Exists, Todo:add arguments */
+char* BranchFile::Exists(char *buffer,int buflen, char *filepath) /* File Exists */
 {
-    fprintf(stderr,"BranchFile::Exists(), Todo: add arguments if needed\n");
-    return QueryResponse(buffer,buflen,"Exists?\n");
+    return QueryResponse(buffer,buflen,"Exists \"%s\"\n",filepath);
 }
 
-char *BranchFile::Fetch(int *pcount) /* Fetch File - Must free() return value, Todo:add arguments */
+char *BranchFile::Fetch(char *filepath, int *pcount) /* Fetch File - Must free() return value, Todo:add arguments */
 {
-    fprintf(stderr,"BranchFile::Fetch(), Todo: add arguments if needed\n");
-    return QueryBinaryResponse(pcount,"Fetch\n");
+    return QueryBinaryResponse(pcount,"Fetch \"%s\"\n",filepath);
 }
 
-void BranchFile::Length() /* File Length, Todo:add arguments */
+void BranchFile::Length(char *filepath) /* File Length, Todo:add arguments */
 {
-    fprintf(stderr,"BranchFile::Length(), Todo: add arguments if needed\n");
-    SendCommand("Length\n");
+    SendCommand("Length \"%s\"\n",filepath);
 }
 
-char *BranchFile::List() /* List Directory - Must free() return value, Todo:add arguments */
+char *BranchFile::List(char *dirpath) /* List Directory - Must free() return value, Todo:add arguments */
 {
-    fprintf(stderr,"BranchFile::List(), Todo: add arguments if needed\n");
-    return QueryBinaryResponse(0,"List\n");
+    return QueryBinaryResponse(0,"List \"%s\"\n",dirpath);
 }
 
-void BranchFile::Rename() /* Rename File, Todo:add arguments */
+void BranchFile::Rename(char *frompath, char *topath) /* Rename File, Todo:add arguments */
 {
     fprintf(stderr,"BranchFile::Rename(), Todo: add arguments if needed\n");
-    SendCommand("Rename\n");
+    SendCommand("Rename \"%s\" \"%s\"\n",frompath,topath);
 }
 
 void BranchFile::XferBuffer() /* Transmit next buffer to device-requires count, optional checksum, Todo:add arguments */

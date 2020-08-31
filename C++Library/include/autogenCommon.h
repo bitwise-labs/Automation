@@ -92,14 +92,14 @@ class BranchFile: /* File System Access */
 
     char* getDir(char *buffer,int buflen); /* Current Directory */
     void setDir( const char* newValue);
-    char* Checksum(char *buffer,int buflen); /* Checksum File, Todo:add arguments */
-    void Copy(); /* Copy File, Todo:add arguments */
-    void Del(); /* Delete File, Todo:add arguments */
-    char* Exists(char *buffer,int buflen); /* File Exists, Todo:add arguments */
-    char *Fetch(int *pcount=0); /* Fetch File - Must free() return value, Todo:add arguments */
-    void Length(); /* File Length, Todo:add arguments */
-    char *List(); /* List Directory - Must free() return value, Todo:add arguments */
-    void Rename(); /* Rename File, Todo:add arguments */
+    char* Checksum(char *buffer,int buflen,char *filepath); /* Checksum File, Todo:add arguments */
+    void Copy(char *frompath, char *topath); /* Copy File, Todo:add arguments */
+    void Del(char *filepath); /* Delete File, Todo:add arguments */
+    char* Exists(char *buffer,int buflen,char *filepath); /* File Exists, Todo:add arguments */
+    char *Fetch(char *filepath,int *pcount=0); /* Fetch File - Must free() return value, Todo:add arguments */
+    void Length(char *filepath); /* File Length, Todo:add arguments */
+    char *List(char *dirpath); /* List Directory - Must free() return value, Todo:add arguments */
+    void Rename(char *frompath, char *topath); /* Rename File, Todo:add arguments */
     void XferBuffer(); /* Transmit next buffer to device-requires count, optional checksum, Todo:add arguments */
     void XferDoneGet(); /* Indicates completion of get operation, Todo:add arguments */
     void XferDonePut(); /* Indicates completion of send operation, Todo:add arguments */
