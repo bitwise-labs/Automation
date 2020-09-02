@@ -595,73 +595,66 @@ void BranchAccDDR::ProgramPhase() /* Program Phase DRAM+RCD, Todo:add arguments 
     SendCommand("ProgramPhase\n");
 }
 
-
 /* ================================================================ */
 
-void BranchAccDDRCTC::DramMPC() /* DramMPC devaddr devchan rank addr data, Todo:add arguments */
+void BranchAccDDRCTC::DramMPC( int devaddr, int channel, int rank, int data ) /* devaddr(0-3F), channel(0-1), rank(0-1), data(0-FF) */
 {
-    fprintf(stderr,"BranchAccDDRCTC::DramMPC(), Todo: add arguments if needed\n");
-    SendCommand("DramMPC\n");
+    SendCommand("DramMPC %d %d %d 0x%x\n", devaddr, channel, rank, data );
 }
 
-void BranchAccDDRCTC::DramMRR() /* DramMRR devaddr devchan rank addr, Todo:add arguments */
+void BranchAccDDRCTC::DramMRR( int devaddr, int channel, int rank, int address ) /* devaddr(0-3F), channel(0-1), rank(0-1), address(0-FF) */
 {
-    fprintf(stderr,"BranchAccDDRCTC::DramMRR(), Todo: add arguments if needed\n");
-    SendCommand("DramMRR\n");
+    SendCommand("DramMRR %d %d %d %d\n", devaddr, channel, rank, address);
 }
 
-void BranchAccDDRCTC::DramMRW() /* DramMRW devaddr devchan rank addr data, Todo:add arguments */
+void BranchAccDDRCTC::DramMRW( int devaddr, int channel, int rank, int address, int data) /* devaddr(0-3F), channel(0-1), rank(0-1), address(0-FF), data(0-FF) */
 {
-    fprintf(stderr,"BranchAccDDRCTC::DramMRW(), Todo: add arguments if needed\n");
-    SendCommand("DramMRW\n");
+    SendCommand("DramMRW %d %d %d %d 0x%x\n", devaddr, channel, rank, address, data );
 }
 
-void BranchAccDDRCTC::DramNOP() /* DramNOP devaddr devchan rank, Todo:add arguments */
+void BranchAccDDRCTC::DramNOP( int devaddr, int channel, int rank ) /* devaddr(0-3F), channel(0-1), rank(0-1) */
 {
-    fprintf(stderr,"BranchAccDDRCTC::DramNOP(), Todo: add arguments if needed\n");
-    SendCommand("DramNOP\n");
+    SendCommand("DramNOP %d %d %d\n", devaddr, channel, rank );
 }
 
-void BranchAccDDRCTC::I2cWriteByte() /* I2cWriteByte devaddr addr byte, Todo:add arguments */
+void BranchAccDDRCTC::I2cWriteByte( int devaddr, int address, int value ) /* devaddr(0-3F), address(0-FF), value(0-FF) */
 {
-    fprintf(stderr,"BranchAccDDRCTC::I2cWriteByte(), Todo: add arguments if needed\n");
-    SendCommand("I2cWriteByte\n");
+    SendCommand("I2cWriteByte %d %d 0x%x\n", devaddr, address, value );
 }
 
-void BranchAccDDRCTC::ReadByte() /* ReadByte devaddr devchan addr, Todo:add arguments */
+int BranchAccDDRCTC::I2cReadByte( int devaddr, int address ) /* devaddr(0-3F), address(0-FF), value(0-FF) */
 {
-    fprintf(stderr,"BranchAccDDRCTC::ReadByte(), Todo: add arguments if needed\n");
-    SendCommand("ReadByte\n");
+    return QueryResponse_int("I2cReadByte %d %d\n", devaddr, address );
 }
 
-void BranchAccDDRCTC::ReadDword() /* ReadDword devaddr devchan addr, Todo:add arguments */
+int BranchAccDDRCTC::ReadByte(int devaddr, int channel, int address ) /* devaddr(0-3F), channel(0-1), address(0-FFFF, 256-byte pages) */
 {
-    fprintf(stderr,"BranchAccDDRCTC::ReadDword(), Todo: add arguments if needed\n");
-    SendCommand("ReadDword\n");
+    return QueryResponse_int("ReadByte %d %d %d\n", devaddr, channel, address );
 }
 
-void BranchAccDDRCTC::SetGpio() /* SetGpio [#] ... <on|off>  (pins 0-16, only 5 supported), Todo:add arguments */
+int BranchAccDDRCTC::ReadDword(int devaddr, int channel, int address ) /* devaddr(0-3F), channel(0-1), address(0-FFFF, 256-byte pages) */
 {
-    fprintf(stderr,"BranchAccDDRCTC::SetGpio(), Todo: add arguments if needed\n");
-    SendCommand("SetGpio\n");
+    return QueryResponse_int("ReadDword %d %d %d\n", devaddr, channel, address );
 }
 
-void BranchAccDDRCTC::WriteByte() /* WriteByte devaddr devchan addr byte, Todo:add arguments */
+void BranchAccDDRCTC::SetGpio(int pin, bool value) /* pin 0-15, value T/F */
 {
-    fprintf(stderr,"BranchAccDDRCTC::WriteByte(), Todo: add arguments if needed\n");
-    SendCommand("WriteByte\n");
+    SendCommand("SetGpio %d %d\n",pin,value?1:0);
 }
 
-void BranchAccDDRCTC::WriteDword() /* WriteDword devaddr devchan addr byte1 byte2 byte3 byte4 (msb first), Todo:add arguments */
+void BranchAccDDRCTC::WriteByte(int devaddr, int channel, int address, int value ) /*  devaddr(0-3F), channel(0-1), address(0-FFFF, 256-byte pages), value (0-FF) */
 {
-    fprintf(stderr,"BranchAccDDRCTC::WriteDword(), Todo: add arguments if needed\n");
-    SendCommand("WriteDword\n");
+    SendCommand("WriteByte %d %d %d 0x%x\n", devaddr, channel, address, value );
 }
 
-void BranchAccDDRCTC::WriteWord() /* WriteWord devaddr devchan addr byte1 byte2 (msb first), Todo:add arguments */
+void BranchAccDDRCTC::WriteDword(int devaddr, int channel, int address, int value ) /* devaddr(0-3F), channel(0-1), address(0-FFFF, 256-byte pages), value (0-FFFFFFFF) */
 {
-    fprintf(stderr,"BranchAccDDRCTC::WriteWord(), Todo: add arguments if needed\n");
-    SendCommand("WriteWord\n");
+    SendCommand("WriteDword %d %d %d 0x%x\n", devaddr, channel, address, value );
+}
+
+void BranchAccDDRCTC::WriteWord(int devaddr, int channel, int address, int value ) /* devaddr(0-3F), channel(0-1), address(0-FFFF, 256-byte pages), value (0-FFFF) */
+{
+    SendCommand("WriteWord %d %d %d 0x%x\n", devaddr, channel, address, value );
 }
 
 /* ================================================================ */

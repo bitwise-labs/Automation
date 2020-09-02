@@ -204,7 +204,6 @@ class BranchAccDDRStress(AutomationExtender):
 
 # ================================ #
 
-
 class BranchAccDDRCTC(AutomationExtender):
     """BranchAccDDRCTC class.  CTC2 Board category"""
 
@@ -215,74 +214,64 @@ class BranchAccDDRCTC(AutomationExtender):
         super().__del__()
         return None
 
-    def DramMPC(self):
-        """Method for DramMPC devaddr devchan rank addr data. Todo: add arguments if needed"""
-        print("BranchAccDDRCTC:DramMPC(), Todo: add arguments if needed")
-        self.SendCommand("DramMPC\n")
+    def DramMPC(self, devaddr: int, channel: int, rank: int, data: int ):
+        """Method for DramMPC devaddr(0-3F), channel(0-1), rank(0-1), data(0-FF)."""
+        self.SendCommand("DramMPC "+str(devaddr)+" " + str(channel)+" " + str(rank) + " " + hex(data) + "\n")
         return None
 
-    def DramMRR(self):
-        """Method for DramMRR devaddr devchan rank addr. Todo: add arguments if needed"""
-        print("BranchAccDDRCTC:DramMRR(), Todo: add arguments if needed")
-        self.SendCommand("DramMRR\n")
+    def DramMRR(self, devaddr: int, channel: int, rank: int, address: int ):
+        """Method for DramMRR devaddr(0-3F), channel(0-1), rank(0-1), address(0-FF). """
+        self.SendCommand("DramMRR "+str(devaddr)+" " + str(channel)+" " + str(rank) + " " + str(address) + "\n")
         return None
 
-    def DramMRW(self):
-        """Method for DramMRW devaddr devchan rank addr data. Todo: add arguments if needed"""
-        print("BranchAccDDRCTC:DramMRW(), Todo: add arguments if needed")
-        self.SendCommand("DramMRW\n")
+    def DramMRW(self, devaddr: int, channel: int, rank: int, address: int, data: int ):
+        """Method for DramMRW devaddr(0-3F), channel(0-1), rank(0-1), address(0-FF), data(0-FF)."""
+        self.SendCommand("DramMRW "+str(devaddr)+" " + str(channel)+" " + str(rank) + " " + str(address) + " " + hex(data) + "\n")
         return None
 
-    def DramNOP(self):
-        """Method for DramNOP devaddr devchan rank. Todo: add arguments if needed"""
-        print("BranchAccDDRCTC:DramNOP(), Todo: add arguments if needed")
-        self.SendCommand("DramNOP\n")
+    def DramNOP(self, devaddr: int, channel: int, rank: int ):
+        """Method for DramNOP devaddr(0-3F), channel(0-1), rank(0-1)."""
+        self.SendCommand("DramNOP "+str(devaddr)+" " + str(channel)+" " + str(rank) + "\n")
         return None
 
-    def I2cWriteByte(self):
-        """Method for I2cWriteByte devaddr addr byte. Todo: add arguments if needed"""
-        print("BranchAccDDRCTC:I2cWriteByte(), Todo: add arguments if needed")
-        self.SendCommand("I2cWriteByte\n")
+    def I2cWriteByte(self, devaddr: int, address: int, value: int ):
+        """Method for I2cWriteByte devaddr(0-3F), address(0-FF), value(0-FF)."""
+        self.SendCommand("I2cWriteByte "+str(devaddr)+" " + str(address) + " " + hex(value) + "\n")
         return None
 
-    def ReadByte(self):
-        """Method for ReadByte devaddr devchan addr. Todo: add arguments if needed"""
-        print("BranchAccDDRCTC:ReadByte(), Todo: add arguments if needed")
-        self.SendCommand("ReadByte\n")
+    def I2cReadByte(self, devaddr: int, address: int, value: int ) -> int :
+        """Method for devaddr(0-3F), address(0-FF), value(0-FF)."""
+        return self.QueryResponse_int("I2cReadByte "+str(devaddr)+" " + str(address) + "\n")
+
+    def ReadByte(self, devaddr: int, address: int):
+        """Method for ReadByte devaddr(0-3F), channel(0-1), address(0-FFFF, 256-byte pages)."""
+        return self.QueryResponse_int("ReadByte "+str(devaddr)+" " + str(address) + "\n")
+
+    def ReadDword(self, devaddr: int, channel: int, address: int) -> int :
+        """Method for ReadDword devaddr(0-3F), channel(0-1), address(0-FFFF, 256-byte pages)."""
+        return self.QueryResponse_int("ReadDword "+str(devaddr)+" " + str(channel) + " " + str(address) + "\n")
+
+    def SetGpio(self, pin: int, value: bool):
+        """Method for SetGpio pin 0-15, value T/F."""
+        self.SendCommand("SetGpio " + str(pin) + ("T" if value else "F") + "\n")
         return None
 
-    def ReadDword(self):
-        """Method for ReadDword devaddr devchan addr. Todo: add arguments if needed"""
-        print("BranchAccDDRCTC:ReadDword(), Todo: add arguments if needed")
-        self.SendCommand("ReadDword\n")
+    def WriteByte(self, devaddr: int, channel: int, address: int, value: int ):
+        """Method for WriteByte devaddr(0-3F), channel(0-1), address(0-FFFF, 256-byte pages), value (0-FF)."""
+        self.SendCommand("WriteByte "+str(devaddr)+" " + str(channel)+" " + str(address) + " " + hex(value) + "\n")
         return None
 
-    def SetGpio(self):
-        """Method for SetGpio [#] ... <on|off>  (pins 0-16, only 5 supported). Todo: add arguments if needed"""
-        print("BranchAccDDRCTC:SetGpio(), Todo: add arguments if needed")
-        self.SendCommand("SetGpio\n")
+    def WriteDword(self, devaddr: int, channel: int, address: int, value: int ):
+        """Method for WriteDword devaddr(0-3F), channel(0-1), address(0-FFFF, 256-byte pages), value (0-FFFFFFFF)."""
+        self.SendCommand("WriteDword "+str(devaddr)+" " + str(channel)+" " + str(address) + " " + hex(value) + "\n")
         return None
 
-    def WriteByte(self):
-        """Method for WriteByte devaddr devchan addr byte. Todo: add arguments if needed"""
-        print("BranchAccDDRCTC:WriteByte(), Todo: add arguments if needed")
-        self.SendCommand("WriteByte\n")
-        return None
-
-    def WriteDword(self):
-        """Method for WriteDword devaddr devchan addr byte1 byte2 byte3 byte4 (msb first). Todo: add arguments if needed"""
-        print("BranchAccDDRCTC:WriteDword(), Todo: add arguments if needed")
-        self.SendCommand("WriteDword\n")
-        return None
-
-    def WriteWord(self):
-        """Method for WriteWord devaddr devchan addr byte1 byte2 (msb first). Todo: add arguments if needed"""
-        print("BranchAccDDRCTC:WriteWord(), Todo: add arguments if needed")
-        self.SendCommand("WriteWord\n")
+    def WriteWord(self, devaddr: int, channel: int, address: int, value: int ):
+        """Method for WriteWord devaddr(0-3F), channel(0-1), address(0-FFFF, 256-byte pages), value (0-FFFF)."""
+        self.SendCommand("WriteWord "+str(devaddr)+" " + str(channel)+" " + str(address) + " " + hex(value) + "\n")
         return None
 
 # ================================ #
-
 
 class BranchAccDDRDFE(AutomationExtender):
     """BranchAccDDRDFE class.  DFE category"""

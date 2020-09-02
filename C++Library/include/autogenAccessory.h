@@ -45,17 +45,18 @@ class BranchAccDDRCTC: /* CTC2 Board category */
 		AutomationExtender(baseDevice,prefix) {}
 	virtual ~BranchAccDDRCTC() {}
 
-	void DramMPC(); /* DramMPC devaddr devchan rank addr data, Todo:add arguments */
-	void DramMRR(); /* DramMRR devaddr devchan rank addr, Todo:add arguments */
-	void DramMRW(); /* DramMRW devaddr devchan rank addr data, Todo:add arguments */
-	void DramNOP(); /* DramNOP devaddr devchan rank, Todo:add arguments */
-	void I2cWriteByte(); /* I2cWriteByte devaddr addr byte, Todo:add arguments */
-	void ReadByte(); /* ReadByte devaddr devchan addr, Todo:add arguments */
-	void ReadDword(); /* ReadDword devaddr devchan addr, Todo:add arguments */
-	void SetGpio(); /* SetGpio [#] ... <on|off>  (pins 0-16, only 5 supported), Todo:add arguments */
-	void WriteByte(); /* WriteByte devaddr devchan addr byte, Todo:add arguments */
-	void WriteDword(); /* WriteDword devaddr devchan addr byte1 byte2 byte3 byte4 (msb first), Todo:add arguments */
-	void WriteWord(); /* WriteWord devaddr devchan addr byte1 byte2 (msb first), Todo:add arguments */
+	void DramMPC( int devaddr, int channel, int rank, int data ); /* devaddr(0-3F), channel(0-1), rank(0-1), data(0-FF) */
+	void DramMRR( int devaddr, int channel, int rank, int address ); /* devaddr(0-3F), channel(0-1) rank(0-1), address(0-FF) */
+	void DramMRW( int devaddr, int channel, int rank, int address, int data); /* devaddr(0-3F), channel(0-1), rank(0-1), address(0-FF), data(0-FF) */
+	void DramNOP( int devaddr, int channel, int rank ); /* devaddr(0-3F), channel(0-1), rank(0-1) */
+	void I2cWriteByte( int devaddr, int address, int value ); /* devaddr(0-3F), address(0-FF), value(0-FF) */
+	int I2cReadByte( int devaddr, int address ); /* devaddr(0-3F), address(0-FF) */
+	int ReadByte(int devaddr, int channel, int address ); /* devaddr(0-3F), channel(0-1), address(0-FFFF, 256-byte pages) */
+	int ReadDword(int devaddr, int channel, int address ); /* devaddr(0-3F), channel(0-1), address(0-FFFF, 256-byte pages) */
+	void SetGpio(int pin, bool value); /* pin 0-15, value T/F */
+	void WriteByte(int devaddr, int channel, int address, int value ); /*  devaddr(0-3F), channel(0-1), address(0-FFFF, 256-byte pages), value (0-FF) */
+	void WriteDword(int devaddr, int channel, int address, int value ); /* devaddr(0-3F), channel(0-1), address(0-FFFF, 256-byte pages), value (0-FFFFFFFF) */
+	void WriteWord(int devaddr, int channel, int address, int value ); /* devaddr(0-3F), channel(0-1), address(0-FFFF, 256-byte pages), value (0-FFFF) */
 };
 
 /* ================================ */

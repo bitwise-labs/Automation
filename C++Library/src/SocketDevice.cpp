@@ -391,7 +391,7 @@ int SocketDevice::QueryResponse_int( const char *command, ... )
 	QueryResponse(inBuffer,4096,outBuffer);
 
 	int number;
-	if( sscanf(inBuffer,"%d",&number ) != 1 )
+	if( sscanf(inBuffer,"%i",&number ) != 1 )
 		throw "[Invalid_Integer_Response]";
 
 	return number;
@@ -415,7 +415,7 @@ long long SocketDevice::QueryResponse_int64( const char *command, ... )
 	QueryResponse(inBuffer,4096,outBuffer);
 
 	long long int number;
-	if( sscanf(inBuffer,"%Ld",&number ) != 1 )
+	if( sscanf(inBuffer,"%lli",&number ) != 1 )
 		throw "[Invalid_Integer_Response]";
 
 	return number;
