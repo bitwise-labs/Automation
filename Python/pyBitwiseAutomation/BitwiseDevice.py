@@ -181,6 +181,33 @@ class BitwiseDevice(SocketDevice):
         self.App.Stop()
         return None
 
+    @staticmethod
+    def unpackValueByKey(string: str, key: str) -> str:
+        lines = string.split("\n")
+        retn = None
+        for tok in lines:
+            if tok.startswith(key+" ") or tok.startswith(key+"=") or tok.startswith(key+"\t") or tok.startswith(key+",") :
+                retn = tok[len(key)+1:]
+
+        if retn == None:
+            raise Exception("[Key_Not_Found]")
+
+        return retn
+
+    @staticmethod
+    def unpackDoubleByKey(string: str, key: str) -> float:
+        return float(BitwiseDevice.unpackValueByKey(string, key))
+
+    @staticmethod
+    def unpackIntegerByKey(string: str, key: str) -> float:
+        value = BitwiseDevice.unpackValueByKey(string,key)
+        if value.startswith("0x") or value.startswith("0X"):
+            retn = int(value[2:], 16)
+        else:
+            retn = int(value)
+        return retn
+
+
     def Clear(self):
         self.App.Clear()
         return None

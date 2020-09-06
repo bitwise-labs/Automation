@@ -37,6 +37,7 @@
 char *IPAddress = (char*) "192.168.1.176:923";
 void test_001(char *ip_address );
 void test_002(char *ip_address );
+void test_003(char *ip_address );
 
 int main( int argc, char *argv[] )
 {
@@ -49,7 +50,8 @@ int main( int argc, char *argv[] )
 	try
 	{
 		//test_001(IPAddress);
-		test_002(IPAddress);
+		//test_002(IPAddress);
+		test_003(IPAddress);
 	}
 	catch(const char*msg)
 	{
@@ -125,6 +127,10 @@ void test_001(char *ip_address )
 		free(results);
 	}
 
+	printf("Tub RJ......%.3lf ps\n",
+		BitwiseDevice::unpackDoubleByKey(results,"RJ")
+	);
+
 	printf("Accessory...%s\n", BranchAcc::Type_Strings[ (int)Pega.Acc.getType()] );
 
 	if( Pega.Acc.getType()==BranchAcc::Type::DDR5 )
@@ -138,7 +144,6 @@ void test_001(char *ip_address )
 
 	Pega.Disconnect();
 }
-
 
 void test_002(char *ip_address )
 {
@@ -272,8 +277,6 @@ void test_002(char *ip_address )
 				throw "[No_Syc_Error]";
 
 		}
-
-
 	}
 
 	printf("===============================\n");
@@ -285,6 +288,187 @@ void test_002(char *ip_address )
 
 	Pega.Disconnect();
 }
+
+void test_003(char *ip_address )
+{
+	printf("Pega Frequency Sweep with Tub\n");
+
+	PegaDevice Pega;
+
+	Pega.Connect( ip_address );
+	Pega.ED.setDebugging(true);
+	Pega.PG.setDebugging(true);
+
+	char buffer[4096];
+	printf("Serial number.....%s\n", Pega.Const.getSN( buffer, 4096 )) ;
+	printf("Build.............%s\n", Pega.Sys.getBuild( buffer, 4096 )) ;
+	printf("Nickname..........%s\n", Pega.Sys.getNickname( buffer, 4096 )) ;
+
+	//================================================================================
+	//================================================================================
+	Pega.Stop();
+
+	Pega.RestoreConfiguration("[factory]");
+	Pega.PG.Amp.setAmplMV(0,500.0);
+	Pega.PG.Amp.setAmplMV(1,500.0);
+
+	Pega.PG.setPattern(0,BranchPG::Pattern::Prbs7);
+	Pega.PG.setPattern(1,BranchPG::Pattern::Prbs31);
+
+	Pega.Syn.setSource(0,BranchSyn::Source::Internal);
+	Pega.Syn.setSource(1,BranchSyn::Source::Internal);
+	Pega.PG.setAllOn(true);
+
+	Pega.ED.setEnabled(true);
+	Pega.ED.Sampler.setMode(BranchEDSampler::Mode::CalInput);
+	Pega.ED.setEyeSubrate(BranchED::EyeSubrate::DivBy1) ;
+	Pega.ED.setAutoResync(true);
+	Pega.ED.setPatt(BranchED::Patt::Auto);
+
+	Pega.Tub.setResolutionPS(0.5);
+
+	static int CALNUM[] = {2,4,8,16,0};
+	static BranchSyn::DivCalib CALDIV[] = {
+		BranchSyn::DivCalib::Div2,
+		BranchSyn::DivCalib::Div4,
+		BranchSyn::DivCalib::Div8,
+		BranchSyn::DivCalib::Div16
+	};
+
+	static const bool STOP_ON_ERROR=false;
+	static const double STARTGHZ=1.0;
+	static const double ENDGHZ=28.0;
+	static const double STEPGHZ=0.5;
+	static const double MAX_CALIB_GHZ=3.0;
+	static const int NUMFREQ = 1+(ENDGHZ-STARTGHZ)/STEPGHZ;
+
+	int fnum=0;
+	double r_freq[NUMFREQ];
+	bool r_sync[NUMFREQ];
+	double r_ber[NUMFREQ];
+	double r_rj[NUMFREQ];
+
+	for( double dataRateGHz = STARTGHZ; dataRateGHz<=ENDGHZ; dataRateGHz += STEPGHZ, fnum++ )
+	{
+		r_freq[fnum]=dataRateGHz;
+
+		int nIndex=0;
+		while( CALNUM[nIndex]!=0 )
+		{
+			if( dataRateGHz/(double)CALNUM[nIndex] <= MAX_CALIB_GHZ )
+				break;
+			nIndex++;
+		}
+
+		if( CALNUM[nIndex]==0 )
+			throw "[Unable_To_Find_Matching_Calib_GHz]";
+
+		double clockRateGHz=dataRateGHz/2.0;
+		printf("%.3lf GHz\n", dataRateGHz );
+		Pega.Syn.setClockRateGHz(clockRateGHz);
+		Pega.Syn.setDivCalib(CALDIV[nIndex]);
+
+		Pega.PG.WaitForClockToSettle(clockRateGHz);
+
+		Pega.ED.AlignData(BranchED::AlignBy::All);
+		char alignStatus[1024];
+
+		Pega.ED.getAlignDataMsg( alignStatus, 1024 );
+		printf(" Align=%s\n", alignStatus );
+
+		if( STOP_ON_ERROR && strncasecmp(alignStatus,"Success",7) )
+			throw "[Stop_On_No_Sync]" ;
+
+		usleep(100);
+		bool inSyncFlag = Pega.ED.getInSync();
+
+		r_sync[fnum] = inSyncFlag;
+		r_ber[fnum] = -1;
+		r_rj[fnum] = -1;
+
+		printf("  Sync=%s\n", inSyncFlag?"Yes":"No");
+
+		if( !inSyncFlag && STOP_ON_ERROR )
+			throw "[Stop_On_No_Sync]" ;
+
+		//======================================================================
+
+		Pega.App.Stop();
+		Pega.App.setTab("BERT");
+		Pega.App.Clear();
+
+		Pega.App.Run();
+		usleep(5*1000*1000); // five seconds
+		Pega.App.Stop();
+
+		double BER = Pega.Err.getABER();
+		r_ber[fnum] = BER;
+
+		int RC = (int) Pega.Err.getResyncCount();
+		double ERRS = (int)Pega.Err.getErrors();
+		double BITS = Pega.Err.getBits();
+
+		printf("   Bits=%.0lf\n", BITS);
+		printf("    Errors=%.0lf\n", ERRS);
+		printf("     Resync=%d\n", RC );
+		printf("      BER=%.2le\n", BER );
+
+		if(  STOP_ON_ERROR && ( RC>0 || ERRS>0.0)  )
+			throw "[Stop_On_Errors]" ;
+
+		//======================================================================
+
+		Pega.App.Stop();
+		Pega.App.setTab("TUB");
+		Pega.App.Clear();
+
+		Pega.RunSingle();
+
+		static const double TIMEOUT_SEC=300.0;
+		double now = SocketDevice::timestamp();
+		double timeout = now + TIMEOUT_SEC;
+
+		while( now<timeout && Pega.getIsRunning() )
+		{
+			usleep( 200*1000 ); /* poll 5 times per second */
+			now=SocketDevice::timestamp();
+
+			int progress = Pega.Tub.getProgress100Pcnt();
+			printf("Tub progress: %d%%   \r", progress );
+		}
+
+		printf("\n");
+		Pega.Stop();
+		if( now>=timeout )
+			throw "[Stop_Timeout]";
+
+		char buffer[4096];
+		Pega.Tub.getStatusMsg( buffer, 4096 );
+
+		printf("       Tub Status=%s\n", buffer );
+
+		char *results = Pega.Tub.FetchResults();
+		double RJ = BitwiseDevice::unpackDoubleByKey(results,"RJ");
+		r_rj[fnum]=RJ;
+		free(results);
+
+		printf("        Tub RJ=%.3lf\n", RJ );
+
+		if(  STOP_ON_ERROR && ( RJ==0.0)  )
+			throw "[Stop_On_Bad_Tub]" ;
+	}
+
+	printf("===============================\n");
+	printf("Freq, Sync, BER, RJ\n");
+
+	for( int n=0; n<NUMFREQ; n++ )
+		printf("%.2lf GHz, %s, %.3le, %.3lf ps\n",
+			r_freq[n], r_sync[n]?"Sync":"No Sync", r_ber[n], r_rj[n]
+			);
+
+	Pega.Disconnect();
+}
+
 
 
 

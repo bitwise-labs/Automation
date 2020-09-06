@@ -31,10 +31,10 @@
 
 from pyBitwiseAutomation import *
 
-def test_main_001():
+def test_main_001(ip_address: str):
     Pega = PegaDevice()
     try:
-        Pega.Connect("192.168.1.176")
+        Pega.Connect(ip_address)
         Pega.ED.setDebugging(True)
 
         print("Serial number......." + Pega.Const.getSN())
@@ -91,15 +91,17 @@ def test_main_001():
         results = Pega.Tub.FetchResults()
         print("RESULTS:\n" + results)
 
+        print("Tub RJ.........."+str(BitwiseDevice.unpackDoubleByKey(results, "RJ")) + " ps")
+
     finally:
         Pega.Disconnect()
         Pega = None
     return None
 
-def test_main_002():
+def test_main_002(ip_address: str):
     Pega = PegaDevice()
     try:
-        Pega.Connect("192.168.1.176")
+        Pega.Connect(ip_address)
         Pega.ED.setDebugging(True)
         Pega.PG.setDebugging(True)
 
@@ -224,6 +226,7 @@ def test_main_002():
 
 if __name__ == '__main__':
     print("Test Main\n")
-    test_main_002()
+    test_main_001("192.168.1.176:923")
+    #test_main_002("192.168.1.176:923")
 
 # EOF

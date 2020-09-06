@@ -50,6 +50,10 @@ class BitwiseDevice :
 
 	virtual ~BitwiseDevice() {}
 
+	static double unpackDoubleByKey(const char *str, const char *key );
+	static int unpackIntegerByKey(const char *str, const char *key );
+	static char *unpackValueByKey( char *buffer, int buflen, const char *str, const char *key );
+
 	virtual void Connect( const char *ipaddress, int port=923 ); /* provide default port 923 */
 	virtual void SendCommand( const char *command, ... );
 	virtual char *QueryResponse( char *buffer, int buflen, const char *command, ... );

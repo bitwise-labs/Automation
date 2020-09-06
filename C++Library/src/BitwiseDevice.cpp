@@ -33,6 +33,7 @@
 #include <stdio.h> /* vsnprintf,snprintf,fprintf */
 #include <string.h> /* strcmp, strtok */
 #include <unistd.h> /* usleep */
+#include <stdlib.h> /* malloc, free */
 
 #include "BitwiseDevice.h"
 
@@ -42,6 +43,69 @@
 void BitwiseDevice::Connect( const char *ipaddress, int port )
 {
 	base::Connect(ipaddress,port);
+}
+
+//================================================================================
+//================================================================================
+
+int BitwiseDevice::unpackIntegerByKey(const char *str, const char *key )
+{
+	char buffer[1024];
+	unpackValueByKey( buffer, 1024, str, key );
+	int retn=0.0;
+	if( sscanf(buffer,"%i",&retn) != 1)
+		throw "[No_Integer_Found]";
+	return retn;
+}
+
+double BitwiseDevice::unpackDoubleByKey(const char *str, const char *key )
+{
+	char buffer[1024];
+	unpackValueByKey( buffer, 1024, str, key );
+	double retn=0.0;
+	if( sscanf(buffer,"%lf",&retn) != 1)
+		throw "[No_Double_Found]";
+	return retn;
+}
+
+char *BitwiseDevice::unpackValueByKey( char *buffer, int buflen, const char *str, const char *key )
+{
+	int keylen=0;
+	if( key==0|| (keylen=strlen(key))<1 )
+		throw("[Invalid_Key]");
+	if( buffer==0||buflen<1 )
+		throw "[Invalid_Buffer]";
+
+	char *ptr = (char*)malloc( strlen(str)+1 ); /* buffer because strtok changes contents */
+	bool found=false;
+
+	try
+	{
+		memcpy( ptr, str, strlen(str)+1 );
+		char *tok = strtok(ptr,"\n");
+
+		while( tok && !found )
+		{
+			if(!strncmp(tok,key,keylen) && (int)strlen(tok)>keylen &&
+				(tok[keylen]==' '||tok[keylen]=='\t'||tok[keylen]=='='||tok[keylen]==',' ) )
+			{
+				snprintf(buffer,buflen,"%s",tok+keylen+1);
+				found=true;
+			}
+			tok = strtok(0,"\n");
+		}
+		free(ptr);
+	}
+	catch(...)
+	{
+		free(ptr);
+		throw;
+	}
+
+	if( !found )
+		throw "[Key_Not_Found]";
+
+	return buffer;
 }
 
 //================================================================================
