@@ -248,8 +248,9 @@ class BranchED: /* Pega Calibration Input Access */
 	};
     static const char *AlignBy_Strings[];
 
-    void AlignData( AlignBy alignType = AlignBy::All ); /* Perform data alignment, parameter: Time, Volts, All (Dflt), PrbsVolts, PrbsAll */
+    void AlignData( AlignBy alignType = AlignBy::All, bool waitToComplete=true ); /* Perform data alignment, parameter: Time, Volts, All (Dflt), PrbsVolts, PrbsAll */
     void Resync(); /* Manual Resync, Todo:add arguments */
+    void WaitForAlignmentToComplete();
 };
 
 /* ================================ */

@@ -273,10 +273,16 @@ bool BranchED::getUsingEye() /* Using Eye Diagramming */
 const char *BranchED::AlignBy_Strings[] =
 { "Time","Volts","All","PrbsVolts","PrbsAll",0};
 
-void BranchED::AlignData(AlignBy alignType ) /* Perform data alignment, parameter: Time, Volts, All (Dflt), PrbsVolts, PrbsAll */
+void BranchED::AlignData(AlignBy alignType, bool waitToComplete ) /* Perform data alignment, parameter: Time, Volts, All (Dflt), PrbsVolts, PrbsAll */
 {
     SendCommand("AlignData %s\n",AlignBy_Strings[(int)alignType] );
 
+    if( waitToComplete )
+    	WaitForAlignmentToComplete();
+}
+
+void BranchED::WaitForAlignmentToComplete()
+{
 	double now = SocketDevice::timestamp();
 	double begin_time = now;
 	double timeout = now + 30.0;
@@ -286,8 +292,10 @@ void BranchED::AlignData(AlignBy alignType ) /* Perform data alignment, paramete
 		usleep(500*1000);
 		now = SocketDevice::timestamp();
 
+#ifdef DEBUG
 		if(getDebugging())
 			fprintf(stderr,"Aligning %.1lf\n", now-begin_time);
+#endif
 	}
 
 	if( now >=timeout )
@@ -1312,19 +1320,24 @@ void BranchPG::WaitForClockToSettle( double targetClockGHz, double timeoutSec, d
 	double now = SocketDevice::timestamp();
 	double timeout = now + timeoutSec;
 	double readGHz = getReadRateGHz();
+	double opGHz = getOperatingRateGHz();
 
 	while( now<timeout )
 	{
+#ifdef DEBUG
 		if(getDebugging())
-			fprintf(stderr,"Settle %.3lf GHz\n", readGHz );
+			fprintf(stderr,"Settle %.3lf - %.3lf\n", readGHz, opGHz );
+#endif
 
-		if( fabs(readGHz-targetClockGHz) <= toleranceGHz )
+		if( fabs(readGHz-targetClockGHz) <= toleranceGHz &&
+				fabs(opGHz-targetClockGHz) <= toleranceGHz )
 			break;
 
 		usleep(500*1000);
 		now = SocketDevice::timestamp();
 
 		readGHz = getReadRateGHz();
+		opGHz = getOperatingRateGHz();
 	}
 
 	if( now >=timeout )

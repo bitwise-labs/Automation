@@ -215,12 +215,19 @@ void BitwiseDevice::SaveConfiguration( const char *configuration )
 	base::SendCommand( "save \"%s\"\n", configuration );
 }
 
-void BitwiseDevice::RestoreConfiguration( const char *configuration )
+void BitwiseDevice::RestoreConfiguration( const char *configuration, bool waitToComplete )
 {
 	App.Stop(); // just to make sure
 
 	base::SendCommand( "stc; restore \"%s\"\n", configuration );/* use base: to avoid error checking */
 
+	if( waitToComplete )
+		WaitForRestoreToComplete();
+}
+
+
+void BitwiseDevice::WaitForRestoreToComplete()
+{
 	double now = timestamp();
 	double timeout = now + 30.0;
 	double begin_time=now;
@@ -229,7 +236,11 @@ void BitwiseDevice::RestoreConfiguration( const char *configuration )
 	{
 		usleep(500*1000);
 		now = timestamp();
-		printf("Restoring configuration %.1lf\n",now-begin_time);
+
+#ifdef DEBUG
+		if( getDebugging() )
+			fprintf(stderr,"Restoring configuration %.1lf\n",now-begin_time);
+#endif
 
 		char buffer[4096];
 		base::QueryResponse(buffer,4096,"inprogress\n"); /* use base: to avoid error checking */
@@ -240,9 +251,13 @@ void BitwiseDevice::RestoreConfiguration( const char *configuration )
 	if( now >= timeout )
 		throw "[Timeout_Restoring_Configuration]";
 
-	printf("Restoring configuration complete %.1lf\n",timestamp()-begin_time);
+#ifdef DEBUG
+	fprintf(stderr,"Restoring configuration complete %.1lf\n",timestamp()-begin_time);
+#endif
+
 	base::SendCommand( "stc\n");/* use base: to avoid error checking */
 }
+
 
 //================================================================================
 //================================================================================
@@ -285,6 +300,22 @@ void BitwiseDevice::RunSingle( double waitUntilRunningTimeout )
 		if( now>=timeout )
 			throw "[Run_Once_Timeout]";
 	}
+}
+
+void BitwiseDevice::WaitForRunToComplete( double timeoutSec )
+{
+	double now = SocketDevice::timestamp();
+	double timeout = now + timeoutSec;
+
+	while( now<timeout && getIsRunning() )
+	{
+		usleep( 200*1000 ); /* poll 5 times per second */
+		now=SocketDevice::timestamp();
+	}
+
+	Stop();
+	if( now>=timeout )
+		throw "[Stop_Timeout]";
 }
 
 void BitwiseDevice::Stop()

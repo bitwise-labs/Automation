@@ -91,7 +91,7 @@ class BitwiseDevice(SocketDevice):
         super().SendCommand( "stc\n")
         return None
 
-    def RestoreConfiguration(self, configuration:str ):
+    def RestoreConfiguration(self, configuration:str, waitToComplete:bool = True ):
         """Restore configuration file and optionally pause while operation completes.
 
         specifying configurations:
@@ -106,6 +106,15 @@ class BitwiseDevice(SocketDevice):
 
         super().SendCommand( "stc;"+"restore \"" + configuration + "\"\n" )
 
+        if waitToComplete:
+            self.WaitForRestoreToComplete()
+
+        return None
+
+
+    def WaitForRestoreToComplete(self):
+        """Wait for restore configuration operation completes."""
+
         now = SocketDevice.timestamp()
         timeout = now + 30.0
         begin_time = now
@@ -113,7 +122,9 @@ class BitwiseDevice(SocketDevice):
         while now < timeout:
             time.sleep(0.5)
             now = SocketDevice.timestamp()
-            print("Restoring configuration " + "{:.1f}".format(now - begin_time) )
+
+            if self.getDebugging():
+                print("Restoring configuration " + "{:.1f}".format(now - begin_time) )
 
             response = super().QueryResponse("inprogress\n")
             if response == "F" or response == "0":
@@ -124,6 +135,7 @@ class BitwiseDevice(SocketDevice):
 
         super().SendCommand( "stc\n")
         return None
+
 
     def getIsRunning(self) ->bool :
         response = self.QueryResponse("App:RunState?\n")
@@ -179,6 +191,19 @@ class BitwiseDevice(SocketDevice):
 
     def Stop(self, ):
         self.App.Stop()
+        return None
+
+    def WaitForRunToComplete(self, timeoutSec: float):
+        """Wait for device to stop running."""
+
+        now = SocketDevice.timestamp()
+        timeout = now + timeoutSec
+
+        while now < timeout and self.getIsRunning():
+            time.sleep(0.5)
+            now = SocketDevice.timestamp()
+
+        self.Stop()
         return None
 
     @staticmethod

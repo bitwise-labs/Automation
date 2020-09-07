@@ -66,10 +66,12 @@ class BitwiseDevice :
 	/* filename-only ... settings from file located in configuration folder */
 
 	void SaveConfiguration( const char *configuration );
-	void RestoreConfiguration( const char *configuration);
+	void RestoreConfiguration( const char *configuration, bool waitToComplete=true);
+	void WaitForRestoreToComplete();
 
 	void Run( double waitUntilRunningTimeout=30.0 );
 	void RunSingle( double waitUntilRunningTimeout=30.0 );
+	void WaitForRunToComplete( double timeoutSec );
 	void Stop();
 	void Clear();
 	bool getIsRunning();

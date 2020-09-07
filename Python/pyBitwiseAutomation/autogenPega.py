@@ -940,16 +940,18 @@ class BranchPG(AutomationExtender):
         now = SocketDevice.timestamp()
         timeout = now + timeoutSec
         readGHz = self.getReadRateGHz()
+        opGHz = self.getOperatingRateGHz()
 
         while now < timeout:
             if self.getDebugging():
-                print("Settle " + str(readGHz))
+                print("Settle " + str(readGHz) + " - " + str(opGHz) )
 
-            if abs(readGHz - targetClockGHz) <= toleranceGHz:
+            if abs(readGHz - targetClockGHz) <= toleranceGHz and  abs(opGHz - targetClockGHz) <= toleranceGHz:
                 break
             time.sleep(0.5)
             now = SocketDevice.timestamp()
             readGHz = self.getReadRateGHz()
+            opGHz = self.getOperatingRateGHz()
 
         if now >= timeout:
             raise Exception("[Timeout_During_Clock_Settle]")
@@ -1999,10 +2001,18 @@ class BranchED(AutomationExtender):
         PrbsVolts = "PrbsVolts"
         PrbsAll = "PrbsAll"
 
-    def AlignData(self, alignType: AlignBy = AlignBy.All):
-        """Perform data alignment and wait until completed. """
+    def AlignData(self, alignType: AlignBy = AlignBy.All, waitToComplete: bool = True ):
+        """Perform data alignment and optionally wait until completed. """
 
         self.SendCommand("AlignData " + alignType.value + "\n")
+
+        if waitToComplete:
+            self.WaitForAlignmentToComplete()
+
+        return None
+
+    def WaitForAlignmentToComplete(self):
+        """Wait for alignment operation to complete. """
 
         now = SocketDevice.timestamp()
         begin_time = now
