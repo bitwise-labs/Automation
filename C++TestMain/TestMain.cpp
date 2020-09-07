@@ -37,7 +37,7 @@
 
 char *IPAddress = (char*) "192.168.1.176:923";
 
-void test_003(char *ip_address, bool stopOnError, double stepGHz );
+void test_pega(char *ip_address, bool stopOnError, int run, double fromGHz, double toGHz, double stepGHz );
 
 int main( int argc, char *argv[] )
 {
@@ -48,12 +48,25 @@ int main( int argc, char *argv[] )
 	double stepGHz=0.5;
 	char *ip[32];
 	int ipCount=0;
+	int repeat=1;
+	double fromGHz=1.0;
+	double toGHz=28.0;
 
 	while( *(++argv) )
 		if( !strcmp( *argv, "-stop") )
 			stopOnError=true;
 		else if( !strcmp( *argv, "-step") )
 			stepGHz=atof(*(++argv));
+
+		else if( !strcmp( *argv, "-from") )
+			fromGHz=atof(*(++argv));
+
+		else if( !strcmp( *argv, "-to") )
+			toGHz=atof(*(++argv));
+
+
+		else if( !strcmp( *argv, "-repeat") )
+			repeat=atoi(*(++argv));
 		else if( ipCount<32 )
 			ip[ipCount++] = *argv;
 		else
@@ -62,17 +75,21 @@ int main( int argc, char *argv[] )
 			exit(0);
 		}
 
-	if( ipCount==0 || stepGHz<=0.0 )
+	if( ipCount==0 || stepGHz<=0.0 || repeat<1 || fromGHz<=0.0 || toGHz>32.0 || fromGHz>=toGHz )
 	{
 		printf("Usage:  TestMain [options] IP0 IP1 ... IPn\n");
 		printf("Options:  -stop ..... stop on first error\n");
-		printf("          -step X ... set step-size (dflt 0.5)\n" );
+		printf("          -from X ... set starting Gbps (dflt 1.0)\n");
+		printf("          -to X ..... set ending Gbps (dflt 28.0)\n");
+		printf("          -step X ... set step-size Gbps (dflt 0.5)\n" );
+		printf("          -repeat N.. number of tests for each IP\n");
 	}
 
 	try
 	{
 		for( int n=0; n<ipCount; n++ )
-			test_003(ip[n],stopOnError,stepGHz);
+			for( int k=0; k<repeat; k++ )
+				test_pega(ip[n],stopOnError,k+1,fromGHz,toGHz,stepGHz);
 	}
 	catch(const char*msg)
 	{
@@ -82,7 +99,7 @@ int main( int argc, char *argv[] )
 	return 0;
 }
 
-void test_003(char *ip_address, bool stopOnError, double stepGHz )
+void test_pega(char *ip_address, bool stopOnError, int run, double fromGHz, double toGHz, double stepGHz )
 {
 
 	if( ip_address==0 || ip_address[0]==0 || stepGHz<=0.0 )
@@ -98,10 +115,12 @@ void test_003(char *ip_address, bool stopOnError, double stepGHz )
 	char buffer[4096];
 	printf("PEGA FREQUENCY SWEEP\n");
 	printf("IP Address........%s\n", ip_address );
-	printf("StopOnError.......%c\n", stopOnError?'T':'F');
 	printf("Serial number.....%s\n", serialNumber ) ;
-	printf("Step GHz..........%.3lf\n", stepGHz );
 	printf("Build.............%s\n", Pega.Sys.getBuild( buffer, 4096 )) ;
+	printf("StopOnError.......%c\n", stopOnError?'T':'F');
+	printf("From GHz..........%.3lf\n", fromGHz );
+	printf("To GHz............%.3lf\n", toGHz );
+	printf("Step GHz..........%.3lf\n", stepGHz );
 
 	//================================================================================
 	//================================================================================
@@ -126,13 +145,10 @@ void test_003(char *ip_address, bool stopOnError, double stepGHz )
 
 	Pega.Tub.setResolutionPS(0.25);
 
-	static const double STARTGHZ=1.0;
-	static const double ENDGHZ=28.0;
+	printf("=================================================================================\n");
+	printf("SN,Run,Gbps,CalDiv,Align,Thresh,Delay,Sync,Errors,Resyncs,BER,LogBER,RJ,EWC,TubStatus\n");
 
-printf("=================================================================================\n");
-printf("SN,Gbps,CalDiv,Align,Thresh,Delay,Sync,Errors,Resyncs,BER,LogBER,RJ,EWC,TubStatus\n");
-
-	for( double dataRateGbps = STARTGHZ; dataRateGbps<=ENDGHZ; dataRateGbps += stepGHz )
+	for( double dataRateGbps = fromGHz; dataRateGbps<=toGHz; dataRateGbps += stepGHz )
 	{
 		double clockRateGHz=dataRateGbps/2.0;
 		Pega.Syn.setClockRateGHz(clockRateGHz);
@@ -146,12 +162,13 @@ printf("SN,Gbps,CalDiv,Align,Thresh,Delay,Sync,Errors,Resyncs,BER,LogBER,RJ,EWC,
 
 		Pega.ED.getAlignDataMsg( alignStatus, 1024 );
 
-printf("%s", serialNumber);
-printf(",%.2lf", dataRateGbps );
-printf(",%s", BranchSyn::DivCalib_Strings[(int)divider]);
-printf(",\"%s\"", alignStatus );
-printf(",%.1lf",Pega.ED.Sampler.getVoltsMV());
-printf(",%.1lf", Pega.ED.Sampler.getTimePS());
+		printf("%s", serialNumber);
+		printf(",%d", run );
+		printf(",%.2lf", dataRateGbps );
+		printf(",%s", BranchSyn::DivCalib_Strings[(int)divider]);
+		printf(",\"%s\"", alignStatus );
+		printf(",%.1lf",Pega.ED.Sampler.getVoltsMV());
+		printf(",%.1lf", Pega.ED.Sampler.getTimePS());
 
 		if( stopOnError && strncasecmp(alignStatus,"Success",7) )
 			throw "[Stop_On_No_Alignment]" ;
@@ -171,11 +188,11 @@ printf(",%.1lf", Pega.ED.Sampler.getTimePS());
 		int RC = (int) Pega.Err.getResyncCount();
 		double BER = Pega.Err.getABER();
 
-printf(",%s", inSyncFlag?"Yes":"NoSync");
-printf(",%.0lf", ERRS);
-printf(",%d", RC );
-printf(",%.2le", BER );
-printf(",%.2lf", BER==0.0?0.0:log10(BER));
+		printf(",%s", inSyncFlag?"Yes":"NoSync");
+		printf(",%.0lf", ERRS);
+		printf(",%d", RC );
+		printf(",%.2le", BER );
+		printf(",%.2lf", BER==0.0?0.0:log10(BER));
 
 		if( stopOnError && !inSyncFlag )
 			throw "[Stop_On_No_Sync]" ;
@@ -200,10 +217,10 @@ printf(",%.2lf", BER==0.0?0.0:log10(BER));
 		double EWC=BitwiseDevice::unpackDoubleByKey(results,"EWC");
 		free(results);
 
-printf(",%.3lf", RJ );
-printf(",%.1lf", EWC );
-printf(",\"%s\"", tubStatusMessage );
-printf("\n");
+		printf(",%.3lf", RJ );
+		printf(",%.1lf", EWC );
+		printf(",\"%s\"", tubStatusMessage );
+		printf("\n");
 
 		if(  stopOnError && (RJ==0.0) && dataRateGbps>=4.0 )
 			throw "[Stop_On_Bad_Tub]" ;
