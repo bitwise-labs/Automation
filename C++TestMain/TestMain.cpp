@@ -358,7 +358,7 @@ void test_003(char *ip_address, bool stopOnError, double stepGHz )
 	Pega.ED.setAutoResync(true);
 	Pega.ED.setPatt(BranchED::Patt::Auto);
 
-	Pega.Tub.setResolutionPS(0.5);
+	Pega.Tub.setResolutionPS(0.25);
 
 	static int CALNUM[] = {2,4,8,16,0};
 	static BranchSyn::DivCalib CALDIV[] = {
@@ -462,7 +462,7 @@ printf(",%.1lf", EWC );
 printf(",\"%s\"", tubStatusMessage );
 printf("\n");
 
-		if(  stopOnError && (RJ==0.0) )
+		if(  stopOnError && (RJ==0.0) && dataRateGHz>=4.0 )
 			throw "[Stop_On_Bad_Tub]" ;
 	}
 
