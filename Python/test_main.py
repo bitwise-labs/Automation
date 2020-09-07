@@ -143,20 +143,20 @@ def test_main_002(ip_address: str):
         CALNUM = [2, 4, 8, 16, 0]
         CALDIV = [BranchSyn.DivCalib.Div2, BranchSyn.DivCalib.Div4, BranchSyn.DivCalib.Div8, BranchSyn.DivCalib.Div16]
 
-        dataRateGHz = STARTGHZ
-        while dataRateGHz <= ENDGHZ:
-            print("=============================== Data Rate: " + str(dataRateGHz) + " GHz")
+        dataRateGbps = STARTGHZ
+        while dataRateGbps <= ENDGHZ:
+            print("=============================== Data Rate: " + str(dataRateGbps) + " Gbps")
 
             nIndex = 0;
             while CALNUM[nIndex] != 0:
-                if dataRateGHz / CALNUM[nIndex] <= MAX_CALIB_GHZ:
+                if dataRateGbps / CALNUM[nIndex] <= MAX_CALIB_GHZ:
                     break
                 nIndex += 1
 
             if CALNUM[nIndex] == 0:
                 raise Exception("[Unable_To_Find_Matching_Calib_GHz]")
 
-            clockRateGHz = dataRateGHz / 2.0
+            clockRateGHz = dataRateGbps / 2.0
 
             print("Set DDR Clock Rate to: "+str(clockRateGHz)+" GHz")
 
@@ -195,7 +195,7 @@ def test_main_002(ip_address: str):
                 if BER != 0.0:
                     print("ERR ERR ERR ERR ERR ERR ERR ERR ERR ERR ERR ERR ERR ERR ERR ERR ERR ERR ERR ERR ERR ERR ERR ERR")
                     nonZeroBER += 1
-                    BERErrors += str(dataRateGHz) + " "
+                    BERErrors += str(dataRateGbps) + " "
 
                     if STOP_ON_ERROR:
                         raise Exception("[Non_Zero_BER_Error]")
@@ -204,12 +204,12 @@ def test_main_002(ip_address: str):
                 print("Patt...."+ str(Pega.ED.getDetPatt()) )
                 print("ERR ERR ERR ERR ERR ERR ERR ERR ERR ERR ERR ERR ERR ERR ERR ERR ERR ERR ERR ERR ERR ERR ERR ERR")
                 noSync += 1
-                SyncErrors += str(dataRateGHz) + " "
+                SyncErrors += str(dataRateGbps) + " "
                 if STOP_ON_ERROR:
                     raise Exception("[No_Syc_Error]")
 
 
-            dataRateGHz += STEPGHZ
+            dataRateGbps += STEPGHZ
 
         print("===============================")
         print("Tests complete.  NoSyncErrs="+str(noSync)+", NonZeroBER="+str(nonZeroBER))

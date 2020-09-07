@@ -937,7 +937,7 @@ class BranchPG(AutomationExtender):
 
         # Notice clock rate is 1/2 data rate
     def WaitForClockToSettle(self, targetClockGHz: float, timeoutSec: float = 30.0, toleranceGHz: float = 0.002):
-        now = SocketDevice.timestamp()
+        now = SocketDevice.timestamp()CalibR
         timeout = now + timeoutSec
         readGHz = self.getReadRateGHz()
         opGHz = self.getOperatingRateGHz()
@@ -1818,6 +1818,26 @@ class BranchED(AutomationExtender):
     def getCalibRateGHz(self) -> float:
         """Get Calibration input Rate """
         return self.QueryResponse_float("CalibRate?\n")
+
+    def getCalibLimitGbps(self) -> float:
+        """Get Calibration input rate limit """
+        return self.QueryResponse_float("CalibLimit?\n")
+
+    def findBestCalibDivider(self,dataRateGbps: float) -> BranchSyn.DivCalib :
+        CALNUM = [2,4,8,16,0]
+        CALDIV = [BranchSyn.DivCalib.Div2, BranchSyn.DivCalib.Div4,BranchSyn.DivCalib.Div8,BranchSyn.DivCalib.Div16]
+        index=0
+        calibLimitGbps = self.getCalibLimitGbps()
+        while CALNUM[index]!=0:
+            if dataRateGbps/CALNUM[index] <= calibLimitGbps:
+                break
+            index=index+1
+
+        if CALNUM[index]==0:
+            raise Exception("[Unable_To_Find_Matching_Calib_Divider]")
+
+        return CALDIV[index]
+
 
     def getDelayPS(self) -> float:
         """Get Delay """

@@ -130,6 +130,9 @@ class BranchED: /* Pega Calibration Input Access */
     void setAutoResync( bool newValue);
     double getBitRateGHz(); /* Bit Rate */
     double getCalibRateGHz(); /* Calibration input Rate */
+    double getCalibLimitGbps(); /* Calibration input rate limit */
+
+    BranchSyn::DivCalib findBestCalibDivider(double dataRateGbps) ;
     double getDelayPS(); /* Delay */
     void setDelayPS( double newValue);
 

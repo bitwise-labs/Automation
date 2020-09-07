@@ -58,9 +58,40 @@ double BranchED::getBitRateGHz() /* Bit Rate */
     return QueryResponse_double("BitRate?\n");
 }
 
+double BranchED::getCalibLimitGbps() /* Calibration input rate limit */
+{
+	return QueryResponse_double("CalibLimit?\n");
+}
+
 double BranchED::getCalibRateGHz() /* Calibration input Rate */
 {
     return QueryResponse_double("CalibRate?\n");
+}
+
+BranchSyn::DivCalib BranchED::findBestCalibDivider(double dataRateGbps)
+{
+	static int CALNUM[] = {2,4,8,16,0};
+
+	static BranchSyn::DivCalib CALDIV[] = {
+		BranchSyn::DivCalib::Div2,
+		BranchSyn::DivCalib::Div4,
+		BranchSyn::DivCalib::Div8,
+		BranchSyn::DivCalib::Div16
+	};
+
+	double calibLimitGbps = getCalibLimitGbps();
+	int nIndex=0;
+	while( CALNUM[nIndex]!=0 )
+	{
+		if( dataRateGbps/(double)CALNUM[nIndex] <= calibLimitGbps )
+			break;
+		nIndex++;
+	}
+
+	if( CALNUM[nIndex]==0 )
+		throw "[Unable_To_Find_Matching_Calib_Divider]";
+
+	return CALDIV[nIndex];
 }
 
 double BranchED::getDelayPS() /* Delay */

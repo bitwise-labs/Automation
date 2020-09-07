@@ -201,6 +201,7 @@ class BitwiseDevice(SocketDevice):
 
         while now < timeout and self.getIsRunning():
             time.sleep(0.5)
+
             now = SocketDevice.timestamp()
 
         self.Stop()
