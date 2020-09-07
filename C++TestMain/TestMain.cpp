@@ -146,7 +146,7 @@ void test_pega(char *ip_address, bool stopOnError, int run, double fromGHz, doub
 	Pega.Tub.setResolutionPS(0.25);
 
 	printf("=================================================================================\n");
-	printf("SN,Run,Gbps,CalDiv,Align,Thresh,Delay,Sync,Errors,Resyncs,BER,LogBER,RJ,EWC,TubStatus\n");
+	printf("SN,Run,DegreeC,Gbps,CalDiv,Align,Thresh,Delay,Sync,Errors,Resyncs,BER,LogBER,RJ,EWC,TubStatus\n");
 
 	for( double dataRateGbps = fromGHz; dataRateGbps<=toGHz; dataRateGbps += stepGHz )
 	{
@@ -155,6 +155,7 @@ void test_pega(char *ip_address, bool stopOnError, int run, double fromGHz, doub
 		BranchSyn::DivCalib divider=Pega.ED.findBestCalibDivider(dataRateGbps);
 		Pega.Syn.setDivCalib( divider );
 		Pega.PG.WaitForClockToSettle(clockRateGHz);
+		double degrees = Pega.getTemperatureC();
 
 		Pega.ED.AlignData(BranchED::AlignBy::All);
 
@@ -164,6 +165,7 @@ void test_pega(char *ip_address, bool stopOnError, int run, double fromGHz, doub
 
 		printf("%s", serialNumber);
 		printf(",%d", run );
+		printf(",%.1lf",degrees);
 		printf(",%.2lf", dataRateGbps );
 		printf(",%s", BranchSyn::DivCalib_Strings[(int)divider]);
 		printf(",\"%s\"", alignStatus );

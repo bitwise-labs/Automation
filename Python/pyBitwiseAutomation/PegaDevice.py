@@ -51,6 +51,9 @@ class PegaDevice(BitwiseDevice):
         self.Patt = BranchPatt(self, "Patt:")
         self.Syn = BranchSyn(self, "Syn:")
 
+    def getTemperatureC(self) -> float:
+        """Get Adc TEMPERATURE rate limit """
+        return self.QueryResponse_float("Adc:TEMP?\n")
 
     def __del__(self):
         # # turn off amplifiers upon every Pega object deletion

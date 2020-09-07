@@ -45,6 +45,11 @@ PegaDevice::~PegaDevice()
 //		PG.setAllOn(false);
 }
 
+double PegaDevice::getTemperatureC() /* Adc TEMPERATURE */
+{
+    return QueryResponse_double("Adc:TEMP?\n");
+}
+
 // EOF
 
 

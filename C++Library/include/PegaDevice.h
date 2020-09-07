@@ -56,6 +56,7 @@ class PegaDevice :
 
 	virtual ~PegaDevice();
 
+	double getTemperatureC(); /* Adc TEMPERATURE */
 
 	public:
 
