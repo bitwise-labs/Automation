@@ -51,9 +51,19 @@ class PegaDevice(BitwiseDevice):
         self.Patt = BranchPatt(self, "Patt:")
         self.Syn = BranchSyn(self, "Syn:")
 
-    def getTemperatureC(self) -> float:
+    def getTemperatureC(self, averages: int = 5) -> float:
         """Get Adc TEMPERATURE rate limit """
-        return self.QueryResponse_float("Adc:TEMP?\n")
+        if averages < 1 :
+            averages = 1
+
+        sum = 0.0
+        n = 0
+        while n<averages:
+            sum = sum + self.QueryResponse_float("Adc:TEMP?\n")
+            time.sleep(0.010)
+            n = n + 1
+
+        return sum / n
 
     def __del__(self):
         # # turn off amplifiers upon every Pega object deletion

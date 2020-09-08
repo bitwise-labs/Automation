@@ -45,9 +45,19 @@ PegaDevice::~PegaDevice()
 //		PG.setAllOn(false);
 }
 
-double PegaDevice::getTemperatureC() /* Adc TEMPERATURE */
+double PegaDevice::getTemperatureC(int averages) /* Adc TEMPERATURE */
 {
-    return QueryResponse_double("Adc:TEMP?\n");
+	if(averages<1)
+		averages=1;
+
+	double sum=0.0;
+	for( int n=0;n<averages;n++)
+	{
+		sum += QueryResponse_double("Adc:TEMP?\n");
+		usleep(10*1000);
+	}
+
+    return sum / (double)averages;
 }
 
 // EOF

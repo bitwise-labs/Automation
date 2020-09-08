@@ -252,7 +252,8 @@ void BitwiseDevice::WaitForRestoreToComplete()
 		throw "[Timeout_Restoring_Configuration]";
 
 #ifdef DEBUG
-	fprintf(stderr,"Restoring configuration complete %.1lf\n",timestamp()-begin_time);
+	if( getDebugging() )
+		fprintf(stderr,"Restoring configuration complete %.1lf\n",timestamp()-begin_time);
 #endif
 
 	base::SendCommand( "stc\n");/* use base: to avoid error checking */
