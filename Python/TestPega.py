@@ -196,7 +196,7 @@ if __name__ == '__main__':
         i = i+1
 
     if ipCount == 0 or stepGHz <= 0.0 or repeat < 1 or fromGHz <= 0.0 or toGHz > 32.0 or fromGHz >= toGHz:
-        print("Usage:  TestMain [options] IP0 IP1 ... IPn")
+        print("Usage:  TestPega [options] IP0 IP1 ... IPn")
         print("Options:  -stop ..... stop on first error")
         print("          -from X ... set starting Gbps (dflt 1.0)")
         print("          -to X ..... set ending Gbps (dflt 28.0)")
