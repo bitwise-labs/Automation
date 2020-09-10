@@ -937,7 +937,7 @@ class BranchPG(AutomationExtender):
 
         # Notice clock rate is 1/2 data rate
     def WaitForClockToSettle(self, targetClockGHz: float, timeoutSec: float = 30.0, toleranceGHz: float = 0.002):
-        now = SocketDevice.timestamp()CalibR
+        now = SocketDevice.timestamp()
         timeout = now + timeoutSec
         readGHz = self.getReadRateGHz()
         opGHz = self.getOperatingRateGHz()
@@ -2021,17 +2021,18 @@ class BranchED(AutomationExtender):
         PrbsVolts = "PrbsVolts"
         PrbsAll = "PrbsAll"
 
-    def AlignData(self, alignType: AlignBy = AlignBy.All, waitToComplete: bool = True ):
+    def AlignData(self, alignType: AlignBy = AlignBy.All, waitToComplete: bool = True ) -> bool:
         """Perform data alignment and optionally wait until completed. """
 
         self.SendCommand("AlignData " + alignType.value + "\n")
 
+        retn=False
         if waitToComplete:
-            self.WaitForAlignmentToComplete()
+            retn=self.WaitForAlignmentToComplete()
 
-        return None
+        return retn
 
-    def WaitForAlignmentToComplete(self):
+    def WaitForAlignmentToComplete(self) -> bool:
         """Wait for alignment operation to complete. """
 
         now = SocketDevice.timestamp()
@@ -2050,11 +2051,8 @@ class BranchED(AutomationExtender):
         if now >= timeout:
             raise Exception("[Timeout_During_Alignment]")
 
-        message = self.getAlignDataMsg();
-        if not message.upper().startswith("SUCCESS"):
-            raise Exception("["+message.replace(" ","_",)+"]")
-
-        return None
+        message = self.getAlignDataMsg()
+        return message.upper().startswith("SUCCESS")
 
 # DIFFERENT LINE TEST
 
