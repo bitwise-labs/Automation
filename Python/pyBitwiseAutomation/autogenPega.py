@@ -36,7 +36,6 @@ from enum import Enum
 
 # ================================ #
 
-
 class BranchClk(AutomationExtender):
     """BranchClk class.  Clock Access"""
 
@@ -49,7 +48,6 @@ class BranchClk(AutomationExtender):
         return None
 
 # ================================ #
-
 
 class BranchTubChart(AutomationExtender):
     """BranchTubChart class.  Chart View"""
@@ -210,7 +208,6 @@ class BranchTubChart(AutomationExtender):
         """Set Chart Width """
         self.SendCommand("Width " + str(newvalue) + "\n")
         return None
-
 
 # ================================ #
 
@@ -393,7 +390,6 @@ class BranchTub(AutomationExtender):
         self.SendCommand("Reset\n")
         return None
 
-
 # ================================ #
 
 class BranchPGAmp(AutomationExtender):
@@ -482,7 +478,6 @@ class BranchPGAmp(AutomationExtender):
         self.SendCommand("Offs["+str(index)+"] " + str(newvalue) + "\n")
         return None
 
-
 # ================================ #
 
 class BranchPGCh0(AutomationExtender):
@@ -517,7 +512,6 @@ class BranchPGCh0(AutomationExtender):
         self.SendCommand("Taps["+str(index)+"] " + str(newvalue) + "\n")
         return None
 
-
 # ================================ #
 
 class BranchPGCh1(AutomationExtender):
@@ -551,7 +545,6 @@ class BranchPGCh1(AutomationExtender):
         """Set Tap values for Ch-1 (1 Pre, 1 Cursor, 2 Post)[] """
         self.SendCommand("Taps["+str(index)+"] " + str(newvalue) + "\n")
         return None
-
 
 # ================================ #
 
@@ -1149,7 +1142,6 @@ class BranchEyeChart(AutomationExtender):
 
 # ================================ #
 
-
 class BranchEyeCfg(AutomationExtender):
     """BranchEyeCfg class.  Configuration Settings"""
 
@@ -1308,20 +1300,19 @@ class BranchEyeCfg(AutomationExtender):
 
 # ================================ #
 
-
 class BranchEye(AutomationExtender):
     """BranchEye class.  Calibration channel eye diagram application"""
 
     def __init__(self, parent: AutomationInterface, prefix: str):
         super().__init__(parent, prefix)
         self.Cfg = BranchEyeCfg(self,"Cfg:")
-        self.Chart = BranchEyeChart(self,"Cfg:")
+        self.Chart = BranchEyeChart(self,"Chart:")
 
     def __del__(self):
         super().__del__()
         return None
 
-    def getBinary(self) -> bytes:
+    def getBinary(self) -> list:
         """Get binary Binary Data """
         return self.QueryBinaryResponse( "Binary?\n")
 
@@ -1603,9 +1594,9 @@ class BranchErr(AutomationExtender):
         """Get Ber report of 15 things """
         return self.QueryResponse("BerReport?\n")
 
-    def getBinary(self) -> bytes:
+    def getBinary(self) -> list:
         """Get binary Binary Data """
-        return self.QueryBinaryResponse( "Binary?\n")
+        return self.QueryBinaryResponse_float( "Binary?\n")
 
     def getBits(self) -> int:
         """Get Bit Count Result """
@@ -2042,8 +2033,6 @@ class BranchED(AutomationExtender):
 
         message = self.getAlignDataMsg()
         return message.upper().startswith("SUCCESS")
-
-# DIFFERENT LINE TEST
 
     def Resync(self):
         """Method for Manual Resync."""

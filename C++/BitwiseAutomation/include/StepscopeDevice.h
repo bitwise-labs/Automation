@@ -33,6 +33,7 @@
 #define BITWISE_STEPSCOPE_DEVICE
 
 #include "BitwiseDevice.h"
+#include "autogenStepscope.h"
 
 class StepscopeDevice :
    public BitwiseDevice
@@ -40,8 +41,30 @@ class StepscopeDevice :
 	public:
 	typedef BitwiseDevice base;
 
-	StepscopeDevice() {}
+	StepscopeDevice() :
+		Acc(this,"Acc:"),
+		Calib(this,"Calib:"),
+		Pulse(this,"Pulse:"),
+		S11(this,"S11:"),
+		S21(this,"S21:"),
+		Step(this,"Step:"),
+		Tdr(this,"Tdr:"),
+		Tdt(this,"Tdt:")
+		{}
+
 	virtual ~StepscopeDevice();
+
+	public:
+
+	BranchAcc Acc;
+	BranchCalib Calib;
+	BranchPulse Pulse;
+	BranchS11 S11;
+	BranchS21 S21;
+	BranchStep Step;
+	BranchTdr Tdr;
+	BranchTdt Tdt;
+
 };
 
 #endif // BITWISE_STEPSCOPE_DEVICE

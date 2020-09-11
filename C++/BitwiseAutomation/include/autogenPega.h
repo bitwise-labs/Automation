@@ -369,7 +369,6 @@ class BranchErr: /* Calibration channel error rate application */
     double getABER(); /* Accumulated BER Result */
     char* getBerReport(char *buffer,int buflen); /* Ber report of 15 things */
     char *getBinary(int *pcount=0); /* Binary Data - Must free() return value */
-    void setBinary(char *buffer,int count);
     long long getBits(); /* Bit Count Result */
     double getElapsedSeconds(); /* Elapsed Time Seconds */
     long long getErrors(); /* Bit Errors Count Result */
@@ -519,7 +518,6 @@ class BranchEye: /* Calibration channel eye diagram application */
     virtual ~BranchEye() {}
 
     char *getBinary(int *pcount=0); /* Binary Data - Must free() return value */
-    void setBinary(char *buffer,int count);
     double getElapsedSeconds(); /* Elapsed Time Seconds */
 
     enum class Running

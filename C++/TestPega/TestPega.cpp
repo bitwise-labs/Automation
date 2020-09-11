@@ -35,8 +35,6 @@
 
 #include "PegaDevice.h"
 
-char *IPAddress = (char*) "192.168.1.176:923";
-
 void test_pega(char *ip_address, bool stopOnError, int run, double fromGHz, double toGHz, double stepGHz );
 
 int main( int argc, char *argv[] )
@@ -77,7 +75,7 @@ int main( int argc, char *argv[] )
 
 	if( ipCount==0 || stepGHz<=0.0 || repeat<1 || fromGHz<=0.0 || toGHz>32.0 || fromGHz>=toGHz )
 	{
-		printf("Usage:  TestMain [options] IP0 IP1 ... IPn\n");
+		printf("Usage:  TestPega [options] IP0 IP1 ... IPn\n");
 		printf("Options:  -stop ..... stop on first error\n");
 		printf("          -from X ... set starting Gbps (dflt 1.0)\n");
 		printf("          -to X ..... set ending Gbps (dflt 28.0)\n");

@@ -338,8 +338,8 @@ bool BranchED::WaitForAlignmentToComplete()
 	char buffer[4096];
 	QueryResponse(buffer,4096,"AlignDataMsg?\n");
 
-	/* Responds with:
-	/*    "Aligning ..."       */
+	/* Responds with: */
+	/*    "Aligning" ...       */
 	/*    "Success, 999 mV pp" */
 	/*    "[Error_Message]"    */
 
@@ -502,11 +502,6 @@ char* BranchErr::getBerReport(char *buffer,int buflen) /* Ber report of 15 thing
 char *BranchErr::getBinary(int *pcount) /* Binary Data - Must free() return value */
 {
     return QueryBinaryResponse(pcount,"Binary?\n");
-}
-
-void BranchErr::setBinary(char *buffer,int count) /* Binary Data */
-{
-    SendBinaryCommand(buffer,count,"Binary\n");
 }
 
 long long BranchErr::getBits() /* Bit Count Result */
@@ -809,11 +804,6 @@ void BranchErrChart::setWidthSeconds(double newValue) /* Chart Width */
 char *BranchEye::getBinary(int *pcount) /* Binary Data - Must free() return value */
 {
     return QueryBinaryResponse(pcount,"Binary?\n");
-}
-
-void BranchEye::setBinary(char *buffer,int count) /* Binary Data */
-{
-    SendBinaryCommand(buffer,count,"Binary\n");
 }
 
 double BranchEye::getElapsedSeconds() /* Elapsed Time Seconds */

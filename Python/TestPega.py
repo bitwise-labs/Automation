@@ -33,7 +33,7 @@ from pyBitwiseAutomation import *
 import sys
 import math
 
-def test_pega(ip_address: str, stopOnError: bool, run: int, fromGHz: float = 1, toGHz: float = 28, stepGHz: float = 0.5 ):
+def test_Pega(ip_address: str, stopOnError: bool, run: int, fromGHz: float = 1, toGHz: float = 28, stepGHz: float = 0.5 ):
     Pega = PegaDevice()
     try:
         Pega.Connect(ip_address)
@@ -204,9 +204,9 @@ if __name__ == '__main__':
         print("          -repeat N.. number of tests for each IP")
         exit()
 
-    k = 1
+
     for ip_address in ip:
-        test_pega( ip_address, stopOnError, k, fromGHz, toGHz, stepGHz )
-        k = k + 1
+        for k in range(1,repeat+1):
+            test_Pega( ip_address, stopOnError, k, fromGHz, toGHz, stepGHz )
 
 # EOF

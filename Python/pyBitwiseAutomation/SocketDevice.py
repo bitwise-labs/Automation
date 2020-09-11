@@ -31,6 +31,7 @@
 
 import socket
 import time
+import struct
 from pyBitwiseAutomation.AutomationInterface import *
 from enum import Enum;
 
@@ -235,5 +236,45 @@ class SocketDevice(AutomationInterface):
             pass
 
         return return_value
+
+    def QueryBinaryResponse_float(self, command: str) -> list:
+        """Query array of floats response from command (ending with '\n') from socket device."""
+        data = self.QueryBinaryResponse(command)
+        if not (len(data) % 4) == 0:
+            raise Exception("[Binary_Float_Size_Invalid]")
+
+        count = int(len(data)/4)
+        retn = []
+
+        if count>0 :
+            for i in range(count):
+                retn.append(float(struct.unpack_from("<f", data, i*4)[0]))
+        return retn
+
+    def QueryBinaryResponse_int(self, command: str) -> list:
+        """Query array of 32-bit integers response from command (ending with '\n') from socket device."""
+        data = self.QueryBinaryResponse(command)
+        if not (len(data) % 4) == 0:
+            raise Exception("[Binary_Float_Size_Invalid]")
+
+        count = int(len(data)/4)
+        retn = [count]
+        if count>0 :
+            for i in range(count):
+                retn.append(int(struct.unpack_from("<i", data, i*4)[0]))
+        return retn
+
+    def QueryBinaryResponse_double(self, command: str) -> list:
+        """Query array of doubles response from command (ending with '\n') from socket device."""
+        data = self.QueryBinaryResponse(command)
+        if not (len(data) % 8) == 0:
+            raise Exception("[Binary_Float_Size_Invalid]")
+
+        count = int(len(data)/8)
+        retn = [count]
+        if count>0 :
+            for i in range(count):
+                retn.append(float(struct.unpack_from("<d", data, i*8)[0]))
+        return retn
 
 # EOF

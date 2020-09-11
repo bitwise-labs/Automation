@@ -7,5 +7,6 @@ from .AutomationInterface import *
 from .SocketDevice import *
 from .BitwiseDevice import *
 from .PegaDevice import *
+from .StepscopeDevice import *
 
 

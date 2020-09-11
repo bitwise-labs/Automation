@@ -71,6 +71,18 @@ class AutomationExtender(AutomationInterface):
 		"""Query array of bytes response from command (ending with '\n') from socket device."""
 		return self.Parent.QueryBinaryResponse(self.Prefix+command)
 
+	def QueryBinaryResponse_float(self, command: str) -> list:
+		"""Query array of bytes response from command (ending with '\n') from socket device."""
+		return self.Parent.QueryBinaryResponse_float(self.Prefix+command)
+
+	def QueryBinaryResponse_int(self, command: str) -> list:
+		"""Query array of bytes response from command (ending with '\n') from socket device."""
+		return self.Parent.QueryBinaryResponse_int(self.Prefix+command)
+
+	def QueryBinaryResponse_double(self, command: str) -> list:
+		"""Query array of bytes response from command (ending with '\n') from socket device."""
+		return self.Parent.QueryBinaryResponse_double(self.Prefix+command)
+
 	def QueryResponse_int(self, command: str) -> int:
 		"""Query integer response from command (ending with '\n') from socket device."""
 		return self.Parent.QueryResponse_int(self.Prefix+command)
