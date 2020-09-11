@@ -1325,12 +1325,6 @@ class BranchEye(AutomationExtender):
         """Get binary Binary Data """
         return self.QueryBinaryResponse( "Binary?\n")
 
-    def setBinary(self, newvalue: bytes) :
-        """Set binary Binary Data """
-        self.SendBinaryCommand("Binary\n",newvalue )
-        return None
-        return None
-
     def getElapsedSeconds(self) -> float:
         """Get Elapsed Time Seconds """
         return self.QueryResponse_float("Elapsed?\n")
@@ -1612,11 +1606,6 @@ class BranchErr(AutomationExtender):
     def getBinary(self) -> bytes:
         """Get binary Binary Data """
         return self.QueryBinaryResponse( "Binary?\n")
-
-    def setBinary(self, newvalue: bytes) :
-        """Set binary Binary Data """
-        self.SendBinaryCommand("Binary\n",newvalue )
-        return None
 
     def getBits(self) -> int:
         """Get Bit Count Result """
