@@ -81,7 +81,7 @@ def test_Pega(ip_address: str, stopOnError: bool, run: int, fromGHz: float = 1, 
             divider = Pega.ED.findBestCalibDivider(dataRateGbps)
             Pega.Syn.setDivCalib(divider)
             Pega.PG.WaitForClockToSettle(clockRateGHz)
-            degrees = Pega.getTemperatureC();
+            degrees = Pega.getTemperatureC()
 
             Pega.ED.AlignData(BranchED.AlignBy.All)
 
