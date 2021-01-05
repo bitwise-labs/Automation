@@ -318,7 +318,9 @@ bool BranchED::AlignData(AlignBy alignType, bool waitToComplete ) /* Perform dat
 bool BranchED::WaitForAlignmentToComplete()
 {
 	double now = SocketDevice::timestamp();
+#ifdef DEBUG
 	double begin_time = now;
+#endif
 	double timeout = now + 30.0;
 
 	while( now < timeout && QueryResponse_bool( "InProgress?\n")==true )

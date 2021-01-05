@@ -144,7 +144,7 @@ void SocketDevice::Connect( const char *ipaddress, int dflt_port )
 
 	char tempBuffer[4096];
 	int tempPort = dflt_port;
-	strncpy(tempBuffer,ipaddress,4096);
+	strncpy(tempBuffer,ipaddress,4096-1);
 
 	char *colonFound = strchr(tempBuffer,':');
 	if( colonFound!=0 )

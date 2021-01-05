@@ -52,7 +52,7 @@ bool AutomationExtender::getDebugging()
 void AutomationExtender::SendCommand( const char *command, ... )
 {
 	char Buf[4096];
-	strncpy(Buf,getPrefix(),4096);
+	strncpy(Buf,getPrefix(),4096-1);
 
 	va_list argptr;
 	va_start(argptr,command);
@@ -66,7 +66,7 @@ void AutomationExtender::SendCommand( const char *command, ... )
 char * AutomationExtender::QueryResponse( char *buffer, int buflen, const char *command, ... )
 {
 	char Buf[4096];
-	strncpy(Buf,getPrefix(),4096);
+	strncpy(Buf,getPrefix(),4096-1);
 
 	va_list argptr;
 	va_start(argptr,command);
@@ -80,7 +80,7 @@ char * AutomationExtender::QueryResponse( char *buffer, int buflen, const char *
 void AutomationExtender::SendBinaryCommand( const char *buffer, int count, const char *command, ... )
 {
 	char Buf[4096];
-	strncpy(Buf,getPrefix(),4096);
+	strncpy(Buf,getPrefix(),4096-1);
 
 	va_list argptr;
 	va_start(argptr,command);
@@ -94,7 +94,7 @@ void AutomationExtender::SendBinaryCommand( const char *buffer, int count, const
 char *AutomationExtender::QueryBinaryResponse( int *pcount, const char *command, ... ) /* caller responsible for free(return_value) */
 {
 	char Buf[4096];
-	strncpy(Buf,getPrefix(),4096);
+	strncpy(Buf,getPrefix(),4096-1);
 
 	va_list argptr;
 	va_start(argptr,command);
@@ -108,7 +108,7 @@ char *AutomationExtender::QueryBinaryResponse( int *pcount, const char *command,
 int AutomationExtender::QueryResponse_int( const char *command, ... )
 {
 	char Buf[4096];
-	strncpy(Buf,getPrefix(),4096);
+	strncpy(Buf,getPrefix(),4096-1);
 
 	va_list argptr;
 	va_start(argptr,command);
@@ -122,7 +122,7 @@ int AutomationExtender::QueryResponse_int( const char *command, ... )
 long long AutomationExtender::QueryResponse_int64( const char *command, ... )
 {
 	char Buf[4096];
-	strncpy(Buf,getPrefix(),4096);
+	strncpy(Buf,getPrefix(),4096-1);
 
 	va_list argptr;
 	va_start(argptr,command);
@@ -136,7 +136,7 @@ long long AutomationExtender::QueryResponse_int64( const char *command, ... )
 bool AutomationExtender::QueryResponse_bool( const char *command, ... )
 {
 	char Buf[4096];
-	strncpy(Buf,getPrefix(),4096);
+	strncpy(Buf,getPrefix(),4096-1);
 
 	va_list argptr;
 	va_start(argptr,command);
@@ -152,7 +152,7 @@ return false;
 double AutomationExtender::QueryResponse_double( const char *command, ... )
 {
 	char Buf[4096];
-	strncpy(Buf,getPrefix(),4096);
+	strncpy(Buf,getPrefix(),4096-1);
 
 	va_list argptr;
 	va_start(argptr,command);
@@ -166,7 +166,7 @@ double AutomationExtender::QueryResponse_double( const char *command, ... )
 int AutomationExtender::QueryResponse_enum( const char *enum_strings_null_terminated[], const char *command, ... )
 {
 	char Buf[4096];
-	strncpy(Buf,getPrefix(),4096);
+	strncpy(Buf,getPrefix(),4096-1);
 
 	va_list argptr;
 	va_start(argptr,command);

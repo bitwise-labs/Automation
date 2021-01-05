@@ -230,7 +230,9 @@ void BitwiseDevice::WaitForRestoreToComplete()
 {
 	double now = timestamp();
 	double timeout = now + 30.0;
+#ifdef DEBUG
 	double begin_time=now;
+#endif
 
 	while( now < timeout )
 	{
