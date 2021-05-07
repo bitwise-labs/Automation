@@ -40,7 +40,7 @@ def test_Pega(ip_address: str, stopOnError: bool, run: int, fromGHz: float = 1, 
 
         serialNumber = Pega.Const.getSN()
 
-        print("PEGA FREQUENCY SWEEP");
+        print("PEGA FREQUENCY SWEEP")
         print("IP Address........"+ip_address)
         print("Serial number....."+serialNumber)
         print("Build............."+Pega.Sys.getBuild())
@@ -49,7 +49,7 @@ def test_Pega(ip_address: str, stopOnError: bool, run: int, fromGHz: float = 1, 
         print("To GHz............"+str(toGHz))
         print("Step GHz.........."+str(stepGHz))
 
-        Pega.Stop();
+        Pega.Stop()
 
         Pega.RestoreConfiguration("[factory]")
         Pega.PG.Amp.setAmplMV(0, 500.0)
@@ -70,8 +70,8 @@ def test_Pega(ip_address: str, stopOnError: bool, run: int, fromGHz: float = 1, 
 
         Pega.Tub.setResolutionPS(0.25)
 
-        print("=================================================================================");
-        print("SN,Run,DegreeC,Gbps,CalDiv,Align,Thresh,Delay,Sync,Errors,Resyncs,BER,LogBER,RJ,EWC,TubStatus");
+        print("=================================================================================")
+        print("SN,Run,DegreeC,Gbps,CalDiv,Align,Thresh,Delay,Sync,Errors,Resyncs,BER,LogBER,RJ,EWC,TubStatus")
 
         dataRateGbps = fromGHz
         while dataRateGbps <= toGHz:
@@ -156,11 +156,12 @@ def test_Pega(ip_address: str, stopOnError: bool, run: int, fromGHz: float = 1, 
     finally:
         Pega.Disconnect()
         Pega = None
+
     return None
 
 
 if __name__ == '__main__':
-    print("TestPega, Version 1.0\n")
+    print("TestPega, Version 1.1\n")
 
     stopOnError = False
     fromGHz = 1.0
@@ -190,7 +191,7 @@ if __name__ == '__main__':
             ip[ipCount] = sys.argv[i]
             ipCount = ipCount+1
         else:
-            print( "Too many IP addresses, maximum is 32");
+            print( "Too many IP addresses, maximum is 32")
             exit()
 
         i = i+1
@@ -204,9 +205,12 @@ if __name__ == '__main__':
         print("          -repeat N.. number of tests for each IP")
         exit()
 
+    try:
+        for ip_address in ip:
+            for k in range(1,repeat+1):
+                test_Pega( ip_address, stopOnError, k, fromGHz, toGHz, stepGHz )
 
-    for ip_address in ip:
-        for k in range(1,repeat+1):
-            test_Pega( ip_address, stopOnError, k, fromGHz, toGHz, stepGHz )
+    except KeyboardInterrupt:
+        print("\nCtrl-C encountered")
 
 # EOF

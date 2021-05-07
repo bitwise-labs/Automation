@@ -40,7 +40,7 @@ def test_Stepscope(ip_address: str, stopOnError: bool, run: int ):
 
         serialNumber = Stepscope.Const.getSN()
 
-        print("Stepscope TEST");
+        print("Stepscope TEST")
         print("IP Address........"+ip_address)
         print("Serial number....."+serialNumber)
         print("Build............."+Stepscope.Sys.getBuild())
@@ -88,7 +88,7 @@ def test_Stepscope(ip_address: str, stopOnError: bool, run: int ):
 
 
 if __name__ == '__main__':
-    print("TestStepscope, Version 1.0\n")
+    print("TestStepscope, Version 1.1\n")
 
     stopOnError = False
     ipCount = 0
@@ -106,7 +106,7 @@ if __name__ == '__main__':
             ip[ipCount] = sys.argv[i]
             ipCount = ipCount+1
         else:
-            print( "Too many IP addresses, maximum is 32");
+            print( "Too many IP addresses, maximum is 32")
             exit()
 
         i = i+1
@@ -117,9 +117,13 @@ if __name__ == '__main__':
         print("          -repeat N.. number of tests for each IP")
         exit()
 
-    for ip_address in ip:
-        for k in range(1,repeat+1):
-            test_Stepscope( ip_address, stopOnError, k)
+    try:
+        for ip_address in ip:
+            for k in range(1,repeat+1):
+                test_Stepscope( ip_address, stopOnError, k)
+
+    except KeyboardInterrupt:
+        print("\nCtrl-C encountered")
 
 # EOF
 

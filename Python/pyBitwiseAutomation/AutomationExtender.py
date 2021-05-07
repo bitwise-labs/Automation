@@ -65,7 +65,7 @@ class AutomationExtender(AutomationInterface):
 	def SendBinaryCommand(self, command: str, buffer: bytes):
 		"""Send command (ending with '\n') followed by 4-byte count and array of bytes to socket device."""
 		self.Parent.SendBinaryCommand(self.Prefix+command,buffer)
-		return None;
+		return None
 
 	def QueryBinaryResponse(self, command: str) -> bytes:
 		"""Query array of bytes response from command (ending with '\n') from socket device."""

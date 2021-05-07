@@ -33,7 +33,7 @@ import socket
 import time
 import struct
 from pyBitwiseAutomation.AutomationInterface import *
-from enum import Enum;
+from enum import Enum
 
 
 class SocketDevice(AutomationInterface):

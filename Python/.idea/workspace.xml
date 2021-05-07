@@ -26,8 +26,12 @@
     </select>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a8c4ec53-24da-45fa-99bc-831ed779b362" name="Default Changelist" comment="">
+    <list default="true" id="a8c4ec53-24da-45fa-99bc-831ed779b362" name="Default Changelist" comment="make simple change in python code">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestPega.py" beforeDir="false" afterPath="$PROJECT_DIR$/TestPega.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestStepscope.py" beforeDir="false" afterPath="$PROJECT_DIR$/TestStepscope.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyBitwiseAutomation/AutomationExtender.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyBitwiseAutomation/AutomationExtender.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyBitwiseAutomation/SocketDevice.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyBitwiseAutomation/SocketDevice.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -71,7 +75,7 @@
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/TestPega.py" />
       <option name="PARAMETERS" value="192.168.1.176 -repeat 3" />
       <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="EMULATE_TERMINAL" value="true" />
       <option name="MODULE_MODE" value="false" />
       <option name="REDIRECT_INPUT" value="false" />
       <option name="INPUT_FILE" value="" />
