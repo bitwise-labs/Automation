@@ -577,13 +577,13 @@ class BranchPGAmp: /* Amplifier category */
 
 /* ================================ */
 
-class BranchPGCh0: /* Ch0 taps category */
+class BranchPGChannel: /* Channel taps category */
     public AutomationExtender
 {
     public:
-    BranchPGCh0(AutomationInterface *baseDevice,const char *prefix) :
+    BranchPGChannel(AutomationInterface *baseDevice,const char *prefix) :
         AutomationExtender(baseDevice,prefix) {}
-    virtual ~BranchPGCh0() {}
+    virtual ~BranchPGChannel() {}
 
     double getFinalTaps(int index); /* Final tap values for Ch-0 (1 Pre, 1 Cursor, 2 Post) */
     double getIntrinsicTaps(int index); /* Intrinsic tap values for Ch-0 (1 Pre, 1 Cursor, 2 Post) */
@@ -591,24 +591,6 @@ class BranchPGCh0: /* Ch0 taps category */
     double getTaps(int index); /* Tap values for Ch-0 (1 Pre, 1 Cursor, 2 Post) */
     void setTaps(int index, double newValue);
 };
-
-/* ================================ */
-
-class BranchPGCh1: /* Ch1 taps category */
-    public AutomationExtender
-{
-    public:
-    BranchPGCh1(AutomationInterface *baseDevice,const char *prefix) :
-        AutomationExtender(baseDevice,prefix) {}
-    virtual ~BranchPGCh1() {}
-
-    double getFinalTaps(int index); /* Final tap values for Ch-1 (1 Pre, 1 Cursor, 2 Post) */
-    double getIntrinsicTaps(int index); /* Intrinsic tap values for Ch-1 (1 Pre, 1 Cursor, 2 Post) */
-    void setIntrinsicTaps(int index, double newValue);
-    double getTaps(int index); /* Tap values for Ch-1 (1 Pre, 1 Cursor, 2 Post) */
-    void setTaps(int index, double newValue);
-};
-
 
 /* ================================ */
 
@@ -751,8 +733,8 @@ class BranchPG: /* Pattern generator control */
 {
     public:
 	BranchPGAmp Amp;
-	BranchPGCh0 Ch0;
-	BranchPGCh1 Ch1;
+	BranchPGChannel Ch0;
+	BranchPGChannel Ch1;
     BranchPGErr Err;
 	BranchPGDiag Diag;
 	BranchPGPam Pam;

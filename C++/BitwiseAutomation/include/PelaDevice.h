@@ -33,6 +33,7 @@
 #define BITWISE_PELA_DEVICE
 
 #include "BitwiseDevice.h"
+#include "autogenPela.h"
 
 class PelaDevice :
    public BitwiseDevice
@@ -40,8 +41,45 @@ class PelaDevice :
 	public:
 	typedef BitwiseDevice base;
 
-	PelaDevice() {}
+	PelaDevice() :
+	    Patt(this,"Patt:"),
+		Eye(this,"Eye:"),
+		Basic(this,"Basic:"),
+		Block(this,"Block:"),
+		Burst(this,"Burst:"),
+		Data(this,"Data:"),
+		ED(this,"ED:"),
+		Efi(this,"Efi:"),
+		Ela(this,"Ela:"),
+		Err(this,"Err:"),
+		MaxT(this,"MaxT:"),
+		Wander(this,"Wander:"),
+		Mod(this,"Mod:"),
+		RLen(this,"RLen;:"),
+		Stat(this,"Stat:")
+	    {}
+
 	virtual ~PelaDevice();
+
+	double getTemperatureC(int averages=5); /* Adc TEMPERATURE */
+
+	public:
+
+    BranchPatt Patt;
+    BranchPelaEye Eye;
+    BranchBasic Basic;
+    BranchBlock Block;
+    BranchBurst Burst;
+    BranchData Data;
+    BranchPelaED ED;
+    BranchEfi Efi;
+    BranchEla Ela;
+    BranchErr Err;
+    BranchMaxT MaxT;
+    BranchWander Wander;
+    BranchMod Mod;
+    BranchRLen RLen;
+    BranchStat Stat;
 };
 
 #endif // BITWISE_PELA_DEVICE

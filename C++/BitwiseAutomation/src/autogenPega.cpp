@@ -1531,63 +1531,31 @@ void BranchPGAmp::setOffsMV(int index,double newValue) /* Amp VOffset */
 
 /* ================================================================ */
 
-double BranchPGCh0::getFinalTaps(int index) /* Final tap values for Ch-0 (1 Pre, 1 Cursor, 2 Post) */
+double BranchPGChannel::getFinalTaps(int index) /* Final tap values for Ch-0 (1 Pre, 1 Cursor, 2 Post) */
 {
     if(index<0||index>=4) throw "[Index_Out_Of_Range]";
     return QueryResponse_double("FinalTaps[%d]?\n",index);
 }
 
-double BranchPGCh0::getIntrinsicTaps(int index) /* Intrinsic tap values for Ch-0 (1 Pre, 1 Cursor, 2 Post) */
+double BranchPGChannel::getIntrinsicTaps(int index) /* Intrinsic tap values for Ch-0 (1 Pre, 1 Cursor, 2 Post) */
 {
     if(index<0||index>=4) throw "[Index_Out_Of_Range]";
     return QueryResponse_double("IntrinsicTaps[%d]?\n",index);
 }
 
-void BranchPGCh0::setIntrinsicTaps(int index,double newValue) /* Intrinsic tap values for Ch-0 (1 Pre, 1 Cursor, 2 Post) */
+void BranchPGChannel::setIntrinsicTaps(int index,double newValue) /* Intrinsic tap values for Ch-0 (1 Pre, 1 Cursor, 2 Post) */
 {
     if(index<0||index>=4) throw "[Index_Out_Of_Range]";
     SendCommand("IntrinsicTaps[%d] %lf\n",index,newValue);
 }
 
-double BranchPGCh0::getTaps(int index) /* Tap values for Ch-0 (1 Pre, 1 Cursor, 2 Post) */
+double BranchPGChannel::getTaps(int index) /* Tap values for Ch-0 (1 Pre, 1 Cursor, 2 Post) */
 {
     if(index<0||index>=4) throw "[Index_Out_Of_Range]";
     return QueryResponse_double("Taps[%d]?\n",index);
 }
 
-void BranchPGCh0::setTaps(int index,double newValue) /* Tap values for Ch-0 (1 Pre, 1 Cursor, 2 Post) */
-{
-    if(index<0||index>=4) throw "[Index_Out_Of_Range]";
-    SendCommand("Taps[%d] %lf\n",index,newValue);
-}
-
-/* ================================================================ */
-
-double BranchPGCh1::getFinalTaps(int index) /* Final tap values for Ch-1 (1 Pre, 1 Cursor, 2 Post) */
-{
-    if(index<0||index>=4) throw "[Index_Out_Of_Range]";
-    return QueryResponse_double("FinalTaps[%d]?\n",index);
-}
-
-double BranchPGCh1::getIntrinsicTaps(int index) /* Intrinsic tap values for Ch-1 (1 Pre, 1 Cursor, 2 Post) */
-{
-    if(index<0||index>=4) throw "[Index_Out_Of_Range]";
-    return QueryResponse_double("IntrinsicTaps[%d]?\n",index);
-}
-
-void BranchPGCh1::setIntrinsicTaps(int index,double newValue) /* Intrinsic tap values for Ch-1 (1 Pre, 1 Cursor, 2 Post) */
-{
-    if(index<0||index>=4) throw "[Index_Out_Of_Range]";
-    SendCommand("IntrinsicTaps[%d] %lf\n",index,newValue);
-}
-
-double BranchPGCh1::getTaps(int index) /* Tap values for Ch-1 (1 Pre, 1 Cursor, 2 Post) */
-{
-    if(index<0||index>=4) throw "[Index_Out_Of_Range]";
-    return QueryResponse_double("Taps[%d]?\n",index);
-}
-
-void BranchPGCh1::setTaps(int index,double newValue) /* Tap values for Ch-1 (1 Pre, 1 Cursor, 2 Post) */
+void BranchPGChannel::setTaps(int index,double newValue) /* Tap values for Ch-0 (1 Pre, 1 Cursor, 2 Post) */
 {
     if(index<0||index>=4) throw "[Index_Out_Of_Range]";
     SendCommand("Taps[%d] %lf\n",index,newValue);
