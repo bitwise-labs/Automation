@@ -701,9 +701,9 @@ class BranchData(AutomationExtender):
         self.SendCommand("BitsFmt " + newvalue.value + "\n")
         return None
 
-    def getDataBaudRateGHz(self) -> float:
-        """Get Data Baud Rate """
-        return self.QueryResponse_float("DataBaudRate?\n")
+    def getDataRateGHz(self) -> float:
+        """Get Data Rate """
+        return self.QueryResponse_float("DataRate?\n")
 
     class DataLinkMode(Enum):
         Ch0 = "Ch0"
@@ -884,9 +884,9 @@ class BranchPelaED(AutomationExtender):
         self.SendCommand("AuxOut2 " + newvalue.value + "\n")
         return None
 
-    def getBaudRateGHz(self) -> float:
-        """Get Baud Rate """
-        return self.QueryResponse_float("BaudRate?\n")
+    def getDataRateGHz(self) -> float:
+        """Data Rate """
+        return self.QueryResponse_float("DataRate?\n")
 
     def getClockRateGHz(self) -> float:
         """Get Input Clock Rate """
@@ -1408,9 +1408,9 @@ class BranchEla(AutomationExtender):
         self.SendCommand("BlockSize["+str(index)+"] " + str(newvalue) + "\n")
         return None
 
-    def getElaBaudRateGHz(self) -> float:
-        """Get Ela Baud Rate """
-        return self.QueryResponse_float("ElaBaudRate?\n")
+    def getElaDataRateGHz(self) -> float:
+        """Get Ela Data Rate """
+        return self.QueryResponse_float("ElaDataRate?\n")
 
     class ElaLinkMode(Enum):
         Ch0 = "Ch0"

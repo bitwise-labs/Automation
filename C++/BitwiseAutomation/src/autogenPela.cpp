@@ -734,9 +734,9 @@ void BranchData::setBitsFmt(BitsFmt newValue )
     SendCommand("BitsFmt \"%s\"\n",BitsFmt_Strings[(int)newValue]);
 }
 
-double BranchData::getDataBaudRateGHz() /* Data Baud Rate */
+double BranchData::getDataRateGHz() /* Data Data Rate */
 {
-    return QueryResponse_double("DataBaudRate?\n");
+    return QueryResponse_double("DataRate?\n");
 }
 
 const char *BranchData::DataLinkMode_Strings[] =
@@ -958,9 +958,9 @@ void BranchPelaED::setAuxOut2(AuxOut2 newValue )
     SendCommand("AuxOut2 \"%s\"\n",AuxOut2_Strings[(int)newValue]);
 }
 
-double BranchPelaED::getBaudRateGHz() /* Baud Rate */
+double BranchPelaED::getDataRateGHz() /* Data Rate */
 {
-    return QueryResponse_double("BaudRate?\n");
+    return QueryResponse_double("DataRate?\n");
 }
 
 double BranchPelaED::getClockRateGHz() /* Input Clock Rate */
@@ -1542,9 +1542,9 @@ void BranchEla::setBlockSizeSymbols(int index,int newValue) /* Global symbols pe
     SendCommand("BlockSize[%d] %d\n",index,newValue);
 }
 
-double BranchEla::getElaBaudRateGHz() /* Ela Baud Rate */
+double BranchEla::getElaDataRateGHz() /* Ela Data Rate */
 {
-    return QueryResponse_double("ElaBaudRate?\n");
+    return QueryResponse_double("ElaDataRate?\n");
 }
 
 const char *BranchEla::ElaLinkMode_Strings[] =

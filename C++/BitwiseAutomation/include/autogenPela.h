@@ -341,7 +341,7 @@ class BranchData: /* Data Application */
 
     BitsFmt getBitsFmt();
     void setBitsFmt( BitsFmt newValue);
-    double getDataBaudRateGHz(); /* Data Baud Rate */
+    double getDataRateGHz(); /* Data Rate */
 
     enum class DataLinkMode
     {
@@ -454,7 +454,7 @@ class BranchPelaED: /* Pela Error Detector Access */
 
     AuxOut2 getAuxOut2();
     void setAuxOut2( AuxOut2 newValue);
-    double getBaudRateGHz(); /* Baud Rate */
+    double getDataRateGHz(); /* Data Rate */
     double getClockRateGHz(); /* Input Clock Rate */
     double getClockThreshMV(); /* Clock threshold */
     void setClockThreshMV( double newValue);
@@ -708,7 +708,7 @@ class BranchEla: /* Pela ELA Application */
     void setBitsFmt( BitsFmt newValue);
     int getBlockSizeSymbols(int index); /* Global symbols per block */
     void setBlockSizeSymbols(int index, int newValue);
-    double getElaBaudRateGHz(); /* Ela Baud Rate */
+    double getElaDataRateGHz(); /* Ela Data Rate */
 
     enum class ElaLinkMode
     {
