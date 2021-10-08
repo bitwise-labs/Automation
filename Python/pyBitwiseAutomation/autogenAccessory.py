@@ -514,6 +514,111 @@ class BranchAccDDRRef(AutomationExtender):
 
 # ================================ #
 
+class BranchAccDDRTerm(AutomationExtender):
+    """BranchAccDDRTerm class.  Termination category"""
+
+    def __init__(self, parent: AutomationInterface, prefix: str):
+        super().__init__(parent, prefix)
+
+    def __del__(self):
+        super().__del__()
+        return None
+
+    class CA(Enum):
+        Off = "Off"
+        _480Ohm = "480Ohm"
+        _240Ohm = "240Ohm"
+        _80Ohm = "80Ohm"
+        _60Ohm = "60Ohm"
+        _40Ohm = "40Ohm"
+
+    def getCA(self, index: int) -> CA:
+        """Get enum Termination settings for CA, 0=GroupA, 1=GroupB[] """
+        return self.CA(self.QueryResponse_enum(self.CA, "CA[" + str(index) + "]?\n"))
+
+    def setCA(self, index: int, newvalue: CA):
+        """Set enum Termination settings for CA, 0=GroupA, 1=GroupB[] """
+        self.SendCommand("CA[" + str(index) + "] " + newvalue.value + "\n")
+        return None
+
+    class CK(Enum):
+        Off = "Off"
+        _480Ohm = "480Ohm"
+        _240Ohm = "240Ohm"
+        _80Ohm = "80Ohm"
+        _60Ohm = "60Ohm"
+        _40Ohm = "40Ohm"
+
+    def getCK(self, index: int) -> CK:
+        """Get enum Termination settings for CK, 0=GroupA, 1=GroupB[] """
+        return self.CK(self.QueryResponse_enum(self.CK, "CK[" + str(index) + "]?\n"))
+
+    def setCK(self, index: int, newvalue: CK):
+        """Set enum Termination settings for CK, 0=GroupA, 1=GroupB[] """
+        self.SendCommand("CK[" + str(index) + "] " + newvalue.value + "\n")
+        return None
+
+    class CS(Enum):
+        Off = "Off"
+        _480Ohm = "480Ohm"
+        _240Ohm = "240Ohm"
+        _80Ohm = "80Ohm"
+        _60Ohm = "60Ohm"
+        _40Ohm = "40Ohm"
+
+    def getCS(self, index: int) -> CS:
+        """Get enum Termination settings for CS, 0=GroupA, 1=GroupB[] """
+        return self.CS(self.QueryResponse_enum(self.CS, "CS[" + str(index) + "]?\n"))
+
+    def setCS(self, index: int, newvalue: CS):
+        """Set enum Termination settings for CS, 0=GroupA, 1=GroupB[] """
+        self.SendCommand("CS[" + str(index) + "] " + newvalue.value + "\n")
+        return None
+
+    class DQ(Enum):
+        Off = "Off"
+        _240Ohm = "240Ohm"
+        _120Ohm = "120Ohm"
+        _80Ohm = "80Ohm"
+        _60Ohm = "60Ohm"
+        _48Ohm = "48Ohm"
+        _40Ohm = "40Ohm"
+        _34Ohm = "34Ohm"
+
+    def getDQ(self) -> DQ:
+        """Get enum Termination setting for DQ """
+        return self.DQ(self.QueryResponse_enum(self.DQ, "DQ?\n"))
+
+    def setDQ(self, newvalue: DQ):
+        """Set enum Termination setting for DQ """
+        self.SendCommand("DQ " + newvalue.value + "\n")
+        return None
+
+    class DQS(Enum):
+        Off = "Off"
+        _240Ohm = "240Ohm"
+        _120Ohm = "120Ohm"
+        _80Ohm = "80Ohm"
+        _60Ohm = "60Ohm"
+        _48Ohm = "48Ohm"
+        _40Ohm = "40Ohm"
+        _34Ohm = "34Ohm"
+
+    def getDQS(self) -> DQS:
+        """Get enum Termination setting for DQS """
+        return self.DQS(self.QueryResponse_enum(self.DQS, "DQS?\n"))
+
+    def setDQS(self, newvalue: DQS):
+        """Set enum Termination setting for DQS """
+        self.SendCommand("DQS " + newvalue.value + "\n")
+        return None
+
+    def Program(self):
+        """Method for Program Terminations. Todo: add arguments if needed"""
+        print("BranchAccDDRTerm:Program(), Todo: add arguments if needed")
+        self.SendCommand("Program\n")
+        return None
+
 
 class BranchAccDDR(AutomationExtender):
     """BranchAccDDR class.  DDR5 accessory"""
@@ -526,6 +631,7 @@ class BranchAccDDR(AutomationExtender):
         self.I2C = BranchAccDDRI2C(self, "I2C:")
         self.Ref = BranchAccDDRRef(self, "Ref:")
         self.Stress = BranchAccDDRStress(self,"Stress:")
+        self.Term = BranchAccDDRTerm(self,"Term:")
 
     def __del__(self):
         super().__del__()

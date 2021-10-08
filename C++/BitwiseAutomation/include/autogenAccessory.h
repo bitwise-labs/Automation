@@ -194,6 +194,92 @@ class BranchAccDDRStress: /* Stress category */
 
 /* ================================ */
 
+class BranchAccDDRTerm: /* Termination category */
+        public AutomationExtender
+    {
+        public:
+        BranchAccDDRTerm(AutomationInterface *baseDevice,const char *prefix) :
+            AutomationExtender(baseDevice,prefix) {}
+        virtual ~BranchAccDDRTerm() {}
+
+        enum class CA
+        {
+            Off,
+            _480Ohm,
+            _240Ohm,
+            _80Ohm,
+            _60Ohm,
+            _40Ohm
+        };
+        static const char *CA_Strings[];
+
+        CA getCA(int index);
+        void setCA(int index, CA newValue);
+
+        enum class CK
+        {
+            Off,
+            _480Ohm,
+            _240Ohm,
+            _80Ohm,
+            _60Ohm,
+            _40Ohm
+        };
+        static const char *CK_Strings[];
+
+        CK getCK(int index);
+        void setCK(int index, CK newValue);
+
+        enum class CS
+        {
+            Off,
+            _480Ohm,
+            _240Ohm,
+            _80Ohm,
+            _60Ohm,
+            _40Ohm
+        };
+        static const char *CS_Strings[];
+
+        CS getCS(int index);
+        void setCS(int index, CS newValue);
+
+        enum class DQ
+        {
+            Off,
+            _240Ohm,
+            _120Ohm,
+            _80Ohm,
+            _60Ohm,
+            _48Ohm,
+            _40Ohm,
+            _34Ohm
+        };
+        static const char *DQ_Strings[];
+
+        DQ getDQ();
+        void setDQ( DQ newValue);
+
+        enum class DQS
+        {
+            Off,
+            _240Ohm,
+            _120Ohm,
+            _80Ohm,
+            _60Ohm,
+            _48Ohm,
+            _40Ohm,
+            _34Ohm
+        };
+        static const char *DQS_Strings[];
+
+        DQS getDQS();
+        void setDQS( DQS newValue);
+        void Program(); /* Program Terminations, Todo:add arguments */
+    };
+
+	/* ================================= */
+
 class BranchAccDDR: /* DDR5 accessory */
     public AutomationExtender
 {
@@ -205,6 +291,7 @@ class BranchAccDDR: /* DDR5 accessory */
     BranchAccDDRI2C I2C;
     BranchAccDDRRef  Ref;
     BranchAccDDRStress Stress;
+    BranchAccDDRTerm Term;
 
     BranchAccDDR(AutomationInterface *baseDevice,const char *prefix) :
         AutomationExtender(baseDevice,prefix),
@@ -213,9 +300,9 @@ class BranchAccDDR: /* DDR5 accessory */
 	    DFE(this,"DFE:"),
 	    I2C(this,"I2C:"),
 	    Ref(this,"Ref:"),
-	    Stress(this,"Stress:")  {}
+	    Stress(this,"Stress:"),
+		Term(this,"Term:") {}
     virtual ~BranchAccDDR() {}
-
 
     enum class CardType
     {

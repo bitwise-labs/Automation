@@ -1058,4 +1058,127 @@ void BranchAccPUL::setWidth(Width newValue )
     SendCommand("Width \"%s\"\n",Width_Strings[(int)newValue]);
 }
 
+/* ================================= */
+
+const char *BranchAccDDRTerm::CA_Strings[] =
+{
+    "Off",
+    "480Ohm",
+    "240Ohm",
+    "80Ohm",
+    "60Ohm",
+    "40Ohm",
+    0
+};
+
+BranchAccDDRTerm::CA BranchAccDDRTerm::getCA(int index)
+{
+    if(index<0||index>=2) throw "[Index_Out_Of_Range]";
+    return (CA)QueryResponse_enum(CA_Strings,"CA[%d]?\n",index);
+}
+
+void BranchAccDDRTerm::setCA(int index,CA newValue )
+{
+    if(index<0||index>=2) throw "[Index_Out_Of_Range]";
+    SendCommand("CA[%d] \"%s\"\n",index,CA_Strings[(int)newValue]);
+}
+
+const char *BranchAccDDRTerm::CK_Strings[] =
+{
+    "Off",
+    "480Ohm",
+    "240Ohm",
+    "80Ohm",
+    "60Ohm",
+    "40Ohm",
+    0
+};
+
+BranchAccDDRTerm::CK BranchAccDDRTerm::getCK(int index)
+{
+    if(index<0||index>=2) throw "[Index_Out_Of_Range]";
+    return (CK)QueryResponse_enum(CK_Strings,"CK[%d]?\n",index);
+}
+
+void BranchAccDDRTerm::setCK(int index,CK newValue )
+{
+    if(index<0||index>=2) throw "[Index_Out_Of_Range]";
+    SendCommand("CK[%d] \"%s\"\n",index,CK_Strings[(int)newValue]);
+}
+
+const char *BranchAccDDRTerm::CS_Strings[] =
+{
+    "Off",
+    "480Ohm",
+    "240Ohm",
+    "80Ohm",
+    "60Ohm",
+    "40Ohm",
+    0
+};
+
+BranchAccDDRTerm::CS BranchAccDDRTerm::getCS(int index)
+{
+    if(index<0||index>=2) throw "[Index_Out_Of_Range]";
+    return (CS)QueryResponse_enum(CS_Strings,"CS[%d]?\n",index);
+}
+
+void BranchAccDDRTerm::setCS(int index,CS newValue )
+{
+    if(index<0||index>=2) throw "[Index_Out_Of_Range]";
+    SendCommand("CS[%d] \"%s\"\n",index,CS_Strings[(int)newValue]);
+}
+
+const char *BranchAccDDRTerm::DQ_Strings[] =
+{
+    "Off",
+    "240Ohm",
+    "120Ohm",
+    "80Ohm",
+    "60Ohm",
+    "48Ohm",
+    "40Ohm",
+    "34Ohm",
+    0
+};
+
+BranchAccDDRTerm::DQ BranchAccDDRTerm::getDQ()
+{
+    return (DQ)QueryResponse_enum(DQ_Strings,"DQ?\n");
+}
+
+void BranchAccDDRTerm::setDQ(DQ newValue )
+{
+    SendCommand("DQ \"%s\"\n",DQ_Strings[(int)newValue]);
+}
+
+const char *BranchAccDDRTerm::DQS_Strings[] =
+{
+    "Off",
+    "240Ohm",
+    "120Ohm",
+    "80Ohm",
+    "60Ohm",
+    "48Ohm",
+    "40Ohm",
+    "34Ohm",
+    0
+};
+
+BranchAccDDRTerm::DQS BranchAccDDRTerm::getDQS()
+{
+    return (DQS)QueryResponse_enum(DQS_Strings,"DQS?\n");
+}
+
+void BranchAccDDRTerm::setDQS(DQS newValue )
+{
+    SendCommand("DQS \"%s\"\n",DQS_Strings[(int)newValue]);
+}
+
+void BranchAccDDRTerm::Program() /* Program Terminations, Todo:add arguments */
+{
+    fprintf(stderr,"BranchAccDDRTerm::Program(), Todo: add arguments if needed\n");
+    SendCommand("Program\n");
+}
+
 
