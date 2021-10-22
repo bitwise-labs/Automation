@@ -230,20 +230,6 @@ class BranchAccDDRTerm: /* Termination category */
         CK getCK(int index);
         void setCK(int index, CK newValue);
 
-        enum class CS
-        {
-            Off,
-            _480Ohm,
-            _240Ohm,
-            _80Ohm,
-            _60Ohm,
-            _40Ohm
-        };
-        static const char *CS_Strings[];
-
-        CS getCS(int index);
-        void setCS(int index, CS newValue);
-
         enum class DQ
         {
             Off,

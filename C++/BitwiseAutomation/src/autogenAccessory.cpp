@@ -1106,29 +1106,6 @@ void BranchAccDDRTerm::setCK(int index,CK newValue )
     SendCommand("CK[%d] \"%s\"\n",index,CK_Strings[(int)newValue]);
 }
 
-const char *BranchAccDDRTerm::CS_Strings[] =
-{
-    "Off",
-    "480Ohm",
-    "240Ohm",
-    "80Ohm",
-    "60Ohm",
-    "40Ohm",
-    0
-};
-
-BranchAccDDRTerm::CS BranchAccDDRTerm::getCS(int index)
-{
-    if(index<0||index>=2) throw "[Index_Out_Of_Range]";
-    return (CS)QueryResponse_enum(CS_Strings,"CS[%d]?\n",index);
-}
-
-void BranchAccDDRTerm::setCS(int index,CS newValue )
-{
-    if(index<0||index>=2) throw "[Index_Out_Of_Range]";
-    SendCommand("CS[%d] \"%s\"\n",index,CS_Strings[(int)newValue]);
-}
-
 const char *BranchAccDDRTerm::DQ_Strings[] =
 {
     "Off",

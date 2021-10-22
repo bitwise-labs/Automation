@@ -558,23 +558,6 @@ class BranchAccDDRTerm(AutomationExtender):
         self.SendCommand("CK[" + str(index) + "] " + newvalue.value + "\n")
         return None
 
-    class CS(Enum):
-        Off = "Off"
-        _480Ohm = "480Ohm"
-        _240Ohm = "240Ohm"
-        _80Ohm = "80Ohm"
-        _60Ohm = "60Ohm"
-        _40Ohm = "40Ohm"
-
-    def getCS(self, index: int) -> CS:
-        """Get enum Termination settings for CS, 0=GroupA, 1=GroupB[] """
-        return self.CS(self.QueryResponse_enum(self.CS, "CS[" + str(index) + "]?\n"))
-
-    def setCS(self, index: int, newvalue: CS):
-        """Set enum Termination settings for CS, 0=GroupA, 1=GroupB[] """
-        self.SendCommand("CS[" + str(index) + "] " + newvalue.value + "\n")
-        return None
-
     class DQ(Enum):
         Off = "Off"
         _240Ohm = "240Ohm"
