@@ -243,8 +243,8 @@ class BranchAccDDRTerm: /* Termination category */
         };
         static const char *DQ_Strings[];
 
-        DQ getDQ();
-        void setDQ( DQ newValue);
+        DQ getDQ(int index);
+        void setDQ( int index,DQ newValue);
 
         enum class DQS
         {
@@ -259,8 +259,8 @@ class BranchAccDDRTerm: /* Termination category */
         };
         static const char *DQS_Strings[];
 
-        DQS getDQS();
-        void setDQS( DQS newValue);
+        DQS getDQS(int index);
+        void setDQS( int index,DQS newValue);
         void Program(); /* Program Terminations, Todo:add arguments */
     };
 

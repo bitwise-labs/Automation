@@ -1119,14 +1119,16 @@ const char *BranchAccDDRTerm::DQ_Strings[] =
     0
 };
 
-BranchAccDDRTerm::DQ BranchAccDDRTerm::getDQ()
+BranchAccDDRTerm::DQ BranchAccDDRTerm::getDQ(int index)
 {
-    return (DQ)QueryResponse_enum(DQ_Strings,"DQ?\n");
+    if(index<0||index>=2) throw "[Index_Out_Of_Range]";
+    return (DQ)QueryResponse_enum(DQ_Strings,"DQ[%d]?\n",index);
 }
 
-void BranchAccDDRTerm::setDQ(DQ newValue )
+void BranchAccDDRTerm::setDQ(int index,DQ newValue )
 {
-    SendCommand("DQ \"%s\"\n",DQ_Strings[(int)newValue]);
+    if(index<0||index>=2) throw "[Index_Out_Of_Range]";
+    SendCommand("DQ[%d] \"%s\"\n",index,DQ_Strings[(int)newValue]);
 }
 
 const char *BranchAccDDRTerm::DQS_Strings[] =
@@ -1142,14 +1144,16 @@ const char *BranchAccDDRTerm::DQS_Strings[] =
     0
 };
 
-BranchAccDDRTerm::DQS BranchAccDDRTerm::getDQS()
+BranchAccDDRTerm::DQS BranchAccDDRTerm::getDQS(int index)
 {
-    return (DQS)QueryResponse_enum(DQS_Strings,"DQS?\n");
+    if(index<0||index>=2) throw "[Index_Out_Of_Range]";
+    return (DQS)QueryResponse_enum(DQS_Strings,"DQS[%d]?\n",index);
 }
 
-void BranchAccDDRTerm::setDQS(DQS newValue )
+void BranchAccDDRTerm::setDQS(int index,DQS newValue )
 {
-    SendCommand("DQS \"%s\"\n",DQS_Strings[(int)newValue]);
+    if(index<0||index>=2) throw "[Index_Out_Of_Range]";
+    SendCommand("DQS[%d] \"%s\"\n",index,DQS_Strings[(int)newValue]);
 }
 
 void BranchAccDDRTerm::Program() /* Program Terminations, Todo:add arguments */
