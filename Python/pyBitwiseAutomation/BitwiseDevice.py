@@ -53,7 +53,7 @@ class BitwiseDevice(SocketDevice):
         super().SendCommand( "stc;"+command)
         statusResponse = super().QueryResponse( "st?\n")
 
-        if statusResponse != "[none]" :
+        if statusResponse.casefold() != "[none]".casefold() :
             raise Exception("["+statusResponse+"]")
 
         return None
@@ -71,7 +71,7 @@ class BitwiseDevice(SocketDevice):
         response = super().QueryResponse( "stc;"+command, maxLength)
         statusResponse = super().QueryResponse( "st?\n")
 
-        if statusResponse != "[none]":
+        if statusResponse.casefold() != "[none]".casefold():
             raise Exception("[" + statusResponse + "]")
 
         return response

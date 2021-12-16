@@ -136,7 +136,7 @@ void BitwiseDevice::SendCommand( const char *command, ... )
 		fprintf(stderr,"BitwiseDevice::SendCommand(), Status Response is: [%s]\n", inBuffer );
 #endif
 
-	if( strcmp(inBuffer,"[none]") )
+	if( strcasecmp(inBuffer,"[none]") )
 	{
 		static char static_throw_buffer[4096];
 #pragma GCC diagnostic push
@@ -181,7 +181,7 @@ char * BitwiseDevice::QueryResponse( char *buffer, int buflen, const char *comma
 		fprintf(stderr,"BitwiseDevice::QueryResponse(), Status Response is: [%s]\n", inBuffer );
 #endif
 
-	if( strcmp(inBuffer,"[none]") )
+	if( strcasecmp(inBuffer,"[none]") )
 	{
 		static char static_throw_buffer[4096];
 #pragma GCC diagnostic push
