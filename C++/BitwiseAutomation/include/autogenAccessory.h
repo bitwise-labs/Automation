@@ -266,6 +266,22 @@ class BranchAccDDRTerm: /* Termination category */
 
 	/* ================================= */
 
+class BranchAccDDRLB: /* Loopback category */
+        public AutomationExtender
+    {
+        public:
+        BranchAccDDRLB(AutomationInterface *baseDevice,const char *prefix) :
+            AutomationExtender(baseDevice,prefix) {}
+        virtual ~BranchAccDDRLB() {}
+
+        void Start(); /* Start loopback (asynchronous), Todo:add arguments */
+        void Cancel(); /* Loopback cancel, Todo:add arguments */
+        char* getStatus(char *buffer,int buflen); /* Loopback status */
+    };
+
+	/* ================================= */
+
+
 class BranchAccDDR: /* DDR5 accessory */
     public AutomationExtender
 {
@@ -278,6 +294,7 @@ class BranchAccDDR: /* DDR5 accessory */
     BranchAccDDRRef  Ref;
     BranchAccDDRStress Stress;
     BranchAccDDRTerm Term;
+    BranchAccDDRLB LB;
 
     BranchAccDDR(AutomationInterface *baseDevice,const char *prefix) :
         AutomationExtender(baseDevice,prefix),
@@ -287,7 +304,8 @@ class BranchAccDDR: /* DDR5 accessory */
 	    I2C(this,"I2C:"),
 	    Ref(this,"Ref:"),
 	    Stress(this,"Stress:"),
-		Term(this,"Term:") {}
+		Term(this,"Term:"),
+		LB(this,"LB:") {}
     virtual ~BranchAccDDR() {}
 
     enum class CardType
@@ -567,7 +585,6 @@ class BranchAccDDR: /* DDR5 accessory */
 
     Host getHost();
     void setHost( Host newValue);
-    bool getInProgress(); /* Loopback in progress */
 
     enum class Lane
     {
@@ -654,7 +671,6 @@ class BranchAccDDR: /* DDR5 accessory */
 
     Lane getLane();
     void setLane( Lane newValue);
-    char* getLoopbackStatus(char *buffer,int buflen); /* Loopback status */
     bool getPdaEarlyClocking(); /* PDA Enumerate before clocking (reqd for Micron loopback) */
     void setPdaEarlyClocking( bool newValue);
 
@@ -699,8 +715,6 @@ class BranchAccDDR: /* DDR5 accessory */
     void FetchDevices(); /* Fetch list of devices currently available, Todo:add arguments */
     void FetchLanes(); /* Fetch list of lanes currently available, Todo:add arguments */
     void FetchPhases(); /* Fetch list of phases currently available, Todo:add arguments */
-    void Loopback(); /* Start loopback (asynchronous), Todo:add arguments */
-    void LoopbackCancel(); /* Loopback cancel, Todo:add arguments */
     void PowerOn(); /* Power-on MIC, Todo:add arguments */
     void ProgramPhase(); /* Program Phase DRAM+RCD, Todo:add arguments */
 };

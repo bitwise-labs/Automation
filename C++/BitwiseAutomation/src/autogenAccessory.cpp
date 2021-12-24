@@ -380,11 +380,6 @@ void BranchAccDDR::setHost(Host newValue )
     SendCommand("Host \"%s\"\n",Host_Strings[(int)newValue]);
 }
 
-bool BranchAccDDR::getInProgress() /* Loopback in progress */
-{
-    return QueryResponse_bool("InProgress?\n");
-}
-
 const char *BranchAccDDR::Lane_Strings[] =
 {
     "DQ0_A",
@@ -478,11 +473,6 @@ void BranchAccDDR::setLane(Lane newValue )
     SendCommand("Lane \"%s\"\n",Lane_Strings[(int)newValue]);
 }
 
-char* BranchAccDDR::getLoopbackStatus(char *buffer,int buflen) /* Loopback status */
-{
-    return QueryResponse(buffer,buflen,"LoopbackStatus?\n");
-}
-
 bool BranchAccDDR::getPdaEarlyClocking() /* PDA Enumerate before clocking (reqd for Micron loopback) */
 {
     return QueryResponse_bool("PdaEarlyClocking?\n");
@@ -569,18 +559,6 @@ void BranchAccDDR::FetchPhases() /* Fetch list of phases currently available, To
 {
     fprintf(stderr,"BranchAccDDR::FetchPhases(), Todo: add arguments if needed\n");
     SendCommand("FetchPhases\n");
-}
-
-void BranchAccDDR::Loopback() /* Start loopback (asynchronous), Todo:add arguments */
-{
-    fprintf(stderr,"BranchAccDDR::Loopback(), Todo: add arguments if needed\n");
-    SendCommand("Loopback\n");
-}
-
-void BranchAccDDR::LoopbackCancel() /* Loopback cancel, Todo:add arguments */
-{
-    fprintf(stderr,"BranchAccDDR::LoopbackCancel(), Todo: add arguments if needed\n");
-    SendCommand("LoopbackCancel\n");
 }
 
 void BranchAccDDR::PowerOn() /* Power-on MIC, Todo:add arguments */
@@ -1162,4 +1140,22 @@ void BranchAccDDRTerm::Program() /* Program Terminations, Todo:add arguments */
     SendCommand("Program\n");
 }
 
+//=============
+
+void BranchAccDDRLB::Start() /* Start loopback (asynchronous), Todo:add arguments */
+{
+    fprintf(stderr,"BranchAccDDR::Loopback(), Todo: add arguments if needed\n");
+    SendCommand("Start\n");
+}
+
+void BranchAccDDRLB::Cancel() /* Loopback cancel, Todo:add arguments */
+{
+    fprintf(stderr,"BranchAccDDR::LoopbackCancel(), Todo: add arguments if needed\n");
+    SendCommand("Cancel\n");
+}
+
+char* BranchAccDDRLB::getStatus(char *buffer,int buflen) /* Loopback status */
+{
+    return QueryResponse(buffer,buflen,"Status?\n");
+}
 

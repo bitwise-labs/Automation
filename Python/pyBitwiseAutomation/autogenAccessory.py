@@ -602,6 +602,35 @@ class BranchAccDDRTerm(AutomationExtender):
         self.SendCommand("Program\n")
         return None
 
+# ================================ #
+
+class BranchAccDDRLB(AutomationExtender):
+    """BranchAccDDRLB class.  Loopback category"""
+
+    def __init__(self, parent: AutomationInterface, prefix: str):
+        super().__init__(parent, prefix)
+
+    def __del__(self):
+        super().__del__()
+        return None
+
+    def getStatus(self) -> str:
+        """Get Loopback status """
+        return self.QueryResponse("Status?\n")
+
+    def Start(self):
+        """Method for Start loopback (asynchronous). Todo: add arguments if needed"""
+        print("BranchAccDDRLB:Start(), Todo: add arguments if needed")
+        self.SendCommand("Start\n")
+        return None
+
+    def Cancel(self):
+        """Method for Loopback cancel. Todo: add arguments if needed"""
+        print("BranchAccDDRLB:Cancel(), Todo: add arguments if needed")
+        self.SendCommand("Cancel\n")
+        return None
+
+
 class BranchAccDDR(AutomationExtender):
     """BranchAccDDR class.  DDR5 accessory"""
 
@@ -614,6 +643,7 @@ class BranchAccDDR(AutomationExtender):
         self.Ref = BranchAccDDRRef(self, "Ref:")
         self.Stress = BranchAccDDRStress(self,"Stress:")
         self.Term = BranchAccDDRTerm(self,"Term:")
+        self.LB = BranchAccDDRLB(self,"LB:")
 
     def __del__(self):
         super().__del__()
@@ -910,10 +940,6 @@ class BranchAccDDR(AutomationExtender):
         self.SendCommand("Host " + newvalue.value + "\n")
         return None
 
-    def getInProgress(self) -> bool:
-        """Get Loopback in progress """
-        return self.QueryResponse_bool("InProgress?\n")
-
     class Lane(Enum):
         DQ0_A = "DQ0_A"
         DQ1_A = "DQ1_A"
@@ -1003,10 +1029,6 @@ class BranchAccDDR(AutomationExtender):
         self.SendCommand("Lane " + newvalue.value + "\n")
         return None
 
-    def getLoopbackStatus(self) -> str:
-        """Get Loopback status """
-        return self.QueryResponse("LoopbackStatus?\n")
-
     def getPdaEarlyClocking(self) -> bool:
         """Get PDA Enumerate before clocking (reqd for Micron loopback) """
         return self.QueryResponse_bool("PdaEarlyClocking?\n")
@@ -1080,18 +1102,6 @@ class BranchAccDDR(AutomationExtender):
         """Method for Fetch list of phases currently available. Todo: add arguments if needed"""
         print("BranchAccDDR:FetchPhases(), Todo: add arguments if needed")
         self.SendCommand("FetchPhases\n")
-        return None
-
-    def Loopback(self):
-        """Method for Start loopback (asynchronous). Todo: add arguments if needed"""
-        print("BranchAccDDR:Loopback(), Todo: add arguments if needed")
-        self.SendCommand("Loopback\n")
-        return None
-
-    def LoopbackCancel(self):
-        """Method for Loopback cancel. Todo: add arguments if needed"""
-        print("BranchAccDDR:LoopbackCancel(), Todo: add arguments if needed")
-        self.SendCommand("LoopbackCancel\n")
         return None
 
     def PowerOn(self):
