@@ -277,7 +277,54 @@ class BranchAccDDRLB: /* Loopback category */
         void Start(); /* Start loopback (asynchronous), Todo:add arguments */
         void Cancel(); /* Loopback cancel, Todo:add arguments */
         char* getStatus(char *buffer,int buflen); /* Loopback status */
+
+        int getLogSEQ();
+        void ClearLog();
+        char *FetchLog(); /* Fetch log - Must free() return value */
     };
+
+/* ================================= */
+
+class BranchAccDDRTools: /* Tools category */
+    public AutomationExtender
+{
+    public:
+	BranchAccDDRTools(AutomationInterface *baseDevice,const char *prefix) :
+        AutomationExtender(baseDevice,prefix) {}
+    virtual ~BranchAccDDRTools() {}
+
+    double getDQOffsMV();
+    void setDQOffsMV(double newValue);
+
+    double getDQSOffsMV();
+    void setDQSOffsMV(double newValue);
+
+    double getEyeDelayPS();
+    void setEyeDelayPS(double newValue);
+
+    double getEyeThreshMV();
+    void setEyeThreshMV(double newValue);
+
+    enum class AlignBy
+    {
+        Both,
+        Time,
+        Volts
+    };
+    static const char *AlignBy_Strings[];
+
+    void AutoCenter(BranchAccDDRTools::AlignBy argument);
+    void AutoDQ();
+    void AutoDQS();
+
+    void Cancel();
+    char* getStatus(char *buffer,int buflen); /* Tools status */
+
+    int getLogSEQ();
+    void ClearLog();
+    char *FetchLog(); /* Fetch tools log - Must free() return value */
+};
+
 
 	/* ================================= */
 
@@ -295,6 +342,7 @@ class BranchAccDDR: /* DDR5 accessory */
     BranchAccDDRStress Stress;
     BranchAccDDRTerm Term;
     BranchAccDDRLB LB;
+    BranchAccDDRTools Tools;
 
     BranchAccDDR(AutomationInterface *baseDevice,const char *prefix) :
         AutomationExtender(baseDevice,prefix),
@@ -305,7 +353,8 @@ class BranchAccDDR: /* DDR5 accessory */
 	    Ref(this,"Ref:"),
 	    Stress(this,"Stress:"),
 		Term(this,"Term:"),
-		LB(this,"LB:") {}
+		LB(this,"LB:"),
+		Tools(this,"Tools:") {}
     virtual ~BranchAccDDR() {}
 
     enum class CardType

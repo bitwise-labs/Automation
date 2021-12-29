@@ -1778,8 +1778,16 @@ class BranchED(AutomationExtender):
         super().__del__()
         return None
 
+    def getAlignLogSEQ(self) -> int:
+        """Get Log sequence number """
+        return self.QueryResponse_int("AlignLogSEQ?\n")
+
+    def getAlignStatus(self) -> str:
+        """Get Align status """
+        return self.QueryResponse("AlignStatus?\n")
+
     def getAlignDataMsg(self) -> str:
-        """Get Data alignment results """
+        """Get Align Data Message - Begin with Success if okay """
         return self.QueryResponse("AlignDataMsg?\n")
 
     def getAutoResync(self) -> bool:
@@ -2012,6 +2020,22 @@ class BranchED(AutomationExtender):
 
         return retn
 
+    def AlignCancel(self):
+        def AlignClearLog(self):
+            """Method for canceling Align operation."""
+            self.SendCommand("AlignCancel\n")
+            return None
+
+    def AlignClearLog(self):
+        def AlignClearLog(self):
+            """Method for clearing Align Log."""
+            self.SendCommand("AlignClearLog\n")
+            return None
+
+    def AlignFetchLog(self) -> str:
+        """Binary string response method for Fetching Align log. """
+        return str(self.QueryBinaryResponse("AlignFetchLog\n"), encoding='utf-8')
+
     def WaitForAlignmentToComplete(self) -> bool:
         """Wait for alignment operation to complete. """
 
@@ -2025,7 +2049,10 @@ class BranchED(AutomationExtender):
             if self.getDebugging():
                 print("Aligning "+ "{:.1f}".format(now - begin_time))
 
-            if not self.QueryResponse_bool("InProgress?\n"):
+            # if not self.QueryResponse_bool("InProgress?\n"):
+            #     break
+
+            if self.getAlignStatus().upper() != "[RUNNING]":
                 break
 
         if now >= timeout:

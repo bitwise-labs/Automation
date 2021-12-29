@@ -27,10 +27,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a8c4ec53-24da-45fa-99bc-831ed779b362" name="Default Changelist" comment="make simple change in python code">
-      <change beforePath="$PROJECT_DIR$/../C++/BitwiseAutomation/include/autogenAccessory.h" beforeDir="false" afterPath="$PROJECT_DIR$/../C++/BitwiseAutomation/include/autogenAccessory.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../C++/BitwiseAutomation/src/autogenAccessory.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../C++/BitwiseAutomation/src/autogenAccessory.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../C++/BitwiseAutomation/include/autogenPega.h" beforeDir="false" afterPath="$PROJECT_DIR$/../C++/BitwiseAutomation/include/autogenPega.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../C++/BitwiseAutomation/src/autogenPega.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../C++/BitwiseAutomation/src/autogenPega.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pyBitwiseAutomation/autogenAccessory.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyBitwiseAutomation/autogenAccessory.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyBitwiseAutomation/autogenPega.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyBitwiseAutomation/autogenPega.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -165,7 +166,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/pyBitwiseAutomation/autogenAccessory.py</url>
-          <line>1121</line>
+          <line>1205</line>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
       </breakpoints>

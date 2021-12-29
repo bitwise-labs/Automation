@@ -1141,16 +1141,17 @@ void BranchAccDDRTerm::Program() /* Program Terminations, Todo:add arguments */
 }
 
 //=============
+//=============
 
-void BranchAccDDRLB::Start() /* Start loopback (asynchronous), Todo:add arguments */
+void BranchAccDDRLB::Start() /* Start loopback (asynchronous) */
 {
-    fprintf(stderr,"BranchAccDDR::Loopback(), Todo: add arguments if needed\n");
+    fprintf(stderr,"BranchAccDDRLB::Start()\n");
     SendCommand("Start\n");
 }
 
-void BranchAccDDRLB::Cancel() /* Loopback cancel, Todo:add arguments */
+void BranchAccDDRLB::Cancel() /* Loopback cancel */
 {
-    fprintf(stderr,"BranchAccDDR::LoopbackCancel(), Todo: add arguments if needed\n");
+    fprintf(stderr,"BranchAccDDRLB::Cancel()\n");
     SendCommand("Cancel\n");
 }
 
@@ -1158,4 +1159,112 @@ char* BranchAccDDRLB::getStatus(char *buffer,int buflen) /* Loopback status */
 {
     return QueryResponse(buffer,buflen,"Status?\n");
 }
+
+int BranchAccDDRLB::getLogSEQ()
+{
+	return QueryResponse_int("LogSEQ?\n");
+}
+
+void BranchAccDDRLB::ClearLog()
+{
+    fprintf(stderr,"BranchAccDDRLB::ClearLog()\n");
+    SendCommand("ClearLog\n");
+}
+
+char *BranchAccDDRLB::FetchLog() /* Fetch Log - Must free() return value, Todo:add arguments */
+{
+    return QueryBinaryResponse(0,"FetchLog\n");
+}
+
+//=============
+//=============
+
+const char *BranchAccDDRTools::AlignBy_Strings[] = { "Both", "Time", "Volts", 0 };
+
+void BranchAccDDRTools::AutoCenter( BranchAccDDRTools::AlignBy argument )
+{
+    fprintf(stderr,"BranchAccDDRTools::AutoCenter()\n");
+    SendCommand("AutoCenter %s\n", AlignBy_Strings[(int)argument] );
+}
+
+void BranchAccDDRTools::AutoDQ()
+{
+    fprintf(stderr,"BranchAccDDRTools::AutoDQ()\n");
+    SendCommand("AutoDQ\n");
+}
+
+void BranchAccDDRTools::AutoDQS()
+{
+    fprintf(stderr,"BranchAccDDRTools::AutoDQS()\n");
+    SendCommand("AutoDQS\n");
+}
+
+void BranchAccDDRTools::Cancel() /* Loopback cancel */
+{
+    fprintf(stderr,"BranchAccDDRTools::Cancel()\n");
+    SendCommand("Cancel\n");
+}
+
+char* BranchAccDDRTools::getStatus(char *buffer,int buflen) /* Tools status */
+{
+    return QueryResponse(buffer,buflen,"Status?\n");
+}
+
+int BranchAccDDRTools::getLogSEQ()
+{
+	return QueryResponse_int("LogSEQ?\n");
+}
+
+void BranchAccDDRTools::ClearLog()
+{
+    fprintf(stderr,"BranchAccDDRTools::ClearLog()\n");
+    SendCommand("ClearLog\n");
+}
+
+char *BranchAccDDRTools::FetchLog() /* Fetch Log - Must free() return value, Todo:add arguments */
+{
+    return QueryBinaryResponse(0,"FetchLog\n");
+}
+
+double BranchAccDDRTools::getDQOffsMV()
+{
+	return QueryResponse_double("DQOffs?\n");
+}
+
+void BranchAccDDRTools::setDQOffsMV(double newValue)
+{
+	SendCommand( "DQOffs %.3lf\n", newValue );
+}
+
+double BranchAccDDRTools::getDQSOffsMV()
+{
+	return QueryResponse_double("DQSOffs?\n");
+}
+
+void BranchAccDDRTools::setDQSOffsMV(double newValue)
+{
+	SendCommand( "DQSOffs %.3lf\n", newValue );
+}
+
+double BranchAccDDRTools::getEyeDelayPS()
+{
+	return QueryResponse_double("EyeDelay?\n");
+}
+
+void BranchAccDDRTools::setEyeDelayPS(double newValue)
+{
+	SendCommand( "EyeDelay %.3lf\n", newValue );
+}
+
+double BranchAccDDRTools::getEyeThreshMV()
+{
+	return QueryResponse_double("EyeThresh?\n");
+}
+void BranchAccDDRTools::setEyeThreshMV(double newValue)
+{
+	SendCommand( "EyeThresh %.3lf\n", newValue );
+}
+
+//=============
+//=============
 

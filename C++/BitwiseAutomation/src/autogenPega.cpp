@@ -38,6 +38,16 @@
 
 /* ================================================================ */
 
+int BranchED::getAlignLogSEQ() /* Log sequence number */
+{
+    return QueryResponse_int("AlignLogSEQ?\n");
+}
+
+char *BranchED::getAlignStatus(char *buffer,int buflen) /* Align status */
+{
+    return QueryResponse(buffer,buflen,"AlignStatus?\n");
+}
+
 char* BranchED::getAlignDataMsg(char *buffer,int buflen) /* Data alignment results */
 {
     return QueryResponse(buffer,buflen,"AlignDataMsg?\n");
@@ -194,7 +204,7 @@ char* BranchED::getGrabPatt(char *buffer,int buflen) /* Grabbed pattern 32-bit w
     return QueryResponse(buffer,buflen,"GrabPatt?\n");
 }
 
-bool BranchED::getInProgress() /* Aligning in progress */
+bool BranchED::getInProgress() /* Aligning in progress - deprecated */
 {
     return QueryResponse_bool("InProgress?\n");
 }
@@ -315,6 +325,22 @@ bool BranchED::AlignData(AlignBy alignType, bool waitToComplete ) /* Perform dat
     return retn;
 }
 
+void BranchED::AlignClearLog()
+{
+    SendCommand("AlignClearLog\n");
+}
+
+void BranchED::AlignCancel()
+{
+    SendCommand("AlignCancel\n");
+}
+
+char *BranchED::AlignFetchLog() /* Fetch align log - Must free() return value */
+{
+    return QueryBinaryResponse(0,"AlignFetchLog\n");
+}
+
+
 bool BranchED::WaitForAlignmentToComplete()
 {
 	double now = SocketDevice::timestamp();
@@ -323,7 +349,7 @@ bool BranchED::WaitForAlignmentToComplete()
 #endif
 	double timeout = now + 30.0;
 
-	while( now < timeout && QueryResponse_bool( "InProgress?\n")==true )
+	while( now < timeout )
 	{
 		usleep(500*1000);
 		now = SocketDevice::timestamp();
@@ -332,6 +358,14 @@ bool BranchED::WaitForAlignmentToComplete()
 		if(getDebugging())
 			fprintf(stderr,"Aligning %.1lf\n", now-begin_time);
 #endif
+
+//		if( getInProgress()==false )
+//			break;
+
+		char statusBuffer[1024];
+		getAlignStatus(statusBuffer,1024);
+		if( strcasecmp(statusBuffer,"[Running]") )
+			break;
 	}
 
 	if( now >=timeout )

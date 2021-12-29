@@ -604,6 +604,7 @@ class BranchAccDDRTerm(AutomationExtender):
 
 # ================================ #
 
+
 class BranchAccDDRLB(AutomationExtender):
     """BranchAccDDRLB class.  Loopback category"""
 
@@ -630,20 +631,103 @@ class BranchAccDDRLB(AutomationExtender):
         self.SendCommand("Cancel\n")
         return None
 
+# ================================ #
+
+
+class BranchAccDDRTools(AutomationExtender):
+    """BranchAccDDRTools class.  Tools category"""
+
+    def __init__(self, parent: AutomationInterface, prefix: str):
+        super().__init__(parent, prefix)
+
+    def __del__(self):
+        super().__del__()
+        return None
+
+    def getStatus(self) -> str:
+        """Get Tools status """
+        return self.QueryResponse("Status?\n")
+
+    def Cancel(self):
+        """Method for Tool cancel. """
+        print("BranchAccDDRTools:Cancel()")
+        self.SendCommand("Cancel\n")
+        return None
+
+    class AlignBy(Enum):
+        Both = "Both"
+        Time = "Time"
+        Volts = "Volts"
+
+    def AutoCenter(self, argument: AlignBy ):
+        """Method for Auto centering (asynchronous)."""
+        print("BranchAccDDRTools:AutoCenter()")
+        self.SendCommand("AutoCenter " + argument.value + "\n")
+        return None
+
+    def AutoDQ(self):
+        """Method for AutoDQ loopback (asynchronous)."""
+        print("BranchAccDDRTools:AutoDQ()")
+        self.SendCommand("AutoDQ\n")
+        return None
+
+    def AutoDQS(self):
+        """Method for AutoDQS loopback (asynchronous)."""
+        print("BranchAccDDRTools:AutoDQS()")
+        self.SendCommand("AutoDQS\n")
+        return None
+
+    def getDQOffsMV(self) -> float:
+        """Get DQ Offs """
+        return self.QueryResponse_float("DQOffs?\n")
+
+    def setDQOffsMV(self, newvalue: float):
+        """Set DQ Offs """
+        self.SendCommand("DQOffs " + str(newvalue) + "\n")
+        return None
+
+    def getDQSOffsMV(self) -> float:
+        """Get DQS Offs """
+        return self.QueryResponse_float("DQSOffs?\n")
+
+    def setDQSOffsMV(self, newvalue: float):
+        """Set DQS Offs """
+        self.SendCommand("DQSOffs " + str(newvalue) + "\n")
+        return None
+
+    def getEyeDelayPS(self) -> float:
+        """Get Eye Delay """
+        return self.QueryResponse_float("EyeDelay?\n")
+
+    def setEyeDelayPS(self, newvalue: float):
+        """Set Eye Delay """
+        self.SendCommand("EyeDelay " + str(newvalue) + "\n")
+        return None
+
+    def getEyeThreshMV(self) -> float:
+        """Get Eye Thresh """
+        return self.QueryResponse_float("EyeThresh?\n")
+
+    def setEyeThreshMV(self, newvalue: float):
+        """Set Eye Thresh """
+        self.SendCommand("EyeThresh " + str(newvalue) + "\n")
+        return None
+
 
 class BranchAccDDR(AutomationExtender):
     """BranchAccDDR class.  DDR5 accessory"""
 
     def __init__(self, parent: AutomationInterface, prefix: str):
         super().__init__(parent, prefix)
-        self.Const = BranchConst(self,"Const:")
+        self.Const = BranchConst(self, "Const:")
         self.CTC = BranchAccDDRCTC(self, "CTC:")
         self.DFE = BranchAccDDRDFE(self, "DFE:")
         self.I2C = BranchAccDDRI2C(self, "I2C:")
         self.Ref = BranchAccDDRRef(self, "Ref:")
-        self.Stress = BranchAccDDRStress(self,"Stress:")
-        self.Term = BranchAccDDRTerm(self,"Term:")
-        self.LB = BranchAccDDRLB(self,"LB:")
+        self.Stress = BranchAccDDRStress(self, "Stress:")
+        self.Term = BranchAccDDRTerm(self, "Term:")
+        self.LB = BranchAccDDRLB(self, "LB:")
+        self.Tools = BranchAccDDRTools(self, "Tools:")
 
     def __del__(self):
         super().__del__()

@@ -125,6 +125,8 @@ class BranchED: /* Pega Calibration Input Access */
 		Sampler(this,"Sampler:") {}
     virtual ~BranchED() {}
 
+    int getAlignLogSEQ(); /* Log sequence number */
+    char *getAlignStatus(char *buffer,int buflen); /* Align status */
     char* getAlignDataMsg(char *buffer,int buflen); /* Data alignment results */
     bool getAutoResync(); /* Auto Resync Enable */
     void setAutoResync( bool newValue);
@@ -192,7 +194,7 @@ class BranchED: /* Pega Calibration Input Access */
     GrabLen getGrabLen();
     void setGrabLen( GrabLen newValue);
     char* getGrabPatt(char *buffer,int buflen); /* Grabbed pattern 32-bit word hex values */
-    bool getInProgress(); /* Aligning in progress */
+    bool getInProgress(); /* Aligning in progress - deprecated */
     bool getInSync(); /* In Sync Flag */
     bool getMonitor(); /* Pattern change and data rate monitoring enable */
     void setMonitor( bool newValue);
@@ -254,6 +256,9 @@ class BranchED: /* Pega Calibration Input Access */
     void Resync(); /* Manual Resync, Todo:add arguments */
     bool AlignData( AlignBy alignType = AlignBy::All, bool waitToComplete=true ); /* Perform data alignment, parameter: Time, Volts, All (Dflt), PrbsVolts, PrbsAll */
     bool WaitForAlignmentToComplete();
+    void AlignClearLog();
+    void AlignCancel();
+    char *AlignFetchLog();/* Fetch align log - Must free() return value */
 };
 
 /* ================================ */
