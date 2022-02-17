@@ -132,6 +132,9 @@ class SocketDevice(AutomationInterface):
         if not self.IsConnected:
             raise Exception("[Not_Connected]")
 
+        if self.Debugging:
+            print("SendCommand() command: " + command)
+
         self.Sock.send(bytes(command,'utf-8'))
         return None
 
@@ -196,6 +199,9 @@ class SocketDevice(AutomationInterface):
         if not self.IsConnected:
             raise Exception("[Not_Connected]")
 
+        if self.Debugging:
+            print("SendBinaryCommand() command: " + command)
+
         count = len(buffer)
 
         self.Sock.send(bytes(command,'utf-8'))
@@ -212,6 +218,9 @@ class SocketDevice(AutomationInterface):
 
         if not self.IsConnected:
             raise Exception("[Not_Connected]")
+
+        if self.Debugging:
+            print("QueryBinaryResponse() command: " + command)
 
         self.Sock.send( bytes(command,'utf-8') )
 

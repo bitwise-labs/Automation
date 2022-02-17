@@ -856,6 +856,7 @@ class BranchPG(AutomationExtender):
 
     def setLinkMode(self, newvalue: LinkMode) :
         """Set enum Link mode """
+        print("===================== SET LINK MODE TO: "+str(newvalue)+"=======================")
         self.SendCommand("LinkMode " + newvalue.value + "\n")
         return None
 
