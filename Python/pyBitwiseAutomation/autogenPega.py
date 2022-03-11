@@ -361,10 +361,9 @@ class BranchTub(AutomationExtender):
         """Get Working Serial number """
         return self.QueryResponse_int("WkgSEQ?\n")
 
-    def Csv(self) -> str:
-        """Response method for PegaTub Csv. Todo: add arguments if needed"""
-        print("BranchTub:Csv(), Todo: add arguments if needed")
-        return self.QueryResponse("Csv\n")
+    def Csv(self, filename: str = "") -> str:
+        """Response method for PegaTub Csv. """
+        return self.QueryResponse("Csv\n" if filename == "" else 'Csv "'+filename+'"\n')
 
     def FetchPoints(self) -> str:
         """Binary string response method for Fetch points. Todo: add arguments if needed"""
@@ -1636,10 +1635,9 @@ class BranchErr(AutomationExtender):
         """Get Serial Number of Integration """
         return self.QueryResponse_int("Serial?\n")
 
-    def Csv(self) -> str:
-        """Response method for PegaED Csv. Todo: add arguments if needed"""
-        print("BranchErr:Csv(), Todo: add arguments if needed")
-        return self.QueryResponse("Csv\n")
+    def Csv(self, filename: str = "") -> str:
+        """Response method for PegaED Csv. """
+        return self.QueryResponse("Csv\n" if filename == "" else 'Csv "'+filename+'"\n')
 
     def Csv2(self) -> str:
         """Response method for PegaErr Csv. Todo: add arguments if needed"""

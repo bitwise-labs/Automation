@@ -541,10 +541,9 @@ class BranchS11(AutomationExtender):
         """Get Status Message """
         return self.QueryResponse("StatusMsg?\n")
 
-    def FileSave(self) -> str:
-        """Response method for S21 file save. Todo: add arguments if needed"""
-        print("BranchS11:FileSave(), Todo: add arguments if needed")
-        return self.QueryResponse("FileSave\n")
+    def FileSave(self, filename: str = "") -> str:
+        """Response method for S11 file save. """
+        return self.QueryResponse("FileSave\n" if filename == "" else 'FileSave "'+filename+'"\n')
 
     def Fit(self):
         """Method for S11 Chart Fit. Todo: add arguments if needed"""
@@ -919,10 +918,9 @@ class BranchS21(AutomationExtender):
         """Get Status Message """
         return self.QueryResponse("StatusMsg?\n")
 
-    def FileSave(self) -> str:
-        """Response method for S21 file save. Todo: add arguments if needed"""
-        print("BranchS21:FileSave(), Todo: add arguments if needed")
-        return self.QueryResponse("FileSave\n")
+    def FileSave(self, filename: str = "") -> str:
+        """Response method for S21 file save. """
+        return self.QueryResponse("FileSave\n" if filename == "" else 'FileSave "'+filename+'"\n')
 
     def Fit(self):
         """Method for S21 Chart Fit. Todo: add arguments if needed"""
@@ -1338,10 +1336,9 @@ class BranchStep(AutomationExtender):
 
         return None
 
-    def Csv(self) -> str:
-        """Response method for Step Csv. Todo: add arguments if needed"""
-        print("BranchStep:Csv(), Todo: add arguments if needed")
-        return self.QueryResponse("Csv\n")
+    def Csv(self, filename: str = "") -> str:
+        """Response method for Step Csv. """
+        return self.QueryResponse("Csv\n" if filename == "" else 'Csv "'+filename+'"\n')
 
     def Fit(self):
         """Method for Step Chart Fit.  """
@@ -1742,10 +1739,9 @@ class BranchTdr(AutomationExtender):
         self.SendCommand("ClearCal\n")
         return None
 
-    def Csv(self) -> str:
-        """Response method for Tdr Csv. Todo: add arguments if needed"""
-        print("BranchTdr:Csv(), Todo: add arguments if needed")
-        return self.QueryResponse("Csv\n")
+    def Csv(self, filename: str = "") -> str:
+        """Response method for Tdr Csv. """
+        return self.QueryResponse("Csv\n" if filename == "" else 'Csv "'+filename+'"\n')
 
     def Fit(self):
         """Method for Tdr Chart Fit. Todo: add arguments if needed"""
@@ -1766,8 +1762,7 @@ class BranchTdr(AutomationExtender):
         return None
 
     def Reset(self):
-        """Method for Reset position. Todo: add arguments if needed"""
-        print("BranchTdr:Reset(), Todo: add arguments if needed")
+        """Method for Reset position. """
         self.SendCommand("Reset\n")
         return None
 
@@ -2206,10 +2201,9 @@ class BranchTdt(AutomationExtender):
         self.SendCommand("ClearCal\n")
         return None
 
-    def Csv(self) -> str:
-        """Response method for Tdt Csv. Todo: add arguments if needed"""
-        print("BranchTdt:Csv(), Todo: add arguments if needed")
-        return self.QueryResponse("Csv\n")
+    def Csv(self, filename: str = "") -> str:
+        """Response method for Tdt Csv. """
+        return self.QueryResponse("Csv\n" if filename == "" else 'Csv "'+filename+'"\n')
 
     def Fit(self):
         """Method for Tdt Chart Fit. Todo: add arguments if needed"""

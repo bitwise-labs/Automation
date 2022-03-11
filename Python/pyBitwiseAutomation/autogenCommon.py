@@ -28,7 +28,7 @@
 # ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 # ================================================================================
-
+import datetime
 
 from pyBitwiseAutomation.AutomationInterface import AutomationInterface
 from pyBitwiseAutomation.AutomationExtender import AutomationExtender
@@ -585,7 +585,6 @@ class BranchFile(AutomationExtender):
 
     def Del(self, filepath:str):
         """Method for Delete File."""
-        print("BranchFile:Del(), Todo: add arguments if needed")
         self.SendCommand("Del " + "\""+filepath+"\"" + "\n")
         return None
 
@@ -611,22 +610,10 @@ class BranchFile(AutomationExtender):
         self.SendCommand("Rename " + "\""+frompath+"\"" + " " +"\""+topath+"\"" + "\n")
         return None
 
-    def XferBuffer(self):
-        """Method for Transmit next buffer to device-requires count, optional checksum. Todo: add arguments if needed"""
-        print("BranchFile:XferBuffer(), Todo: add arguments if needed")
-        self.SendCommand("Xfer:Buffer\n")
-        return None
-
     def XferDoneGet(self):
         """Method for Indicates completion of get operation. Todo: add arguments if needed"""
         print("BranchFile:XferDoneGet(), Todo: add arguments if needed")
         self.SendCommand("Xfer:DoneGet\n")
-        return None
-
-    def XferDonePut(self):
-        """Method for Indicates completion of send operation. Todo: add arguments if needed"""
-        print("BranchFile:XferDonePut(), Todo: add arguments if needed")
-        self.SendCommand("Xfer:DonePut\n")
         return None
 
     def XferGet(self):
@@ -641,22 +628,64 @@ class BranchFile(AutomationExtender):
         self.SendCommand("Xfer:Next\n")
         return None
 
-    def XferPut(self):
-        """Method for Put file-requires filepath and optional modification date and time. Todo: add arguments if needed"""
-        print("BranchFile:XferPut(), Todo: add arguments if needed")
-        self.SendCommand("Xfer:Put\n")
-        return None
-
     def XferResend(self):
         """Method for Retrieve last buffer--respond three u32 values. Todo: add arguments if needed"""
         print("BranchFile:XferResend(), Todo: add arguments if needed")
         self.SendCommand("Xfer:Resend\n")
         return None
 
-    def XferSameBuffer(self):
-        """Method for Re-transmit same buffer to device-requires count, optional checksum. Todo: add arguments if needed"""
-        print("BranchFile:XferSameBuffer(), Todo: add arguments if needed")
-        self.SendCommand("Xfer:SameBuffer\n")
-        return None
+    # def XferDonePut(self):
+    #     """Method for Indicates completion of send operation. Todo: add arguments if needed"""
+    #     print("BranchFile:XferDonePut(), Todo: add arguments if needed")
+    #     self.SendCommand("Xfer:DonePut\n")
+    #     return None
+
+    # def XferPut(self, destinationfilepath:str, dt:datetime = None ):
+    #     """Method for Put file-requires filepath and optional modification date and time. """
+    #
+    #     datetime_str = ""
+    #     if dt is not None:
+    #         datetime_str = dt.strftime(" %m/%d/%y %H:%M:%s")
+    #
+    #     self.SendCommand('Xfer:Put "'+destinationfilepath+'"' + datetime_str + '\n')
+    #     return None
+
+    # def XferBuffer(self, buffer_bytes: bytes ):
+    #     """Method for Transmit next buffer to device-requires count, optional checksum. """
+    #
+    #     if len(buffer_bytes) == 0:
+    #         raise Exception("[XferBuffer_Is_Empty]")
+    #
+    #     cksum = 0
+    #     for i in range(len(buffer_bytes)):
+    #         cksum = cksum + buffer_bytes[i]
+    #
+    #     cksum = cksum % 256
+    #     command_string = "stc; File:Xfer:Buffer " + "{:.0f}".format(len(buffer_bytes))+" 0x" + hex(cksum) + "\n"
+    #     command_bytes = command_string.encode("utf8")
+    #
+    #     self.Send(command_bytes)
+    #     self.Send(buffer_bytes)
+    #
+    #     return None
+
+    # def XferSameBuffer(self, buffer_bytes: bytes ):
+    #     """Method for Re-transmit same buffer to device-requires count, optional checksum. """
+    #
+    #     if len(buffer_bytes) == 0:
+    #         raise Exception("[XferSameBuffer_Is_Empty]")
+    #
+    #     cksum = 0
+    #     for i in range(len(buffer_bytes)):
+    #         cksum = cksum + buffer_bytes[i]
+    #
+    #     cksum = cksum % 256
+    #     command_string = "stc; File:Xfer:SameBuffer " + "{:.0f}".format(len(buffer_bytes))+" 0x" + hex(cksum) + "\n"
+    #     command_bytes = command_string.encode("utf8")
+    #
+    #     self.Send(command_bytes)
+    #     self.Send(buffer_bytes)
+    #
+    #     return None
 
 # EOF

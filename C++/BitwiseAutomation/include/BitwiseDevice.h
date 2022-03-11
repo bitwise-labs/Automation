@@ -65,12 +65,13 @@ class BitwiseDevice :
 	/* full-path-name ... settings from fully-specified configuration file path  */
 	/* filename-only ... settings from file located in configuration folder */
 
-	void SaveConfiguration( const char *configuration );
+	void SaveConfiguration( const char *configuration = "[recent]");
 	void RestoreConfiguration( const char *configuration, bool waitToComplete=true);
 	void WaitForRestoreToComplete();
 
-	void Run( double waitUntilRunningTimeout=30.0 );
-	void RunSingle( double waitUntilRunningTimeout=30.0 );
+	void Run( double waitUntilRunningTimeout=10.0 );
+	void RunSingle( double waitUntilRunningTimeout=10.0 );
+	void WaitForRunToStart( double timeoutSec=10.0);
 	void WaitForRunToComplete( double timeoutSec );
 	void Stop();
 	void Clear();

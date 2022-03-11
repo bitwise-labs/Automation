@@ -352,10 +352,9 @@ class BranchBlockChannel(AutomationExtender):
         self.SendCommand("Width " + str(newvalue) + "\n")
         return None
 
-    def Csv(self) -> str:
-        """Response method for Download CSV File. Todo: add arguments if needed"""
-        print("BranchBlockChannel:Csv(), Todo: add arguments if needed")
-        return self.QueryResponse("Csv\n")
+    def Csv(self, filename: str = "") -> str:
+        """Response method for Download Csv. """
+        return self.QueryResponse("Csv\n" if filename == "" else 'Csv "'+filename+'"\n')
 
     def Fit(self):
         """Method for Fit chart to data. Todo: add arguments if needed"""
@@ -758,10 +757,9 @@ class BranchData(AutomationExtender):
         """Get Bytes per second """
         return self.QueryResponse_float("Transfer?\n")
 
-    def Csv(self) -> str:
-        """Response method for Save ELA Results in CSV file. Todo: add arguments if needed"""
-        print("BranchData:Csv(), Todo: add arguments if needed")
-        return self.QueryResponse("Csv\n")
+    def Csv(self, filename: str = "") -> str:
+        """Response method for ELA Results Csv. """
+        return self.QueryResponse("Csv\n" if filename == "" else 'Csv "'+filename+'"\n')
 
     def getCommonBits(self) -> int:
         """Get Common bit count """
@@ -1323,10 +1321,9 @@ class BranchEfiChannel(AutomationExtender):
         self.SendCommand("Width " + str(newvalue) + "\n")
         return None
 
-    def Csv(self) -> str:
-        """Response method for Download CSV File. Todo: add arguments if needed"""
-        print("BranchEfiChannel:Csv(), Todo: add arguments if needed")
-        return self.QueryResponse("Csv\n")
+    def Csv(self, filename: str = "") -> str:
+        """Response method for Download Csv. """
+        return self.QueryResponse("Csv\n" if filename == "" else 'Csv "'+filename+'"\n')
 
     def Fit(self):
         """Method for Fit chart to data. Todo: add arguments if needed"""
@@ -1500,10 +1497,9 @@ class BranchEla(AutomationExtender):
         """Get Bytes per second """
         return self.QueryResponse_float("Transfer?\n")
 
-    def Csv(self) -> str:
-        """Response method for Save ELA Results in CSV file. Todo: add arguments if needed"""
-        print("BranchEla:Csv(), Todo: add arguments if needed")
-        return self.QueryResponse("Csv\n")
+    def Csv(self, filename: str = "") -> str:
+        """Response method for ELA Results Csv. """
+        return self.QueryResponse("Csv\n" if filename == "" else 'Csv "'+filename+'"\n')
 
     def getCommonCapturePcnt(self) -> float:
         """Get Common Capture percentage """
@@ -1818,10 +1814,9 @@ class BranchErr(AutomationExtender):
         self.SendCommand("ShowStripSettings " + ("T" if newvalue else "F") + "\n")
         return None
 
-    def Csv(self) -> str:
-        """Response method for PelaED Csv. Todo: add arguments if needed"""
-        print("BranchErr:Csv(), Todo: add arguments if needed")
-        return self.QueryResponse("Csv\n")
+    def Csv(self, filename: str = "") -> str:
+        """Response method for PelaED Csv. """
+        return self.QueryResponse("Csv\n" if filename == "" else 'Csv "'+filename+'"\n')
 
     def Csv2(self) -> str:
         """Response method for PelaErr Csv. Todo: add arguments if needed"""
@@ -2457,10 +2452,9 @@ class BranchMaxTChannel(AutomationExtender):
         self.SendCommand("Width " + str(newvalue) + "\n")
         return None
 
-    def Csv(self) -> str:
-        """Response method for Download CSV File. Todo: add arguments if needed"""
-        print("BranchMaxTChannel:Csv(), Todo: add arguments if needed")
-        return self.QueryResponse("Csv\n")
+    def Csv(self, filename: str = "") -> str:
+        """Response method for Download Csv. """
+        return self.QueryResponse("Csv\n" if filename == "" else 'Csv "'+filename+'"\n')
 
     def Fit(self):
         """Method for Fit chart to data. Todo: add arguments if needed"""
@@ -2740,10 +2734,9 @@ class BranchModChannel(AutomationExtender):
         self.SendCommand("Width " + str(newvalue) + "\n")
         return None
 
-    def Csv(self) -> str:
-        """Response method for Download CSV File. Todo: add arguments if needed"""
-        print("BranchModChannel:Csv(), Todo: add arguments if needed")
-        return self.QueryResponse("Csv\n")
+    def Csv(self, filename: str = "") -> str:
+        """Response method for Download Csv. """
+        return self.QueryResponse("Csv\n" if filename == "" else 'Csv "'+filename+'"\n')
 
     def Fit(self):
         """Method for Fit chart to data. Todo: add arguments if needed"""
@@ -2975,10 +2968,9 @@ class BranchRLenChannel(AutomationExtender):
         self.SendCommand("Width " + str(newvalue) + "\n")
         return None
 
-    def Csv(self) -> str:
-        """Response method for Download CSV File. Todo: add arguments if needed"""
-        print("BranchRLenChannel:Csv(), Todo: add arguments if needed")
-        return self.QueryResponse("Csv\n")
+    def Csv(self, filename: str = "") -> str:
+        """Response method for Download Csv. """
+        return self.QueryResponse("Csv\n" if filename == "" else 'Csv "'+filename+'"\n')
 
     def Fit(self):
         """Method for Fit chart to data. Todo: add arguments if needed"""
@@ -3273,10 +3265,9 @@ class BranchWanderChannel(AutomationExtender):
         self.SendCommand("Window " + str(newvalue) + "\n")
         return None
 
-    def Csv(self) -> str:
-        """Response method for Download CSV File. Todo: add arguments if needed"""
-        print("BranchWanderChannel:Csv(), Todo: add arguments if needed")
-        return self.QueryResponse("Csv\n")
+    def Csv(self, filename: str = "") -> str:
+        """Response method for Download Csv. """
+        return self.QueryResponse("Csv\n" if filename == "" else 'Csv "'+filename+'"\n')
 
     def Fit(self):
         """Method for Fit chart to data. Todo: add arguments if needed"""

@@ -28,6 +28,8 @@
 # ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 # ================================================================================
+import math
+import os
 import time
 from pyBitwiseAutomation.SocketDevice import SocketDevice
 from pyBitwiseAutomation.autogenCommon import *
@@ -76,7 +78,7 @@ class BitwiseDevice(SocketDevice):
 
         return response
 
-    def SaveConfiguration(self, configuration:str ):
+    def SaveConfiguration(self, configuration:str = "[recent]"):
         """Restore configuration file and optionally pause while operation completes.
 
         specifying configurations:
@@ -111,7 +113,6 @@ class BitwiseDevice(SocketDevice):
 
         return None
 
-
     def WaitForRestoreToComplete(self):
         """Wait for restore configuration operation completes."""
 
@@ -136,7 +137,6 @@ class BitwiseDevice(SocketDevice):
         super().SendCommand( "stc\n")
         return None
 
-
     def getIsRunning(self) ->bool :
         response = self.QueryResponse("App:RunState?\n")
         if len(response) < 2:
@@ -151,46 +151,43 @@ class BitwiseDevice(SocketDevice):
 
         return return_value
 
-    def Run(self):
+    def Run(self, waitUntilRunningTimeout: float = 10.0):
         """Initiate run operation and wait until started."""
 
         self.App.Run(False)
 
-        now = SocketDevice.timestamp()
-        timeout = now + 30.0
-
-        while now < timeout:
-            time.sleep(0.5)
-            now = SocketDevice.timestamp()
-            if getIsRunning():
-                break
-
-        if now >= timeout:
-            raise Exception("[Run_Timeout]")
+        if waitUntilRunningTimeout > 0.0:
+            self.WaitForRunToStart(waitUntilRunningTimeout)
 
         return None
 
-    def RunSingle(self):
+    def RunSingle(self, waitUntilRunningTimeout: float = 10.0):
         """Initiate run once operation and wait until started."""
 
         self.App.Run(True)
 
-        now = SocketDevice.timestamp()
-        timeout = now + 30.0
-
-        while now < timeout:
-            time.sleep(0.5)
-            now = SocketDevice.timestamp()
-            if self.getIsRunning():
-                break
-
-        if now >= timeout:
-            raise Exception("[Run_Single_Timeout]")
+        if waitUntilRunningTimeout > 0.0:
+            self.WaitForRunToStart(waitUntilRunningTimeout)
 
         return None
 
     def Stop(self, ):
         self.App.Stop()
+        return None
+
+    def WaitForRunToStart(self, timeoutSec: float = 10.0):
+        """Wait for device to start running."""
+
+        now = SocketDevice.timestamp()
+        timeout = now + timeoutSec
+
+        while now < timeout and not self.getIsRunning():
+            time.sleep(0.5)
+            now = SocketDevice.timestamp()
+
+            if now >= timeout:
+                raise Exception("[Wait_Run_Start_Timeout]")
+
         return None
 
     def WaitForRunToComplete(self, timeoutSec: float):
@@ -201,8 +198,10 @@ class BitwiseDevice(SocketDevice):
 
         while now < timeout and self.getIsRunning():
             time.sleep(0.5)
-
             now = SocketDevice.timestamp()
+
+        if now >= timeout:
+            raise Exception("[Wait_Run_Complete_Timeout]")
 
         self.Stop()
         return None
@@ -233,9 +232,94 @@ class BitwiseDevice(SocketDevice):
             retn = int(value)
         return retn
 
-
     def Clear(self):
         self.App.Clear()
         return None
+
+    def fileXferPut(self, destinationfilepath:str, dt:datetime = None ):
+        """Method for Put file-requires filepath and optional modification date and time. """
+
+        datetime_str = ""
+        if dt is not None:
+            datetime_str = dt.strftime(" %Y/%m/%d %H:%M:%S")
+
+        self.SendCommand('File:Xfer:Put "'+destinationfilepath+'"' + datetime_str + '\n')
+        return None
+
+    def fileXferDonePut(self):
+        """Method for Indicates completion of send operation. """
+        self.SendCommand("File:Xfer:DonePut\n")
+        return None
+
+    def fileXferBuffer(self, buffer_bytes: bytes):
+        """Method for Transmit next buffer to device-requires count, optional checksum. """
+        if len(buffer_bytes) == 0:
+            raise Exception("[XferBuffer_Is_Empty]")
+
+        cksum = 0
+        for i in range(len(buffer_bytes)):
+            cksum = cksum + buffer_bytes[i]
+
+        cksum = cksum & 0xffffffff
+
+        super().SendCommand("stc; File:Xfer:Buffer " + "{:.0f}".format(len(buffer_bytes))+" " + hex(cksum) + "\n")
+        super().Send(buffer_bytes)
+
+        return None
+
+    def fileXferSameBuffer(self, buffer_bytes: bytes ):
+        """Method for Re-transmit same buffer to device-requires count, optional checksum. """
+
+        if len(buffer_bytes) == 0:
+            raise Exception("[XferSameBuffer_Is_Empty]")
+
+        cksum = 0
+        for i in range(len(buffer_bytes)):
+            cksum = cksum + buffer_bytes[i]
+
+        cksum = cksum % 256
+
+        super().SendCommand("stc; File:Xfer:SameBuffer " + "{:.0f}".format(len(buffer_bytes))+" " + hex(cksum) + "\n")
+        super().Send(buffer_bytes)
+
+        return None
+
+    def SendFileAs(self, localfilepath: str, destinationfilepath: str ):
+        print("BitwiseDevice::SendFileAs src=[" + localfilepath + "], dest=[" + destinationfilepath + "]")
+
+        dt = datetime.datetime.fromtimestamp(os.path.getmtime(localfilepath))
+        f = open(localfilepath, "rb")
+
+        try:
+            self.fileXferPut(destinationfilepath, dt)
+
+            byte_buffer = f.read(4096)
+            print("chunk: ", len(byte_buffer))
+            while len(byte_buffer) > 0:
+                self.fileXferBuffer(byte_buffer)
+                status = super().QueryResponse("st?\n")
+
+                retry = 0
+                while retry < 3 and status == "[Checksum_Error]":
+                    self.fileXferSameBuffer(byte_buffer)
+                    status = super().QueryResponse("st?\n")
+                    retry = retry + 1
+
+                if status != "[none]":
+                    raise Exception("[File_Send_Failed]")
+
+                byte_buffer = f.read(4096)
+                print("chunk: ", len(byte_buffer))
+
+            self.SendCommand("File:Xfer:DonePut\n");
+
+        except Exception as e:
+            print("problem sending file: ", e)
+            self.File.Del(destinationfilepath)
+
+            raise e
+
+        finally:
+            f.close()
 
 # EOF

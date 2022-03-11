@@ -77,20 +77,20 @@ class SocketDevice(AutomationInterface):
         tempBuffer = ipaddress
         tempPort = dflt_port
         tokens = ipaddress.split(":")
-        if len(tokens)>1:
+        if len(tokens) > 1:
             tempBuffer = tokens[0]
             tempPort = int(tokens[1])
 
         try:
-            self.Sock = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+            self.Sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
         except Exception as e:
-            print("socket.socket() exception:",e)
+            print("socket.socket() exception:", e)
             raise Exception("[Create_Socket_Failed")
 
         try:
-            self.Sock.connect((tempBuffer,tempPort))
-            self.IsConnected=True
+            self.Sock.connect((tempBuffer, tempPort))
+            self.IsConnected = True
         except Exception as e:
             print("self.Sock.connect() exception is: ", e)
             self.Sock=None
@@ -113,7 +113,7 @@ class SocketDevice(AutomationInterface):
             raise Exception("[Not_Connected]")
         return self.Sock.recv(buflen)
 
-    def Send( self, buffer:bytes ):
+    def Send( self, buffer: bytes):
         """Send specified number of bytes to socket device."""
         if not isinstance(buffer,bytes) :
             raise Exception("[Invalid_Type]")
@@ -122,6 +122,7 @@ class SocketDevice(AutomationInterface):
             raise Exception("[Not_Connected]")
 
         self.Sock.send(buffer)
+
         return None
 
     def SendCommand(self, command:str ):

@@ -305,6 +305,23 @@ void BitwiseDevice::RunSingle( double waitUntilRunningTimeout )
 	}
 }
 
+void BitwiseDevice::WaitForRunToStart( double timeoutSec )
+{
+	double now = SocketDevice::timestamp();
+	double timeout = now + timeoutSec;
+
+	while( now<timeout && !getIsRunning() )
+	{
+		usleep( 200*1000 ); /* poll 5 times per second */
+		now=SocketDevice::timestamp();
+	}
+
+	Stop();
+	if( now>=timeout )
+		throw "[Wait_Run_Start_Timeout]";
+}
+
+
 void BitwiseDevice::WaitForRunToComplete( double timeoutSec )
 {
 	double now = SocketDevice::timestamp();
@@ -318,7 +335,7 @@ void BitwiseDevice::WaitForRunToComplete( double timeoutSec )
 
 	Stop();
 	if( now>=timeout )
-		throw "[Stop_Timeout]";
+		throw "[Wait_Run_Complete_Timeout]";
 }
 
 void BitwiseDevice::Stop()
