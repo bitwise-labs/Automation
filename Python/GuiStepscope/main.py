@@ -68,7 +68,7 @@ class Main(Ui_SS):
                 self.refreshResults(0xff)
 
         except Exception as e:
-            Popup.error(str(e))
+            Popup.error(e)
 
         finally:
             self.editIPAddress.setEnabled(not Connect.getConnected())

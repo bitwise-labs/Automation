@@ -37,7 +37,7 @@ from PyQt5.QtWidgets import QVBoxLayout, QApplication, QMainWindow
 
 from matplotlib import pyplot as plt
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
-# from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar
+from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar
 from popup import Popup
 from connect import Connect
 from settings import Settings
@@ -64,14 +64,17 @@ class Tdr(Settings):
         self.TDRchartFigure = plt.figure()
         self.TDRchartFigure.set_tight_layout(True)
         self.TDRchartCanvas = FigureCanvas(self.TDRchartFigure)
-        # self.chartToolbar = NavigationToolbar(self.TDRchartCanvas, mainWindow)
+        self.chartToolbar = NavigationToolbar(self.TDRchartCanvas, mainWindow)
 
         vLayout = QVBoxLayout()
         vLayout.addWidget(self.TDRchartCanvas)
-        # vLayout.addWidget(self.chartToolbar)
+        vLayout.addWidget(self.chartToolbar)
+        self.chartToolbar.hide()
         self.TDRChartLayout.addLayout(vLayout)
         self.TDRcurrentPlot = None
         self.TDRcurrentShadowPlot = None
+        self.TDRchartLeft = None
+        self.TDRchartWidth = None
 
         self.TDRshadowFigure = plt.figure()
         self.TDRshadowFigure.set_tight_layout(True)
@@ -82,7 +85,7 @@ class Tdr(Settings):
         try:
             self.refreshResults(0x1)
         except Exception as e:
-            Popup.error(str(e))
+            Popup.error(e)
 
     def buttonTDRClear_clicked(self):
         # print("Tdr::buttonTDRClear_clicked")
@@ -92,7 +95,7 @@ class Tdr(Settings):
             Connect.getDevice().Clear()
             self.refreshResults(0x1)
         except Exception as e:
-            Popup.error(str(e))
+            Popup.error(e)
 
     def buttonTDRResetView_clicked(self):
         # print("Tdr::buttonTDRResetView_clicked")
@@ -104,7 +107,7 @@ class Tdr(Settings):
             Connect.getDevice().WaitForRunToComplete(120.0)
             self.refreshResults(0x1)
         except Exception as e:
-            Popup.error(str(e))
+            Popup.error(e)
 
     def buttonTDRSaveResults_clicked(self):
         # print("Tdr::buttonTDRSaveResults_clicked")
@@ -173,7 +176,7 @@ class Tdr(Settings):
                     
             Popup.info("TDR results saved to: " + results_subdir, "Save TDR Results")
         except Exception as e:
-            Popup.error(str(e))
+            Popup.error(e)
             
 
 
@@ -197,7 +200,7 @@ class Tdr(Settings):
             self.refreshResults(0x1)
 
         except Exception as e:
-            Popup.error(str(e))
+            Popup.error(e)
 
         finally:
             self.buttonTDRRunSingle.setEnabled(True)
@@ -215,7 +218,7 @@ class Tdr(Settings):
             Connect.getDevice().Tdr.Chart.setCursValue(0, math.floor(self.numTDRCursorX1.value()))
             self.refreshResults(0x1)
         except Exception as e:
-            Popup.error(str(e))
+            Popup.error(e)
 
     def numTDRCursorX2_editingFinished(self):
         # print("Tdr::numTDRCursorX2_editingFinished")
@@ -223,7 +226,7 @@ class Tdr(Settings):
             Connect.getDevice().Tdr.Chart.setCursValue(1, math.floor(self.numTDRCursorX2.value()))
             self.refreshResults(0x1)
         except Exception as e:
-            Popup.error(str(e))
+            Popup.error(e)
 
     # override
     def editResultsName_editingFinished(self):
@@ -288,6 +291,10 @@ class Tdr(Settings):
         usingDiff = Connect.getDevice().Tdr.Cfg.getUseDiff()
         avg = Connect.getDevice().Tdr.Cfg.getAvg()
         calState = Connect.getDevice().Tdr.getCalState()
+        self.TDRchartLeft = Connect.getDevice().Tdr.Chart.getLeftPS()
+        self.TDRchartWidth = Connect.getDevice().Tdr.Chart.getWidthPS()
+
+
         # print("bw =", bw, ", usingDiff =", usingDiff, ", avg =", avg, ", calState =", calState);
 
         # Fetch short calibration file names and contents, and extract date-time
@@ -382,6 +389,8 @@ class Tdr(Settings):
                        fontsize=9)
         plot.set_xlabel("ps", fontsize=9)
         plot.set_ylabel("ohm", fontsize=9)
+
+        plot.set_xlim(self.TDRchartLeft, self.TDRchartLeft+self.TDRchartWidth)
         plot.grid()
 
         t = plot.text(0.95, 0.95, metaData,
@@ -405,6 +414,7 @@ class Tdr(Settings):
                         fontsize=9)
         plot2.set_xlabel("ps", fontsize=9)
         plot2.set_ylabel("ohm", fontsize=9)
+        plot.set_xlim(self.TDRchartLeft, self.TDRchartLeft+self.TDRchartWidth)
         plot2.grid()
 
         t = plot2.text(0.95, 0.95, metaData,

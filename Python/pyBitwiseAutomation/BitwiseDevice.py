@@ -285,7 +285,7 @@ class BitwiseDevice(SocketDevice):
         return None
 
     def SendFileAs(self, localfilepath: str, destinationfilepath: str ):
-        print("BitwiseDevice::SendFileAs src=[" + localfilepath + "], dest=[" + destinationfilepath + "]")
+        # print("BitwiseDevice::SendFileAs src=[" + localfilepath + "], dest=[" + destinationfilepath + "]")
 
         dt = datetime.datetime.fromtimestamp(os.path.getmtime(localfilepath))
         f = open(localfilepath, "rb")
@@ -294,7 +294,7 @@ class BitwiseDevice(SocketDevice):
             self.fileXferPut(destinationfilepath, dt)
 
             byte_buffer = f.read(4096)
-            print("chunk: ", len(byte_buffer))
+            # print("chunk: ", len(byte_buffer))
             while len(byte_buffer) > 0:
                 self.fileXferBuffer(byte_buffer)
                 status = super().QueryResponse("st?\n")
@@ -309,7 +309,7 @@ class BitwiseDevice(SocketDevice):
                     raise Exception("[File_Send_Failed]")
 
                 byte_buffer = f.read(4096)
-                print("chunk: ", len(byte_buffer))
+                # print("chunk: ", len(byte_buffer))
 
             self.SendCommand("File:Xfer:DonePut\n");
 

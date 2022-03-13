@@ -28,6 +28,7 @@
 # ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 # ================================================================================
+import traceback
 
 from PyQt5.QtWidgets import QMessageBox
 
@@ -35,11 +36,16 @@ from PyQt5.QtWidgets import QMessageBox
 class Popup:
 
     @staticmethod
-    def error(message:str, title: str = "Error"):
+    def error(e: Exception, title: str = "Error"):
+        stack_trace = ''.join(traceback.format_exception(type(e), e, e.__traceback__))
+
+        print("Error message from:")
+        print(stack_trace)
+
         msg = QMessageBox()
         msg.setIcon(QMessageBox.Critical)
-        msg.setText(message)
-        #msg.setInformativeText('More information')
+        msg.setText(str(e))
+        # msg.setInformativeText('More information')
         msg.setWindowTitle(title)
         msg.exec_()
 

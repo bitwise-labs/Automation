@@ -86,7 +86,7 @@ class Settings(Main):
                 self.editDataDirectory.blockSignals(False)
                 self.savePersistentVariables()
         except Exception as e:
-            Popup.error(str(e))
+            Popup.error(e)
 
     def buttonResultsNameFinder_clicked(self):
         # print("Settings::buttonResultsNameFinder_clicked")
@@ -108,7 +108,7 @@ class Settings(Main):
                 self.editResultsName.blockSignals(False)
                 self.savePersistentVariables()
         except Exception as e:
-            Popup.error(str(e))
+            Popup.error(e)
 
     def buttonConfigFileFinder_clicked(self):
         # print("Settings::buttonConfigFileFinder_clicked")
@@ -137,7 +137,7 @@ class Settings(Main):
                 self.savePersistentVariables()
 
         except Exception as e:
-            Popup.error(str(e))
+            Popup.error(e)
 
     def buttonRetrieveConfiguration_clicked(self):
         # print("Settings::buttonRetrieveConfiguration")
@@ -199,7 +199,7 @@ class Settings(Main):
 
             Popup.info("Configuration saved to: "+local_file_path, "Retrieve Configuration")
         except Exception as e:
-            Popup.error(str(e))
+            Popup.error(e)
 
     def buttonUploadConfigAndRestore_clicked(self):
         # print("Settings::buttonUploadConfigAndRestore")
@@ -308,7 +308,7 @@ class Settings(Main):
             Popup.info("Configuration restored from: "+source_file_full_path, "Upload and Restore Configuration")
 
         except Exception as e:
-            Popup.error(str(e))
+            Popup.error(e)
 
     def editResultsName_editingFinished(self):
         # print("Settings::editResultsName_editingFinished: [" + self.editResultsName.text() + "]")
@@ -328,7 +328,7 @@ class Settings(Main):
                 self.savePersistentVariables()
 
         except Exception as e:
-            Popup.error(str(e))
+            Popup.error(e)
 
     def editIPAddress_editingFinished(self):
         # print("Settings::editIPAddress_editingFinished: [" + self.editIPAddress.text() + "]")
@@ -336,7 +336,7 @@ class Settings(Main):
             Connect.setIPAddress(self.editIPAddress.text())
             self.savePersistentVariables()
         except Exception as e:
-            Popup.error(str(e))
+            Popup.error(e)
 
 
     # override

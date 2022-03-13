@@ -37,7 +37,7 @@ from PyQt5.QtWidgets import QVBoxLayout, QApplication, QMainWindow
 
 from matplotlib import pyplot as plt
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
-# from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar
+from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar
 from popup import Popup
 from connect import Connect
 from tdr import Tdr
@@ -65,14 +65,17 @@ class S11(Tdr):
         self.S11chartFigure = plt.figure()
         self.S11chartFigure.set_tight_layout(True)
         self.S11chartCanvas = FigureCanvas(self.S11chartFigure)
-        # self.chartToolbar = NavigationToolbar(self.S11chartCanvas, mainWindow)
+        self.chartToolbar = NavigationToolbar(self.S11chartCanvas, mainWindow)
 
         vLayout = QVBoxLayout()
         vLayout.addWidget(self.S11chartCanvas)
-        # vLayout.addWidget(self.chartToolbar)
+        vLayout.addWidget(self.chartToolbar)
+        self.chartToolbar.hide()
         self.S11ChartLayout.addLayout(vLayout)
         self.S11currentPlot = None
         self.S11currentShadowPlot = None
+        self.S11chartLeft = None
+        self.S11chartWidth = None
 
         self.S11shadowFigure = plt.figure()
         self.S11shadowFigure.set_tight_layout(True)
@@ -83,7 +86,7 @@ class S11(Tdr):
         try:
             self.refreshResults(0x2)
         except Exception as e:
-            Popup.error(str(e))
+            Popup.error(e)
 
     def buttonS11Clear_clicked(self):
         # print("S11::buttonS11Clear_clicked")
@@ -93,7 +96,7 @@ class S11(Tdr):
             Connect.getDevice().Clear()
             self.refreshResults(0x2)
         except Exception as e:
-            Popup.error(str(e))
+            Popup.error(e)
 
     def buttonS11ResetView_clicked(self):
         # print("S11::buttonS11ResetView_clicked")
@@ -105,7 +108,7 @@ class S11(Tdr):
             Connect.getDevice().WaitForRunToComplete(120.0)
             self.refreshResults(0x2)
         except Exception as e:
-            Popup.error(str(e))
+            Popup.error(e)
 
     def buttonS11SaveResults_clicked(self):
         # print("S11::buttonS11SaveResults_clicked")
@@ -177,7 +180,7 @@ class S11(Tdr):
             Popup.info("S11 results saved to: " + results_subdir, "Save S11 Results")
                 
         except Exception as e:
-            Popup.error(str(e))
+            Popup.error(e)
 
     def buttonS11RunSingle_clicked(self):
         # print("S11::buttonS11RunSingle_clicked")
@@ -198,7 +201,7 @@ class S11(Tdr):
             self.refreshResults(0x2)
 
         except Exception as e:
-            Popup.error(str(e))
+            Popup.error(e)
 
         finally:
             self.buttonS11RunSingle.setEnabled(True)
@@ -236,7 +239,7 @@ class S11(Tdr):
     # override
     def refreshResults(self, flag: int):
         super().refreshResults(flag)
-        #  print("S11::refreshResults()")
+        # print("S11::refreshResults()")
 
         if (flag & 0x2) == 0:
             return
@@ -251,6 +254,14 @@ class S11(Tdr):
         persist = Connect.getDevice().S11.Cfg.getPersist()
         applySmoothing = Connect.getDevice().S11.Cfg.getApplySmooth()
         avg = Connect.getDevice().S11.Cfg.getAvg()
+        self.S11chartLeft = Connect.getDevice().S11.Chart.getLeftGHz()
+        self.S11chartWidth = Connect.getDevice().S11.Chart.getWidthGHz()
+
+        leftLimit = Connect.getDevice().S11.Chart.getLimits(0)
+        logType = Connect.getDevice().S11.Chart.getLogscale()
+        if self.S11chartLeft == leftLimit and not logType:
+            self.S11chartLeft = 0.0
+
         # print("persist =", persist, ", applySmoothing =", applySmoothing, ", avg =", avg)
 
         # Fetch trace data
@@ -295,6 +306,8 @@ class S11(Tdr):
                        fontsize=9)
         plot.set_xlabel("GHz", fontsize=9)
         plot.set_ylabel("dB", fontsize=9)
+
+        plot.set_xlim(self.S11chartLeft, self.S11chartLeft+self.S11chartWidth)
         plot.grid()
 
         t = plot.text(0.95, 0.95, metaData,
@@ -306,8 +319,9 @@ class S11(Tdr):
                       )
         t.set_bbox(dict(facecolor='lightyellow', alpha=0.6))
 
-        self.S11chartCanvas.draw()
         self.S11currentPlot = plot
+        self.S11chartCanvas.draw()
+
 
         # Create duplicate chart for "save" function so not dependent on viewing configuration
         self.S11shadowFigure.clear()
@@ -319,6 +333,7 @@ class S11(Tdr):
                         fontsize=9)
         plot2.set_xlabel("GHz", fontsize=9)
         plot2.set_ylabel("dB", fontsize=9)
+        plot2.set_xlim(self.S11chartLeft, self.S11chartLeft+self.S11chartWidth)
         plot2.grid()
 
         t = plot2.text(0.95, 0.95, metaData,
