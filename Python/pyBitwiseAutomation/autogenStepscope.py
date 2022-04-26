@@ -81,7 +81,7 @@ class BranchCalib(AutomationExtender):
         """Get Pulser Slave IP address """
         return self.QueryResponse("SlaveIP?\n")
 
-    def setSlaveIP(self, newvalue:str) :
+    def setSlaveIP(self, newvalue: str) :
         """Set Pulser Slave IP address """
         self.SendCommand("SlaveIP " + "\""+newvalue+"\"" + "\n")
         return None

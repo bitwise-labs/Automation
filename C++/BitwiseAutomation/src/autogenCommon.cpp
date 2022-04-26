@@ -100,29 +100,27 @@ void BranchApp::setTab(const char* newValue) /* Application Tab */
     SendCommand("Tab \"%s\"\n",newValue);
 }
 
-void BranchApp::Clear() /* Clear [<active-appname-list-no-commas>] */
+void BranchApp::Clear() /* Clear all applications */
 {
     SendCommand("Clear\n");
 }
 
-void BranchApp::GuiReset() /* Gui Reset Tabs, Todo:add arguments */
+void BranchApp::GuiReset() /* Gui Reset Tabs */
 {
-    fprintf(stderr,"BranchApp::GuiReset(), Todo: add arguments if needed\n");
     SendCommand("GuiReset\n");
 }
 
-void BranchApp::Refresh() /* Gui Refresh, Todo:add arguments */
+void BranchApp::Refresh() /* Gui Refresh */
 {
-    fprintf(stderr,"BranchApp::Refresh(), Todo: add arguments if needed\n");
     SendCommand("Refresh\n");
 }
 
-void BranchApp::Run(bool runOnceFlag) /* Run [Once] [<active-runobj-list-no-commas>] */
+void BranchApp::Run(bool runOnceFlag)
 {
     SendCommand("Run%s\n",runOnceFlag?" Once":"");
 }
 
-void BranchApp::Stop() /* Stop [<running-runobj-list-no-commas>] */
+void BranchApp::Stop()
 {
     SendCommand("Stop\n");
 }
@@ -138,107 +136,6 @@ char* BranchConst::getOptions(char *buffer,int buflen) /* Option Code */
 char* BranchConst::getSN(char *buffer,int buflen) /* Serial Number */
 {
     return QueryResponse(buffer,buflen,"SN?\n");
-}
-
-/* ================================================================ */
-
-char* BranchFile::getDir(char *buffer,int buflen) /* Current Directory */
-{
-    return QueryResponse(buffer,buflen,"Dir?\n");
-}
-
-void BranchFile::setDir(const char* newValue) /* Current Directory */
-{
-    SendCommand("Dir \"%s\"\n",newValue);
-}
-
-char* BranchFile::Checksum(char *buffer,int buflen, char *filepath) /* Checksum File */
-{
-    return QueryResponse(buffer,buflen,"Checksum \"%s\"\n",filepath);
-}
-
-void BranchFile::Copy(char *frompath, char *topath) /* Copy File */
-{
-    SendCommand("Copy \"%s\" \"%s\"\n",frompath,topath);
-}
-
-void BranchFile::Del(char *filepath) /* Delete File, Todo:add arguments */
-{
-    SendCommand("Del \"%s\"\n",filepath);
-}
-
-char* BranchFile::Exists(char *buffer,int buflen, char *filepath) /* File Exists */
-{
-    return QueryResponse(buffer,buflen,"Exists \"%s\"\n",filepath);
-}
-
-char *BranchFile::Fetch(char *filepath, int *pcount) /* Fetch File - Must free() return value, Todo:add arguments */
-{
-    return QueryBinaryResponse(pcount,"Fetch \"%s\"\n",filepath);
-}
-
-void BranchFile::Length(char *filepath) /* File Length, Todo:add arguments */
-{
-    SendCommand("Length \"%s\"\n",filepath);
-}
-
-char *BranchFile::List(char *dirpath) /* List Directory - Must free() return value, Todo:add arguments */
-{
-    return QueryBinaryResponse(0,"List \"%s\"\n",dirpath);
-}
-
-void BranchFile::Rename(char *frompath, char *topath) /* Rename File, Todo:add arguments */
-{
-    fprintf(stderr,"BranchFile::Rename(), Todo: add arguments if needed\n");
-    SendCommand("Rename \"%s\" \"%s\"\n",frompath,topath);
-}
-
-void BranchFile::XferBuffer() /* Transmit next buffer to device-requires count, optional checksum, Todo:add arguments */
-{
-    fprintf(stderr,"BranchFile::XferBuffer(), Todo: add arguments if needed\n");
-    SendCommand("Xfer:Buffer\n");
-}
-
-void BranchFile::XferDoneGet() /* Indicates completion of get operation, Todo:add arguments */
-{
-    fprintf(stderr,"BranchFile::XferDoneGet(), Todo: add arguments if needed\n");
-    SendCommand("Xfer:DoneGet\n");
-}
-
-void BranchFile::XferDonePut() /* Indicates completion of send operation, Todo:add arguments */
-{
-    fprintf(stderr,"BranchFile::XferDonePut(), Todo: add arguments if needed\n");
-    SendCommand("Xfer:DonePut\n");
-}
-
-void BranchFile::XferGet() /* Get file for transfer-respond filename, length, date, time, Todo:add arguments */
-{
-    fprintf(stderr,"BranchFile::XferGet(), Todo: add arguments if needed\n");
-    SendCommand("Xfer:Get\n");
-}
-
-void BranchFile::XferNext() /* Retrieve next buffer-respond three u32 values, Todo:add arguments */
-{
-    fprintf(stderr,"BranchFile::XferNext(), Todo: add arguments if needed\n");
-    SendCommand("Xfer:Next\n");
-}
-
-void BranchFile::XferPut() /* Put file-requires filepath and optional modification date and time, Todo:add arguments */
-{
-    fprintf(stderr,"BranchFile::XferPut(), Todo: add arguments if needed\n");
-    SendCommand("Xfer:Put\n");
-}
-
-void BranchFile::XferResend() /* Retrieve last buffer--respond three u32 values, Todo:add arguments */
-{
-    fprintf(stderr,"BranchFile::XferResend(), Todo: add arguments if needed\n");
-    SendCommand("Xfer:Resend\n");
-}
-
-void BranchFile::XferSameBuffer() /* Re-transmit same buffer to device-requires count, optional checksum, Todo:add arguments */
-{
-    fprintf(stderr,"BranchFile::XferSameBuffer(), Todo: add arguments if needed\n");
-    SendCommand("Xfer:SameBuffer\n");
 }
 
 /* ================================================================ */
@@ -373,28 +270,24 @@ char* BranchPatt::getVerifyMsg(char *buffer,int buflen) /* Verify message */
     return QueryResponse(buffer,buflen,"VerifyMsg?\n");
 }
 
-void BranchPatt::ClearStatusMsg() /* Clear status message, Todo:add arguments */
+void BranchPatt::ClearStatusMsg() /* Clear status message */
 {
-    fprintf(stderr,"BranchPatt::ClearStatusMsg(), Todo: add arguments if needed\n");
     SendCommand("ClearStatusMsg\n");
 }
 
-void BranchPatt::ClearVerifyMsg() /* Clear verify message, Todo:add arguments */
+void BranchPatt::ClearVerifyMsg() /* Clear verify message */
 {
-    fprintf(stderr,"BranchPatt::ClearVerifyMsg(), Todo: add arguments if needed\n");
     SendCommand("ClearVerifyMsg\n");
 }
 
-void BranchPatt::Copy() /* File copy, Todo:add arguments */
+void BranchPatt::Copy(const char *fromPath, const char *toPath) /* File copy*/
 {
-    fprintf(stderr,"BranchPatt::Copy(), Todo: add arguments if needed\n");
-    SendCommand("Copy\n");
+     SendCommand("Copy \"%s\" \"%s\"\n" ,fromPath,toPath);
 }
 
-void BranchPatt::Delete() /* File delete, Todo:add arguments */
+void BranchPatt::Delete(const char *filePath) /* File delete */
 {
-    fprintf(stderr,"BranchPatt::Delete(), Todo: add arguments if needed\n");
-    SendCommand("Delete\n");
+     SendCommand("Delete \"%s\"\n");
 }
 
 const char *BranchPatt::PatternChannel_Strings[] = {"Ch0","Ch1","Dual",0};
@@ -404,48 +297,46 @@ void BranchPatt::Deploy( PatternChannel ch, const char *filename, int bitShift )
     SendCommand("Deploy %s %d \"%s\"\n",PatternChannel_Strings[(int)ch], bitShift, filename );
 }
 
-char *BranchPatt::Fetch(int *pcount) /* Fetch file - Must free() return value, Todo:add arguments */
+char *BranchPatt::Fetch(const char *filePath, int *pcount) /* Fetch file - Must free() return value, */
 {
-    fprintf(stderr,"BranchPatt::Fetch(), Todo: add arguments if needed\n");
-    return QueryBinaryResponse(pcount,"Fetch\n");
+    return QueryBinaryResponse(pcount,"Fetch \"%s\"\n",filePath);
 }
 
-char *BranchPatt::FetchDir() /* Fetch directory - Must free() return value, Todo:add arguments */
+char *BranchPatt::FetchDir( const char *pathName, GuiType optionalType ) /* Fetch directory - Must free() return value */
 {
-    fprintf(stderr,"BranchPatt::FetchDir(), Todo: add arguments if needed\n");
-    return QueryBinaryResponse(0,"FetchDir\n");
+    return QueryBinaryResponse(0,"FetchDir \"%s\" %s\n",pathName,
+    		GuiType_Strings[(int)optionalType]);
 }
 
-void BranchPatt::Grab() /* Grab pattern, Todo:add arguments */
+void BranchPatt::Grab( PatternChannel ch, int symSize, GuiFormat fmt, const char *filePath ) /* Grab pattern */
 {
-    fprintf(stderr,"BranchPatt::Grab(), Todo: add arguments if needed\n");
-    SendCommand("Grab\n");
+    SendCommand("Grab %s %d %s \"%s\"\n",
+    		PatternChannel_Strings[(int)ch],
+			symSize,
+			GuiFormat_Strings[(int)fmt],
+			filePath
+			);
 }
 
-void BranchPatt::NewFolder() /* New folder, Todo:add arguments */
+void BranchPatt::NewFolder(const char *folderPath) /* New folder */
 {
-    fprintf(stderr,"BranchPatt::NewFolder(), Todo: add arguments if needed\n");
-    SendCommand("NewFolder\n");
+    SendCommand("NewFolder \"%s\"\n",folderPath);
 }
 
-void BranchPatt::Rename() /* File rename, Todo:add arguments */
+void BranchPatt::Rename(const char *fromPath, const char *toName) /* File rename */
 {
-    fprintf(stderr,"BranchPatt::Rename(), Todo: add arguments if needed\n");
-    SendCommand("Rename\n");
+    SendCommand("Rename \"%s\" \"%s\"\n" ,fromPath,toName);
 }
 
-void BranchPatt::Save() /* File save, Todo:add arguments */
+void BranchPatt::Save(const char *filePath) /* File save */
 {
-    fprintf(stderr,"BranchPatt::Save(), Todo: add arguments if needed\n");
-    SendCommand("Save\n");
+    SendCommand("Save \"%s\"\n",filePath);
 }
 
-void BranchPatt::Verify() /* Verify file, Todo:add arguments */
+void BranchPatt::Verify(const char *filePath) /* Verify file */
 {
-    fprintf(stderr,"BranchPatt::Verify(), Todo: add arguments if needed\n");
-    SendCommand("Verify\n");
+    SendCommand("Verify \"%s\"\n",filePath);
 }
-
 
 /* ================================================================ */
 
@@ -606,10 +497,12 @@ void BranchSyn::setSource(int index,Source newValue )
     SendCommand("Source[%d] \"%s\"\n",index,Source_Strings[(int)newValue]);
 }
 
-void BranchSyn::Map() /* Map clock source to destination(s), Todo:add arguments */
+void BranchSyn::Map(Source clockSource, Dest clockDest) /* Map clock source to destination(s) */
 {
-    fprintf(stderr,"BranchSyn::Map(), Todo: add arguments if needed\n");
-    SendCommand("Map\n");
+    SendCommand("Map %s %s\n",
+    	Source_Strings[(int)clockSource],
+    	Dest_Strings[(int)clockDest]
+		);
 }
 
 /* ================================================================ */
@@ -677,6 +570,59 @@ void BranchSys::setShowSettings(bool newValue) /* Show Settings */
 int BranchSys::getUsers() /* Number of users */
 {
     return QueryResponse_int("Users?\n");
+}
+
+
+/* ================================================================ */
+
+char* BranchFile::getDir(char *buffer,int buflen) /* Current Directory */
+{
+    return QueryResponse(buffer,buflen,"Dir?\n");
+}
+
+void BranchFile::setDir(const char* newValue) /* Current Directory */
+{
+    SendCommand("Dir \"%s\"\n",newValue);
+}
+
+char* BranchFile::Checksum(char *buffer,int buflen, char *filepath) /* Checksum File */
+{
+    return QueryResponse(buffer,buflen,"Checksum \"%s\"\n",filepath);
+}
+
+void BranchFile::Copy(char *frompath, char *topath) /* Copy File */
+{
+    SendCommand("Copy \"%s\" \"%s\"\n",frompath,topath);
+}
+
+void BranchFile::Del(char *filepath) /* Delete File */
+{
+    SendCommand("Del \"%s\"\n",filepath);
+}
+
+char* BranchFile::Exists(char *buffer,int buflen, char *filepath) /* File Exists */
+{
+    return QueryResponse(buffer,buflen,"Exists \"%s\"\n",filepath);
+}
+
+char *BranchFile::Fetch(char *filepath, int *pcount) /* Fetch File - Must free() return value */
+{
+    return QueryBinaryResponse(pcount,"Fetch \"%s\"\n",filepath);
+}
+
+void BranchFile::Length(char *filepath) /* File Length */
+{
+    SendCommand("Length \"%s\"\n",filepath);
+}
+
+char *BranchFile::List(char *dirpath) /* List Directory - Must free() return value */
+{
+    return QueryBinaryResponse(0,"List \"%s\"\n",dirpath);
+}
+
+void BranchFile::Rename(char *frompath, char *topath) /* Rename File */
+{
+    SendCommand("Rename \"%s\" \"%s\"\n",frompath,topath);
 }
 
 

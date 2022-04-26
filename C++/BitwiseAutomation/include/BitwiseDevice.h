@@ -32,6 +32,8 @@
 #ifndef BITWISE_BITWISE_DEVICE
 #define  BITWISE_BITWISE_DEVICE
 
+#include <time.h> /* time_t */
+
 #include "SocketDevice.h"
 #include "autogenCommon.h"
 
@@ -76,6 +78,16 @@ class BitwiseDevice :
 	void Stop();
 	void Clear();
 	bool getIsRunning();
+
+	void SendFileAs( char *localFilePath, char *destinationFilePath );
+	void ReceiveFileAs( char *sourceFilePath, char *localFilePath );
+
+	private:
+
+	void fileXferBuffer(
+			char *buffer_bytes,
+			int byte_count,
+			const char *prefix = "" ); /* use prefix "Same" for retry */
 
 	public:
 	BranchApp App;

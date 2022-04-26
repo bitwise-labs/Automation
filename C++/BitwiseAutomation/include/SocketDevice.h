@@ -66,7 +66,7 @@ class SocketDevice :
 	virtual void Disconnect();
 	bool getIsConnected() { return m_IsConnected; }
 
-	private:
+	protected:
 	int getSock() { return m_Sock; }
 	int Send( const char *ptr, int count );
 	int Receive( char *buffer, int buflen );

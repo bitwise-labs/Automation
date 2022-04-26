@@ -80,7 +80,7 @@ class BranchApp(AutomationExtender):
         """Get Run Duration Limit """
         return self.QueryResponse("RunDurLimit?\n")
 
-    def setRunDurLimit(self, newvalue:str) :
+    def setRunDurLimit(self, newvalue: str) :
         """Set Run Duration Limit """
         self.SendCommand("RunDurLimit " + "\""+newvalue+"\"" + "\n")
         return None
@@ -119,36 +119,33 @@ class BranchApp(AutomationExtender):
         """Get Application Tab """
         return self.QueryResponse("Tab?\n")
 
-    def setTab(self, newvalue:str) :
+    def setTab(self, newvalue: str) :
         """Set Application Tab """
         self.SendCommand("Tab " + "\""+newvalue+"\"" + "\n")
         return None
 
     def Clear(self):
-        """Method for Clear [<active-appname-list-no-commas>]."""
+        """Method for Clear all applications."""
         self.SendCommand("Clear\n")
         return None
 
     def GuiReset(self):
-        """Method for Gui Reset Tabs. Todo: add arguments if needed"""
-        print("BranchApp:GuiReset(), Todo: add arguments if needed")
+        """Method for Gui Reset Tabs."""
         self.SendCommand("GuiReset\n")
         return None
 
     def Refresh(self):
-        """Method for Gui Refresh. Todo: add arguments if needed"""
-        print("BranchApp:Refresh(), Todo: add arguments if needed")
+        """Method for Gui Refresh."""
         self.SendCommand("Refresh\n")
         return None
 
     def Run(self, runOnceFlag: bool = False):
-        """Method for Run [Once] [<active-runobj-list-no-commas>]."""
-
+        """Method for Run all applications."""
         self.SendCommand("Run" + (" Once" if runOnceFlag else "") + "\n")
         return None
 
     def Stop(self):
-        """Method for Stop [<running-runobj-list-no-commas>]"""
+        """Method for Stop all applications."""
         self.SendCommand("Stop\n")
         return None
 
@@ -173,7 +170,7 @@ class BranchPatt(AutomationExtender):
         """Get Current folder """
         return self.QueryResponse("Folder?\n")
 
-    def setFolder(self, newvalue:str) :
+    def setFolder(self, newvalue: str) :
         """Set Current folder """
         self.SendCommand("Folder " + "\""+newvalue+"\"" + "\n")
         return None
@@ -252,7 +249,7 @@ class BranchPatt(AutomationExtender):
         """Get Restore user pattern files[] """
         return self.QueryResponse("RestoreFile["+str(index)+"]?\n")
 
-    def setRestoreFile(self, index: int, newvalue:str) :
+    def setRestoreFile(self, index: int, newvalue: str) :
         """Set Restore user pattern files[] """
         self.SendCommand("RestoreFile["+str(index)+"] " + "\""+newvalue+"\"" + "\n")
         return None
@@ -270,27 +267,23 @@ class BranchPatt(AutomationExtender):
         return self.QueryResponse("VerifyMsg?\n")
 
     def ClearStatusMsg(self):
-        """Method for Clear status message. Todo: add arguments if needed"""
-        print("BranchPatt:ClearStatusMsg(), Todo: add arguments if needed")
+        """Method for Clear status message. """
         self.SendCommand("ClearStatusMsg\n")
         return None
 
     def ClearVerifyMsg(self):
-        """Method for Clear verify message. Todo: add arguments if needed"""
-        print("BranchPatt:ClearVerifyMsg(), Todo: add arguments if needed")
+        """Method for Clear verify message."""
         self.SendCommand("ClearVerifyMsg\n")
         return None
 
-    def Copy(self):
-        """Method for File copy. Todo: add arguments if needed"""
-        print("BranchPatt:Copy(), Todo: add arguments if needed")
-        self.SendCommand("Copy\n")
+    def Copy(self, fromPath: str, toPath: str):
+        """Method for File copy."""
+        self.SendCommand("Copy \""+fromPath+"\" \""+toPath+"\"\n")
         return None
 
-    def Delete(self):
-        """Method for File delete. Todo: add arguments if needed"""
-        print("BranchPatt:Delete(), Todo: add arguments if needed")
-        self.SendCommand("Delete\n")
+    def Delete(self, filePath: str):
+        """Method for File delete. """
+        self.SendCommand("Delete \"" + filePath + "\"\n")
         return None
 
     class PatternChannel(Enum):
@@ -303,44 +296,39 @@ class BranchPatt(AutomationExtender):
         self.SendCommand("Deploy "+ch.value+" "+str(bitShift)+" \"" + filename + "\"\n")
         return None
 
-    def Fetch(self) -> bytes:
-        """Binary response method for Fetch file. Todo: add arguments if needed"""
-        print("BranchPatt:Fetch(), Todo: add arguments if needed")
-        return self.QueryBinaryResponse("Fetch\n")
+    def Fetch(self, filePath: str) -> bytes:
+        """Binary response method for Fetch file."""
 
-    def FetchDir(self) -> str:
-        """Binary string response method for Fetch directory. Todo: add arguments if needed"""
-        print("BranchPatt:FetchDir(), Todo: add arguments if needed")
-        return str(self.QueryBinaryResponse("FetchDir\n"),encoding='utf-8')
+        return self.QueryBinaryResponse("Fetch \"" + filePath + "\"\n")
 
-    def Grab(self):
-        """Method for Grab pattern. Todo: add arguments if needed"""
-        print("BranchPatt:Grab(), Todo: add arguments if needed")
-        self.SendCommand("Grab\n")
+    def FetchDir(self, pathName: str, optionalType: GuiType = GuiType.All ) -> str:
+        """Binary string response method for Fetch directory. """
+        return str(self.QueryBinaryResponse("FetchDir \""+pathName+"\" " + str(optionalType)+"\n"),encoding='utf-8')
+
+    def Grab(self, ch: PatternChannel, symSize: int, fmt: GuiFormat, filePath: str):
+        """Method for Grab pattern. """
+        print("BranchPatt:Grab()")
+        self.SendCommand("Grab " + str(ch) + " " + str(symSize) + " " + str(fmt) + "\"" + filePath + "\"\n")
         return None
 
-    def NewFolder(self):
-        """Method for New folder. Todo: add arguments if needed"""
-        print("BranchPatt:NewFolder(), Todo: add arguments if needed")
-        self.SendCommand("NewFolder\n")
+    def NewFolder(self, folderPath: str):
+        """Method for New folder. """
+        self.SendCommand("NewFolder \"" + folderPath + "\"\n")
         return None
 
-    def Rename(self):
-        """Method for File rename. Todo: add arguments if needed"""
-        print("BranchPatt:Rename(), Todo: add arguments if needed")
-        self.SendCommand("Rename\n")
+    def Rename(self, fromPath: str, toName: str):
+        """Method for File rename."""
+        self.SendCommand("Rename \""+fromPath+"\" \""+toName+"\"\n")
         return None
 
-    def Save(self):
-        """Method for File save. Todo: add arguments if needed"""
-        print("BranchPatt:Save(), Todo: add arguments if needed")
-        self.SendCommand("Save\n")
+    def Save(self, filePath: str):
+        """Method for File save."""
+        self.SendCommand("Save \"" + filePath + "\"\n")
         return None
 
-    def Verify(self):
-        """Method for Verify file. Todo: add arguments if needed"""
-        print("BranchPatt:Verify(), Todo: add arguments if needed")
-        self.SendCommand("Verify\n")
+    def Verify(self, filePath: str):
+        """Method for Verify file."""
+        self.SendCommand("Verify \"" + filePath + "\"\n")
         return None
 
 # ================================ #
@@ -384,7 +372,7 @@ class BranchSys(AutomationExtender):
         """Get System nickname """
         return self.QueryResponse("Nickname?\n")
 
-    def setNickname(self, newvalue:str) :
+    def setNickname(self, newvalue: str) :
         """Set System nickname """
         self.SendCommand("Nickname " + "\""+newvalue+"\"" + "\n")
         return None
@@ -546,10 +534,9 @@ class BranchSyn(AutomationExtender):
         self.SendCommand("Source["+str(index)+"] " + newvalue.value + "\n")
         return None
 
-    def Map(self):
-        """Method for Map clock source to destination(s). Todo: add arguments if needed"""
-        print("BranchSyn:Map(), Todo: add arguments if needed")
-        self.SendCommand("Map\n")
+    def Map(self, clockSource: Source, clockDest: Dest):
+        """Method for Map clock source to destination(s). """
+        self.SendCommand("Map " + str(clockSource) + " " + str(clockDest) + "\n")
         return None
 
 # ================================ #
@@ -569,123 +556,45 @@ class BranchFile(AutomationExtender):
         """Get Current Directory """
         return self.QueryResponse("Dir?\n")
 
-    def setDir(self, newvalue:str) :
+    def setDir(self, newvalue: str) :
         """Set Current Directory """
         self.SendCommand("Dir " + "\""+newvalue+"\"" + "\n")
         return None
 
-    def Checksum(self, filepath:str) -> str:
+    def Checksum(self, filepath: str) -> str:
         """Response method for Checksum File."""
         return self.QueryResponse("Checksum " + "\""+filepath+"\"" + "\n")
 
-    def Copy(self,frompath:str, topath:str):
+    def Copy(self,frompath: str, topath: str):
         """Method for Copy File."""
-        self.SendCommand("Copy " + "\""+frompath+"\"" + " " +"\""+topath+"\"" + "\n")
+        self.SendCommand("Copy " + "\"" + frompath + "\"" + " " + "\"" + topath + "\"" + "\n")
         return None
 
-    def Del(self, filepath:str):
+    def Del(self, filepath: str):
         """Method for Delete File."""
         self.SendCommand("Del " + "\""+filepath+"\"" + "\n")
         return None
 
-    def Exists(self, filepath:str) -> str:
+    def Exists(self, filepath: str) -> str:
         """Response method for File Exists."""
         return self.QueryResponse("Exists " + "\""+filepath+"\"" + "\n")
 
-    def Fetch(self, filepath:str) -> bytes:
+    def Fetch(self, filepath: str) -> bytes:
         """Binary response method for Fetch File."""
         return self.QueryBinaryResponse("Fetch " + "\""+filepath+"\"" + "\n")
 
-    def Length(self, filepath:str):
+    def Length(self, filepath: str):
         """Method for File Length. """
         self.SendCommand("Length " + "\""+filepath+"\"" + "\n")
         return None
 
-    def List(self,dirpath:str) -> str:
+    def List(self,dirpath: str) -> str:
         """Binary string response method for List Directory."""
-        return str(self.QueryBinaryResponse("List " + "\""+dirpath+"\"" + "\n"),encoding='utf-8')
+        return str(self.QueryBinaryResponse("List " + "\""+dirpath+"\"" + "\n"), encoding='utf-8')
 
-    def Rename(self,frompath:str, topath:str):
+    def Rename(self,frompath: str, topath: str):
         """Method for Rename File."""
-        self.SendCommand("Rename " + "\""+frompath+"\"" + " " +"\""+topath+"\"" + "\n")
+        self.SendCommand("Rename " + "\"" + frompath + "\"" + " " + "\"" + topath + "\"" + "\n")
         return None
-
-    def XferDoneGet(self):
-        """Method for Indicates completion of get operation. Todo: add arguments if needed"""
-        print("BranchFile:XferDoneGet(), Todo: add arguments if needed")
-        self.SendCommand("Xfer:DoneGet\n")
-        return None
-
-    def XferGet(self):
-        """Method for Get file for transfer-respond filename, length, date, time. Todo: add arguments if needed"""
-        print("BranchFile:XferGet(), Todo: add arguments if needed")
-        self.SendCommand("Xfer:Get\n")
-        return None
-
-    def XferNext(self):
-        """Method for Retrieve next buffer-respond three u32 values. Todo: add arguments if needed"""
-        print("BranchFile:XferNext(), Todo: add arguments if needed")
-        self.SendCommand("Xfer:Next\n")
-        return None
-
-    def XferResend(self):
-        """Method for Retrieve last buffer--respond three u32 values. Todo: add arguments if needed"""
-        print("BranchFile:XferResend(), Todo: add arguments if needed")
-        self.SendCommand("Xfer:Resend\n")
-        return None
-
-    # def XferDonePut(self):
-    #     """Method for Indicates completion of send operation. Todo: add arguments if needed"""
-    #     print("BranchFile:XferDonePut(), Todo: add arguments if needed")
-    #     self.SendCommand("Xfer:DonePut\n")
-    #     return None
-
-    # def XferPut(self, destinationfilepath:str, dt:datetime = None ):
-    #     """Method for Put file-requires filepath and optional modification date and time. """
-    #
-    #     datetime_str = ""
-    #     if dt is not None:
-    #         datetime_str = dt.strftime(" %m/%d/%y %H:%M:%s")
-    #
-    #     self.SendCommand('Xfer:Put "'+destinationfilepath+'"' + datetime_str + '\n')
-    #     return None
-
-    # def XferBuffer(self, buffer_bytes: bytes ):
-    #     """Method for Transmit next buffer to device-requires count, optional checksum. """
-    #
-    #     if len(buffer_bytes) == 0:
-    #         raise Exception("[XferBuffer_Is_Empty]")
-    #
-    #     cksum = 0
-    #     for i in range(len(buffer_bytes)):
-    #         cksum = cksum + buffer_bytes[i]
-    #
-    #     cksum = cksum % 256
-    #     command_string = "stc; File:Xfer:Buffer " + "{:.0f}".format(len(buffer_bytes))+" 0x" + hex(cksum) + "\n"
-    #     command_bytes = command_string.encode("utf8")
-    #
-    #     self.Send(command_bytes)
-    #     self.Send(buffer_bytes)
-    #
-    #     return None
-
-    # def XferSameBuffer(self, buffer_bytes: bytes ):
-    #     """Method for Re-transmit same buffer to device-requires count, optional checksum. """
-    #
-    #     if len(buffer_bytes) == 0:
-    #         raise Exception("[XferSameBuffer_Is_Empty]")
-    #
-    #     cksum = 0
-    #     for i in range(len(buffer_bytes)):
-    #         cksum = cksum + buffer_bytes[i]
-    #
-    #     cksum = cksum % 256
-    #     command_string = "stc; File:Xfer:SameBuffer " + "{:.0f}".format(len(buffer_bytes))+" 0x" + hex(cksum) + "\n"
-    #     command_bytes = command_string.encode("utf8")
-    #
-    #     self.Send(command_bytes)
-    #     self.Send(buffer_bytes)
-    #
-    #     return None
 
 # EOF

@@ -49,7 +49,7 @@ class AutomationInterface():
 		"""Retrieve debugging mode."""
 		pass
 
-	def SendCommand(self, command:str ):
+	def SendCommand(self, command: str ):
 		"""Send command (ending with '\n') to socket device."""
 		pass
 

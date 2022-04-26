@@ -1435,7 +1435,7 @@ class BranchEla(AutomationExtender):
         """Get Ela Filename """
         return self.QueryResponse("File?\n")
 
-    def setFile(self, newvalue:str) :
+    def setFile(self, newvalue: str) :
         """Set Ela Filename """
         self.SendCommand("File " + "\""+newvalue+"\"" + "\n")
         return None

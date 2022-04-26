@@ -31,6 +31,7 @@
 import math
 import os
 import time
+import re
 from pyBitwiseAutomation.SocketDevice import SocketDevice
 from pyBitwiseAutomation.autogenCommon import *
 
@@ -49,7 +50,7 @@ class BitwiseDevice(SocketDevice):
         return None
 
     # Override
-    def SendCommand(self, command:str ):
+    def SendCommand(self, command: str ):
         """Send command (ending with '\n') to socket device, with error handling."""
 
         super().SendCommand( "stc;"+command)
@@ -61,7 +62,7 @@ class BitwiseDevice(SocketDevice):
         return None
 
     #Override
-    def QueryResponse( self, command:str, maxLength:int = 4096 ) -> str:
+    def QueryResponse( self, command: str, maxLength:int = 4096 ) -> str:
         """Query response from command (ending with '\n') from socket device, with error handling."""
 
         if not isinstance(command,str):
@@ -78,7 +79,7 @@ class BitwiseDevice(SocketDevice):
 
         return response
 
-    def SaveConfiguration(self, configuration:str = "[recent]"):
+    def SaveConfiguration(self, configuration: str = "[recent]"):
         """Restore configuration file and optionally pause while operation completes.
 
         specifying configurations:
@@ -93,7 +94,7 @@ class BitwiseDevice(SocketDevice):
         super().SendCommand( "stc\n")
         return None
 
-    def RestoreConfiguration(self, configuration:str, waitToComplete:bool = True ):
+    def RestoreConfiguration(self, configuration: str, waitToComplete:bool = True ):
         """Restore configuration file and optionally pause while operation completes.
 
         specifying configurations:
@@ -225,7 +226,7 @@ class BitwiseDevice(SocketDevice):
 
     @staticmethod
     def unpackIntegerByKey(string: str, key: str) -> float:
-        value = BitwiseDevice.unpackValueByKey(string,key)
+        value = BitwiseDevice.unpackValueByKey(string, key)
         if value.startswith("0x") or value.startswith("0X"):
             retn = int(value[2:], 16)
         else:
@@ -236,25 +237,13 @@ class BitwiseDevice(SocketDevice):
         self.App.Clear()
         return None
 
-    def fileXferPut(self, destinationfilepath:str, dt:datetime = None ):
-        """Method for Put file-requires filepath and optional modification date and time. """
+    # ============================================================================
+    # ============================================================================
 
-        datetime_str = ""
-        if dt is not None:
-            datetime_str = dt.strftime(" %Y/%m/%d %H:%M:%S")
-
-        self.SendCommand('File:Xfer:Put "'+destinationfilepath+'"' + datetime_str + '\n')
-        return None
-
-    def fileXferDonePut(self):
-        """Method for Indicates completion of send operation. """
-        self.SendCommand("File:Xfer:DonePut\n")
-        return None
-
-    def fileXferBuffer(self, buffer_bytes: bytes):
-        """Method for Transmit next buffer to device-requires count, optional checksum. """
+    def fileXferBuffer(self, buffer_bytes: bytes, prefix: str = "" ):  # use prefix "Same" for retry
+        """Method for Transmit next buffer to device-requires count. """
         if len(buffer_bytes) == 0:
-            raise Exception("[XferBuffer_Is_Empty]")
+            raise Exception("[Xfer"+prefix+"Buffer_Is_Empty]")
 
         cksum = 0
         for i in range(len(buffer_bytes)):
@@ -262,36 +251,27 @@ class BitwiseDevice(SocketDevice):
 
         cksum = cksum & 0xffffffff
 
-        super().SendCommand("stc; File:Xfer:Buffer " + "{:.0f}".format(len(buffer_bytes))+" " + hex(cksum) + "\n")
+        super().SendCommand("stc; File:Xfer:" + prefix + "Buffer " + "{:.0f}".format(len(buffer_bytes))+" " + hex(cksum) + "\n")
         super().Send(buffer_bytes)
 
         return None
 
-    def fileXferSameBuffer(self, buffer_bytes: bytes ):
-        """Method for Re-transmit same buffer to device-requires count, optional checksum. """
-
-        if len(buffer_bytes) == 0:
-            raise Exception("[XferSameBuffer_Is_Empty]")
-
-        cksum = 0
-        for i in range(len(buffer_bytes)):
-            cksum = cksum + buffer_bytes[i]
-
-        cksum = cksum % 256
-
-        super().SendCommand("stc; File:Xfer:SameBuffer " + "{:.0f}".format(len(buffer_bytes))+" " + hex(cksum) + "\n")
-        super().Send(buffer_bytes)
-
-        return None
-
-    def SendFileAs(self, localfilepath: str, destinationfilepath: str ):
+    def SendFileAs(self, localfilepath: str, destinationfilepath: str):
+        """Send file to device.  """
         # print("BitwiseDevice::SendFileAs src=[" + localfilepath + "], dest=[" + destinationfilepath + "]")
+
+        if len(localfilepath)==0 :
+            raise Exception("[Local_Filename_Is_Missing]")
+
+        if len(destinationfilepath)==0 :
+            raise Exception("[Destination_Filename_Is_Missing]")
 
         dt = datetime.datetime.fromtimestamp(os.path.getmtime(localfilepath))
         f = open(localfilepath, "rb")
 
         try:
-            self.fileXferPut(destinationfilepath, dt)
+            datetime_str = dt.strftime(" %Y/%m/%d %H:%M:%S")
+            self.SendCommand('File:Xfer:Put "' + destinationfilepath + '"' + datetime_str + '\n')
 
             byte_buffer = f.read(4096)
             # print("chunk: ", len(byte_buffer))
@@ -301,7 +281,7 @@ class BitwiseDevice(SocketDevice):
 
                 retry = 0
                 while retry < 3 and status == "[Checksum_Error]":
-                    self.fileXferSameBuffer(byte_buffer)
+                    self.fileXferBuffer(byte_buffer,"Same")
                     status = super().QueryResponse("st?\n")
                     retry = retry + 1
 
@@ -311,15 +291,152 @@ class BitwiseDevice(SocketDevice):
                 byte_buffer = f.read(4096)
                 # print("chunk: ", len(byte_buffer))
 
-            self.SendCommand("File:Xfer:DonePut\n");
+            self.SendCommand("File:Xfer:DonePut\n")
 
         except Exception as e:
             print("problem sending file: ", e)
-            self.File.Del(destinationfilepath)
+            self.SendCommand("File:Xfer:DonePut\n")
+            super().SendCommand("File:Del \"" + destinationfilepath + "\"\n")
 
             raise e
 
         finally:
             f.close()
+
+    def ReceiveFileAs(self, sourceFilePath: str, localFilePath: str ):
+        """Receive file from device.  Todo: Is code - complete, needs testing. """
+        # print("BitwiseDevice::SendFileAs src=[" + sourceFilePath + "], localdest=[" + localFilePath + "]")
+
+        if len(sourceFilePath)==0 :
+            raise Exception("[Source_Filename_Is_Missing]")
+
+        if len(localFilePath)==0 :
+            raise Exception("[Local_Filename_Is_Missing]")
+
+        # returns with long string containing fields separated by space:
+        # "filename" ... including double quotes
+        # byte count
+        # year / month / day ... including forward slashes, year is 4 digits
+        # HH: MM:SS ... including colons
+
+        buffer = super().QueryResponse('File:Xfer:Get "' + sourceFilePath + '"\n')
+
+        n = 0
+        for n in range(1,len(buffer)):
+            if buffer[n] == '"' :
+                break
+
+        if buffer[0] != '"' or buffer[n] != '"' :
+            raise Exception("[Invalid_Response_From_Get_Command]")
+
+        sevenNumbers = re.split("[0-9]+",buffer[n+1:])
+        if len(sevenNumbers) != 7:
+            raise Exception("[Invalid_Response_Length_Date_Time]")
+
+        length = int(sevenNumbers[0])
+        year = int(sevenNumbers[1])
+        month = int(sevenNumbers[2])
+        day = int(sevenNumbers[3])
+        hour = int(sevenNumbers[4])
+        minute = int(sevenNumbers[5])
+        second = int(sevenNumbers[6])
+
+        f = open(localFilePath,"wb")
+        try:
+
+            totalTransferred=0
+            while totalTransferred<length:
+                super().SendCommand("File:Xfer:Next\n")
+                headerBytes = super().Receive(12)
+
+                if len(headerBytes)!=12:
+                    raise Exception("[No_Response_From_Next_Command]")
+
+                smagic = int.from_bytes(headerBytes[0:4], byteorder="little")
+                sbytes = int.from_bytes(headerBytes[4:8], byteorder="little")
+                ssum = int.from_bytes(headerBytes[8:12], byteorder="little")
+
+                if smagic!=0x12345678:
+                    raise Exception("[Response_From_Next_Command_Is_Invalid]")
+
+                if sbytes == 0:
+                    break
+
+                cnt = 0
+                xfer = bytes(sbytes)
+                while cnt<sbytes:
+                    transfer = super().Receive(sbytes-cnt)
+                    if len(transfer)==0:
+                        raise Exception("[Binary_Xfer_Unsuccessful]")
+
+                    for i in range(len(transfer)):
+                        xfer[cnt+i]=transfer[i]
+                    cnt = cnt + len(transfer)
+
+                xsum=0
+                for i in range(len(xfer)):
+                    xsum = xsum + xfer[i]
+
+                retry=3
+                while xsum != ssum and retry>0:
+                    super().SendCommand("File:Xfer:Resend\n")
+
+                    headerBytes = super().Receive(12)
+
+                    if len(headerBytes) != 12:
+                        raise Exception("[No_Response_From_ResendCommand]")
+
+                    smagic = int.from_bytes(headerBytes[0:4], byteorder="little")
+                    sbytes = int.from_bytes(headerBytes[4:8], byteorder="little")
+                    ssum = int.from_bytes(headerBytes[8:12], byteorder="little")
+
+                    if smagic != 0x12345678:
+                        raise Exception("[Response_From_Resend_Command_Is_Invalid]")
+
+                    cnt = 0
+                    xfer = bytes(sbytes)
+                    while cnt<sbytes:
+                        transfer = super().Receive(sbytes-cnt)
+                        if len(transfer)==0:
+                            raise Exception("[Binary_Retry_Unsuccessful]")
+
+                        for i in range(len(transfer)):
+                            xfer[cnt+i]=transfer[i]
+                        cnt = cnt + len(transfer)
+
+                    xsum=0
+                    for i in range(len(xfer)):
+                        xsum = xsum + xfer[i]
+
+                if retry == 0:
+                    raise Exception("[Binary_Xfer_Retries_Failed]")
+
+                f.write(xfer)
+                totalTransferred = totalTransferred + len(xfer)
+
+            self.SendCommand("File:Xfer:DoneGet\n")
+
+            f.close()
+            f = None
+
+            statbuf = os.stat(localFilePath)
+            timeinfo = time.localtime( statbuf.st_mtime )
+            timeinfo.tm_year = year # careful - c/c++ is years since 1900, but python is all 4 digits
+            timeinfo.tm_mon = month # careful - c/c++ is 0-11, but python is 1-12
+            timeinfo.tm_mday = day
+            timeinfo.tm_hour = hour
+            timeinfo.tm_min = minute
+            timeinfo.tm_sec = second
+
+            new_times = (time.mktime(timeinfo),time.mktime(timeinfo))
+            os.utime(localFilePath,new_times)
+
+        except Exception as e:
+            print("Problem receiving file: " + str(e))
+
+            if f is not None:
+                f.close()
+
+            os.unlink(localFilePath)
 
 # EOF

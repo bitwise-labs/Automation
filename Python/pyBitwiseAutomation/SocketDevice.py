@@ -70,7 +70,7 @@ class SocketDevice(AutomationInterface):
     def getIsConnected(self) -> bool:
         return self.IsConnected
 
-    def Connect( self, ipaddress:str, dflt_port:int = 923 ) :
+    def Connect( self, ipaddress: str, dflt_port:int = 923 ) :
         """Connect to socket device."""
         if self.IsConnected:
             self.Disconnect()
@@ -125,7 +125,7 @@ class SocketDevice(AutomationInterface):
 
         return None
 
-    def SendCommand(self, command:str ):
+    def SendCommand(self, command: str ):
         """Send command (ending with '\n') to socket device."""
         if not isinstance(command,str) :
             raise Exception("[Invalid_Command_Type]")
@@ -139,7 +139,7 @@ class SocketDevice(AutomationInterface):
         self.Sock.send(bytes(command,'utf-8'))
         return None
 
-    def QueryResponse( self, command:str, maxLength:int = 4096 ) -> str:
+    def QueryResponse( self, command: str, maxLength:int = 4096 ) -> str:
         """Query response from command (ending with '\n') from socket device."""
 
         if not isinstance(command, str) :
@@ -211,7 +211,7 @@ class SocketDevice(AutomationInterface):
 
         return None
 
-    def QueryBinaryResponse( self, command:str ) -> bytes :
+    def QueryBinaryResponse( self, command: str ) -> bytes :
         """Query array of bytes response from command (ending with '\n') from socket device."""
 
         if not isinstance(command, str) :

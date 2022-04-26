@@ -53,7 +53,7 @@ class AutomationExtender(AutomationInterface):
 	def setDebugging(self, newvalue: bool):
 		self.Debugging=newvalue
 
-	def SendCommand(self, command:str ):
+	def SendCommand(self, command: str ):
 		"""Send command (ending with '\n') to socket device."""
 		self.Parent.SendCommand(self.Prefix+command)
 		return None

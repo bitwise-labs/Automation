@@ -34,6 +34,8 @@
 #include <string.h> /* strcmp, strtok */
 #include <unistd.h> /* usleep */
 #include <stdlib.h> /* malloc, free */
+#include <sys/stat.h> /* stat */
+#include <utime.h> /* utimbuf */
 
 #include "BitwiseDevice.h"
 
@@ -225,7 +227,6 @@ void BitwiseDevice::RestoreConfiguration( const char *configuration, bool waitTo
 		WaitForRestoreToComplete();
 }
 
-
 void BitwiseDevice::WaitForRestoreToComplete()
 {
 	double now = timestamp();
@@ -261,9 +262,25 @@ void BitwiseDevice::WaitForRestoreToComplete()
 	base::SendCommand( "stc\n");/* use base: to avoid error checking */
 }
 
+//================================================================================
+//================================================================================
 
-//================================================================================
-//================================================================================
+bool BitwiseDevice::getIsRunning()
+{
+	char buffer[4096];
+	if( App.getRunState(buffer,4096)==NULL )
+		throw "[Unable_To_Retrieve_Run_State]" ;
+
+	char *ptr = strtok( buffer, "{}," );
+	bool onState = false;
+	while ( ptr!= NULL && !onState )
+	{
+		onState = onState || (strncasecmp(ptr, "Stop", 4) != 0);
+		ptr = strtok(NULL,"{},");
+	}
+
+	return onState ;
+}
 
 void BitwiseDevice::Run( double waitUntilRunningTimeout )
 {
@@ -321,7 +338,6 @@ void BitwiseDevice::WaitForRunToStart( double timeoutSec )
 		throw "[Wait_Run_Start_Timeout]";
 }
 
-
 void BitwiseDevice::WaitForRunToComplete( double timeoutSec )
 {
 	double now = SocketDevice::timestamp();
@@ -348,22 +364,253 @@ void BitwiseDevice::Clear()
 	App.Clear();
 }
 
-bool BitwiseDevice::getIsRunning()
+//================================================================================
+//================================================================================
+
+void BitwiseDevice::fileXferBuffer(
+		char *buffer_bytes,
+		int byte_count,
+		const char *prefix ) /* use prefix "Same" for retry */
 {
-	char buffer[4096];
-	if( App.getRunState(buffer,4096)==NULL )
-		throw "[Unable_To_Retrieve_Run_State]" ;
+	if( buffer_bytes==NULL || byte_count<1 )
+		throw "[XferBuffer_Is_Empty]";
 
-	char *ptr = strtok( buffer, "{}," );
-	bool onState = false;
-	while ( ptr!= NULL && !onState )
-	{
-		onState = onState || (strncasecmp(ptr, "Stop", 4) != 0);
-		ptr = strtok(NULL,"{},");
-	}
+	uint32_t cksum=0;
+	for( int n=0; n<byte_count; n++ )
+		cksum += (uint8_t) buffer_bytes[n];
 
-	return onState ;
+	SendCommand( "stc; File:Xfer:%sBuffer %u 0x%x\n", prefix, byte_count, cksum );
+	Send( buffer_bytes, byte_count );
 }
 
+void BitwiseDevice::SendFileAs( char *localFilePath, char *destinationFilePath )
+{
+	struct stat statbuf;
+
+	if( localFilePath==NULL || localFilePath[0]==0 )
+		throw "[Local_Filename_Is_Missing]";
+
+	if( destinationFilePath==NULL || destinationFilePath[0]==0 )
+		throw "[Destination_Filename_Is_Missing]";
+
+	if(stat(localFilePath, &statbuf)!=0 )
+		throw "[Send_Unable_To_Stat_File]";
+
+	FILE *f = fopen(localFilePath,"rb");
+	if( f==NULL )
+		throw "[Send_Unable_To_Open_File]";
+
+	try
+	{
+		char timebuffer[128];
+		strftime( timebuffer, 128, "%Y/%m/%d %H:%M:%S", localtime( &statbuf.st_mtime ));
+		SendCommand("File:Xfer:Put \"%s\" %s\n", destinationFilePath, timebuffer );
+
+		char buffer[4096];
+		char response_buffer[1024];
+		char *status;
+
+		unsigned int count = fread(buffer,1,4096,f);
+		while( count>0 )
+		{
+			fileXferBuffer( buffer, count );
+			status = base::QueryResponse(response_buffer,1024,"st?\n");
+
+			unsigned int retry=0;
+			while( retry<3 && !strcasecmp(status,"[Checksum_Error]"))
+			{
+				fileXferBuffer( buffer, count, "Same" );
+				status = base::QueryResponse(response_buffer,1024,"st?\n");
+				retry++ ;
+			}
+
+			if( strcasecmp(status,"[none]") )
+				throw "[File_Send_Failed]";
+
+			count = fread(buffer,1,4096,f);
+		}
+
+		SendCommand("File:Xfer:DonePut\n");
+
+		fclose(f);
+	}
+	catch(...)
+	{
+		if(f!=NULL )
+			fclose(f);
+
+		SendCommand("File:Xfer:DonePut\n");
+		base::SendCommand("File:Del \"%s\"\n",destinationFilePath);
+
+		throw;
+	}
+
+}
+
+void BitwiseDevice::ReceiveFileAs( char *sourceFilePath, char *localFilePath )
+{
+	/* Todo: Is code-complete, needs testing */
+
+	if( sourceFilePath==NULL || sourceFilePath[0]==0 )
+		throw "[Source_Filename_Is_Missing]";
+
+	if( localFilePath==NULL || localFilePath[0]==0 )
+		throw "[Local_Filename_Is_Missing]";
+
+	char xfer[8192];
+	char *buffer;
+	int n;
+
+	/* returns with long string containing fields separated by space: */
+	/*   "filename" .. including double quotes */
+	/*   byte count */
+	/*   year/month/day .. including forward slashes, year is 4 digits */
+	/*   HH:MM:SS .. including colons */
+
+	buffer = base::QueryResponse(
+				xfer,
+				8192,
+				"File:Xfer:Get \"%s\"\n", sourceFilePath
+				);
+
+    for( n=1; buffer[n]!=0 && buffer[n]!='"' && n<8192 ; n++)
+       ;
+
+	if( buffer[0]!='"' || buffer[n]!='"' )
+		throw "[Invalid_Response_From_Get_Command]";
+
+	unsigned int length, year, month, day, hour, minute, second;
+
+	if( sscanf( buffer+n+1,"%u %u/%u/%u %u:%u:%u",
+		&length, &year, &month, &day, &hour, &minute, &second ) != 7 )
+		throw "[Invalid_Response_Length_Date_Time]" ;
+
+	FILE *f = fopen(localFilePath,"wb");
+	if( f==NULL )
+		throw "[Unable_To_Create_Local_File]";
+
+	try
+	{
+		struct
+		{
+			uint32_t magic; // 0x12345678
+			uint32_t bytes;
+			uint32_t sum;
+		} response ;
+
+        unsigned int totalTransferred=0;
+        unsigned int blen;
+
+        while( totalTransferred<length )
+        {
+        	base::SendCommand( "File:Xfer:Next\n" );
+        	blen = base::Receive( (char*) &response, sizeof(response) );
+
+        	if( blen!=sizeof(response) )
+        		throw "[No_Response_From_Next_Command]" ;
+
+        	if( response.magic != 0x12345678 )
+        		throw "[Response_From_Next_Command_Is_Invalid]";
+
+        	if( response.bytes==0 )
+        		break;
+
+        	unsigned int cnt=0;
+
+        	if( response.bytes>8192 )
+        		throw"[Individual_Transfer_Is_Too_Big]";
+
+        	cnt=0;
+        	while( cnt<response.bytes )
+        	{
+        		blen = base::Receive( xfer+cnt, response.bytes-cnt );
+        		if( blen==0 )
+        			throw "[Binary_Xfer_Unsuccessful]";
+        		cnt += blen;
+        	}
+
+        	uint32_t sum=0;
+
+        	for( uint32_t i=0; i<response.bytes; i++ )
+        		sum += (uint8_t) xfer[i];
+
+        	int retry=3;
+        	while( sum != response.sum && retry>0 )
+        	{
+            	base::SendCommand( "File:Xfer:Resend\n" );
+            	blen = base::Receive( (char*) &response, sizeof(response) );
+
+            	if( blen!=sizeof(response) )
+            		throw "[No_Response_From_Resend_Command]" ;
+
+            	if( response.magic != 0x12345678 )
+            		throw "[Response_From_Next_Command_Is_Invalid]";
+
+            	if( response.bytes>8192 )
+            		throw"[Individual_Transfer_Is_Too_Big]";
+
+            	cnt=0;
+            	while( cnt<response.bytes )
+            	{
+            		blen = base::Receive( xfer+cnt, response.bytes-cnt );
+            		if( blen==0 )
+            			throw "[Binary_Retry_Unsuccessful]";
+            		cnt += blen;
+            	}
+
+            	uint32_t sum=0;
+
+            	for( uint32_t i=0; i<response.bytes; i++ )
+            		sum += (uint8_t) xfer[i];
+
+            	retry--;
+        	}
+
+        	if( retry==0 )
+        		throw "[Binary_Xfer_Retries_Failed]";
+
+        	if( fwrite(xfer,1,response.bytes,f) != response.bytes )
+        		throw "[Failed_Writing_To_New_File]";
+
+        	totalTransferred += response.bytes;
+        }
+
+        SendCommand("File:Xfer:DoneGet\n");
+
+        fclose(f);
+        f=NULL;
+
+    	/* set resulting file to have appropriate date and time */
+
+    	struct stat statbuf;
+
+    	if( stat(localFilePath,&statbuf)!=0 )
+    		throw"[Unable_To_Stat_Destination_File]";
+
+    	struct tm * timeinfo;
+    	timeinfo = localtime( &statbuf.st_mtime );
+    	timeinfo->tm_year = year - 1900;
+    	timeinfo->tm_mon = month - 1;
+    	timeinfo->tm_mday = day;
+    	timeinfo->tm_hour = hour;
+    	timeinfo->tm_min = minute;
+    	timeinfo->tm_sec = second;
+
+    	struct utimbuf new_times;
+
+    	new_times.actime = mktime( timeinfo );
+    	new_times.modtime = mktime( timeinfo );
+
+    	if( utime( localFilePath, &new_times ) < 0 )
+    		throw "[Unable_To_Set_Destination_File_Date_Time]";
+	}
+	catch(...)
+	{
+		if(f!=NULL)
+			fclose(f);
+		unlink(localFilePath);
+		throw;
+	}
+}
 // EOF
 

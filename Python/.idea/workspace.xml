@@ -27,22 +27,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a8c4ec53-24da-45fa-99bc-831ed779b362" name="Default Changelist" comment="make simple change in python code">
-      <change afterPath="$PROJECT_DIR$/GuiStepscope/connect.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GuiStepscope/guiStepscope.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GuiStepscope/main.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GuiStepscope/popup.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GuiStepscope/s11.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GuiStepscope/settings.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GuiStepscope/tdr.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GuiStepscope/ui_SS.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GuiStepscope/ui_SS.ui" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../C++/BitwiseAutomation/include/BitwiseDevice.h" beforeDir="false" afterPath="$PROJECT_DIR$/../C++/BitwiseAutomation/include/BitwiseDevice.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../C++/BitwiseAutomation/src/BitwiseDevice.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../C++/BitwiseAutomation/src/BitwiseDevice.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyBitwiseAutomation/AutomationExtender.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyBitwiseAutomation/AutomationExtender.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyBitwiseAutomation/AutomationInterface.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyBitwiseAutomation/AutomationInterface.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pyBitwiseAutomation/BitwiseDevice.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyBitwiseAutomation/BitwiseDevice.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pyBitwiseAutomation/SocketDevice.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyBitwiseAutomation/SocketDevice.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pyBitwiseAutomation/autogenCommon.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyBitwiseAutomation/autogenCommon.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pyBitwiseAutomation/autogenPega.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyBitwiseAutomation/autogenPega.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pyBitwiseAutomation/autogenPela.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyBitwiseAutomation/autogenPela.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pyBitwiseAutomation/autogenStepscope.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyBitwiseAutomation/autogenStepscope.py" afterDir="false" />
     </list>
@@ -231,26 +221,5 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="make simple change in python code" />
     <option name="LAST_COMMIT_MESSAGE" value="make simple change in python code" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/pyBitwiseAutomation/autogenAccessory.py</url>
-          <line>1205</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/pyBitwiseAutomation/SocketDevice.py</url>
-          <line>51</line>
-          <option name="timeStamp" value="5" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/GuiStepscope/settings.py</url>
-          <line>40</line>
-          <option name="timeStamp" value="6" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>

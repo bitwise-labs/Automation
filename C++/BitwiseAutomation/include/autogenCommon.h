@@ -49,7 +49,6 @@ class BranchConst: /* Constants */
 	char* getSN(char *buffer,int buflen); /* Serial Number */
 };
 
-
 /* ================================ */
 
 class BranchApp: /* Applications */
@@ -73,11 +72,11 @@ class BranchApp: /* Applications */
     void setShowText( bool newValue);
     char* getTab(char *buffer,int buflen); /* Application Tab */
     void setTab( const char* newValue);
-    void Clear(); /* Clear [<active-appname-list-no-commas>], Todo:add arguments */
-    void GuiReset(); /* Gui Reset Tabs, Todo:add arguments */
-    void Refresh(); /* Gui Refresh, Todo:add arguments */
-    void Run(bool runOnceFlag=false); /* Run [Once] [<active-runobj-list-no-commas>] */
-    void Stop(); /* Stop [<running-runobj-list-no-commas>], Todo:add arguments */
+    void Clear(); /* Clear all applications. */
+    void GuiReset(); /* Gui Reset Tabs */
+    void Refresh(); /* Gui Refresh */
+    void Run(bool runOnceFlag=false); /* Run all applications */
+    void Stop(); /* Stop all applications */
 };
 
 /* ================================ */
@@ -92,22 +91,14 @@ class BranchFile: /* File System Access */
 
     char* getDir(char *buffer,int buflen); /* Current Directory */
     void setDir( const char* newValue);
-    char* Checksum(char *buffer,int buflen,char *filepath); /* Checksum File, Todo:add arguments */
-    void Copy(char *frompath, char *topath); /* Copy File, Todo:add arguments */
-    void Del(char *filepath); /* Delete File, Todo:add arguments */
-    char* Exists(char *buffer,int buflen,char *filepath); /* File Exists, Todo:add arguments */
-    char *Fetch(char *filepath,int *pcount=0); /* Fetch File - Must free() return value, Todo:add arguments */
-    void Length(char *filepath); /* File Length, Todo:add arguments */
-    char *List(char *dirpath); /* List Directory - Must free() return value, Todo:add arguments */
-    void Rename(char *frompath, char *topath); /* Rename File, Todo:add arguments */
-    void XferBuffer(); /* Transmit next buffer to device-requires count, optional checksum, Todo:add arguments */
-    void XferDoneGet(); /* Indicates completion of get operation, Todo:add arguments */
-    void XferDonePut(); /* Indicates completion of send operation, Todo:add arguments */
-    void XferGet(); /* Get file for transfer-respond filename, length, date, time, Todo:add arguments */
-    void XferNext(); /* Retrieve next buffer-respond three u32 values, Todo:add arguments */
-    void XferPut(); /* Put file-requires filepath and optional modification date and time, Todo:add arguments */
-    void XferResend(); /* Retrieve last buffer--respond three u32 values, Todo:add arguments */
-    void XferSameBuffer(); /* Re-transmit same buffer to device-requires count, optional checksum, Todo:add arguments */
+    char* Checksum(char *buffer,int buflen,char *filepath); /* Checksum File */
+    void Copy(char *frompath, char *topath); /* Copy File */
+    void Del(char *filepath); /* Delete File */
+    char* Exists(char *buffer,int buflen,char *filepath); /* File Exists */
+    char *Fetch(char *filepath,int *pcount=0); /* Fetch File - Must free() return value */
+    void Length(char *filepath); /* File Length */
+    char *List(char *dirpath); /* List Directory - Must free() return value */
+    void Rename(char *frompath, char *topath); /* Rename File */
 };
 
 
@@ -169,10 +160,10 @@ class BranchPatt: /* User Patterns */
     char* getRootFolder(char *buffer,int buflen); /* User Patterns root folder */
     char* getStatusMsg(char *buffer,int buflen); /* Status message */
     char* getVerifyMsg(char *buffer,int buflen); /* Verify message */
-    void ClearStatusMsg(); /* Clear status message, Todo:add arguments */
-    void ClearVerifyMsg(); /* Clear verify message, Todo:add arguments */
-    void Copy(); /* File copy, Todo:add arguments */
-    void Delete(); /* File delete, Todo:add arguments */
+    void ClearStatusMsg(); /* Clear status message */
+    void ClearVerifyMsg(); /* Clear verify message */
+    void Copy(const char *fromPath, const char *toPath); /* File copy */
+    void Delete(const char *filePath); /* File delete */
 
     enum class PatternChannel
 	{
@@ -183,13 +174,13 @@ class BranchPatt: /* User Patterns */
     static const char *PatternChannel_Strings[];
 
     void Deploy( PatternChannel ch, const char *filename, int bitShift=0 ); /* Deploy pattern */
-    char *Fetch(int *pcount=0); /* Fetch file - Must free() return value, Todo:add arguments */
-    char *FetchDir(); /* Fetch directory - Must free() return value, Todo:add arguments */
-    void Grab(); /* Grab pattern, Todo:add arguments */
-    void NewFolder(); /* New folder, Todo:add arguments */
-    void Rename(); /* File rename, Todo:add arguments */
-    void Save(); /* File save, Todo:add arguments */
-    void Verify(); /* Verify file, Todo:add arguments */
+    char *Fetch(const char *filePath, int *pcount=0); /* Fetch file - Must free() return value */
+    char *FetchDir(const char *pathName, GuiType optionalType = GuiType::All ); /* Fetch directory - Must free() return value */
+    void Grab(PatternChannel ch, int symSize, GuiFormat fmt, const char *filePath ); /* Grab pattern */
+    void NewFolder(const char *folderPath); /* New folder */
+    void Rename(const char *fromPath, const char *toName); /* File rename */
+    void Save(const char *filePath); /* File save */
+    void Verify(const char *filePath); /* Verify file */
 };
 
 /* ================================ */
@@ -305,9 +296,8 @@ class BranchSyn: /* Clock source control */
 
     Source getSource(int index);
     void setSource(int index, Source newValue);
-    void Map(); /* Map clock source to destination(s), Todo:add arguments */
+    void Map(Source clockSource, Dest clockDest); /* Map clock source to destination(s) */
 };
-
 
 
 #endif // AUTOGEN_COMMON_H
