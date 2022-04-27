@@ -543,33 +543,30 @@ void BranchAccDDR::setSpeed(Speed newValue )
     SendCommand("Speed \"%s\"\n",Speed_Strings[(int)newValue]);
 }
 
-void BranchAccDDR::FetchDevices() /* Fetch list of devices currently available, Todo:add arguments */
+char *BranchAccDDR::FetchDevices() /* Fetch list of devices currently available - Must free() return value. */
 {
-    fprintf(stderr,"BranchAccDDR::FetchDevices(), Todo: add arguments if needed\n");
-    SendCommand("FetchDevices\n");
+	return QueryBinaryResponse(0,"FetchDevices\n");
 }
 
-void BranchAccDDR::FetchLanes() /* Fetch list of lanes currently available, Todo:add arguments */
+char *BranchAccDDR::FetchLanes() /* Fetch list of lanes currently available - Must free() return value. */
 {
-    fprintf(stderr,"BranchAccDDR::FetchLanes(), Todo: add arguments if needed\n");
-    SendCommand("FetchLanes\n");
+	return QueryBinaryResponse(0,"FetchLanes\n");
 }
 
-void BranchAccDDR::FetchPhases() /* Fetch list of phases currently available, Todo:add arguments */
+char *BranchAccDDR::FetchPhases() /* Fetch list of phases currently available - Must free() return value. */
 {
-    fprintf(stderr,"BranchAccDDR::FetchPhases(), Todo: add arguments if needed\n");
-    SendCommand("FetchPhases\n");
+	return QueryBinaryResponse(0,"FetchPhases\n");
 }
 
-void BranchAccDDR::PowerOn() /* Power-on MIC, Todo:add arguments */
+const char *BranchAccDDR::PowerOp_Strings[] = { "On", "Off", "Reset", 0 };
+
+void BranchAccDDR::PowerOn( PowerOp arg ) /* Power-on MIC. */
 {
-    fprintf(stderr,"BranchAccDDR::PowerOn(), Todo: add arguments if needed\n");
-    SendCommand("PowerOn\n");
+    SendCommand("PowerOn %s\n",PowerOp_Strings[(int)arg]);
 }
 
-void BranchAccDDR::ProgramPhase() /* Program Phase DRAM+RCD, Todo:add arguments */
+void BranchAccDDR::ProgramPhase() /* Program Phase DRAM+RCD */
 {
-    fprintf(stderr,"BranchAccDDR::ProgramPhase(), Todo: add arguments if needed\n");
     SendCommand("ProgramPhase\n");
 }
 
@@ -683,12 +680,10 @@ void BranchAccDDRDFE::setTapsMV(int index,double newValue) /* DFE Tap values */
     SendCommand("Taps[%d] %lf\n",index,newValue);
 }
 
-void BranchAccDDRDFE::Program() /* Program DFE with current settings, Todo:add arguments */
+void BranchAccDDRDFE::Program() /* Program DFE with current settings */
 {
-    fprintf(stderr,"BranchAccDDRDFE::Program(), Todo: add arguments if needed\n");
     SendCommand("Program\n");
 }
-
 
 /* ================================================================ */
 
@@ -702,58 +697,90 @@ void BranchAccDDRI2C::setAux(int newValue) /* High 6 bits of control register */
     SendCommand("Aux %d\n",newValue);
 }
 
-void BranchAccDDRI2C::Read() /* Read bytes, Todo:add arguments */
+void BranchAccDDRI2C::Write(int device, int address, int count, uint8_t *src ) /* Write bytes*/
 {
-    fprintf(stderr,"BranchAccDDRI2C::Read(), Todo: add arguments if needed\n");
-    SendCommand("Read\n");
+	char temp[4096];
+	int slen=0;
+	temp[0]=0;
+	for( int n=0; n<count; n++ )
+	{
+		if( snprintf(temp+slen,4096-slen," 0x%02X", src[n] ) >= 4096-slen )
+			throw("[Input_Byte_List_Too_Long]");
+
+		slen = strlen(temp);
+	}
+
+    SendCommand("Write 0x%x 0x%x%s\n",device, address, temp );
 }
 
-void BranchAccDDRI2C::ReadBYTE() /* Read byte using special format, Todo:add arguments */
+uint8_t *BranchAccDDRI2C::Read(int device, int address, int count, uint8_t *dest ) /* Read bytes */
 {
-    fprintf(stderr,"BranchAccDDRI2C::ReadBYTE(), Todo: add arguments if needed\n");
-    SendCommand("ReadBYTE\n");
+	char buffer[4096];
+    QueryResponse(buffer, 4096, "Read 0x%x 0x%x %d\n",device,address,count);
+    char *ptr = strtok(buffer," \n\t");
+    for( int n=0; n<count && ptr!=NULL; n++ )
+    {
+    	int number;
+    	if( sscanf(ptr,"%i",&number) != 1 )
+    		throw("[Invalid_Number_Response]");
+    	dest[n] = number;
+    }
+
+    return dest;
 }
 
-void BranchAccDDRI2C::ReadDWORD() /* Read DWORD using special format, Todo:add arguments */
+uint8_t * BranchAccDDRI2C::ReadHost(int device, int address, int count, uint8_t *dest) /* Read Host bytes */
 {
-    fprintf(stderr,"BranchAccDDRI2C::ReadDWORD(), Todo: add arguments if needed\n");
-    SendCommand("ReadDWORD\n");
-}
-
-void BranchAccDDRI2C::ReadHost() /* Read Host bytes, Todo:add arguments */
-{
-    fprintf(stderr,"BranchAccDDRI2C::ReadHost(), Todo: add arguments if needed\n");
     SendCommand("ReadHost\n");
+
+	char buffer[4096];
+    QueryResponse(buffer, 4096, "ReadHost 0x%x 0x%x %d\n",device,address,count);
+    char *ptr = strtok(buffer," \n\t");
+    for( int n=0; n<count && ptr!=NULL; n++ )
+    {
+    	int number;
+    	if( sscanf(ptr,"%i",&number) != 1 )
+    		throw("[Invalid_Number_Response]");
+    	dest[n] = number;
+    }
+
+    return dest;
 }
 
-void BranchAccDDRI2C::ReadWORD() /* Read WORD using special format, Todo:add arguments */
+//=============================================================================//
+//=============================================================================//
+
+uint8_t BranchAccDDRI2C::ReadBYTE(int device, int channel, int page, int address) /* Read byte using special format */
 {
-    fprintf(stderr,"BranchAccDDRI2C::ReadWORD(), Todo: add arguments if needed\n");
-    SendCommand("ReadWORD\n");
+	return (uint8_t) QueryResponse_int("ReadBYTE 0x%x 0x%x 0x%x 0x%x\n", device, channel, page, address );
 }
 
-void BranchAccDDRI2C::Write() /* Write bytes, Todo:add arguments */
+uint32_t BranchAccDDRI2C::ReadDWORD(int device, int channel, int page, int address) /* Read DWORD using special format */
 {
-    fprintf(stderr,"BranchAccDDRI2C::Write(), Todo: add arguments if needed\n");
-    SendCommand("Write\n");
+	return (uint32_t) QueryResponse_int64("ReadDWORD 0x%x 0x%x 0x%x 0x%x\n", device, channel, page, address );
 }
 
-void BranchAccDDRI2C::WriteBYTE() /* Write byte using special format, Todo:add arguments */
+uint16_t BranchAccDDRI2C::ReadWORD(int device, int channel, int page, int address) /* Read WORD using special format */
 {
-    fprintf(stderr,"BranchAccDDRI2C::WriteBYTE(), Todo: add arguments if needed\n");
-    SendCommand("WriteBYTE\n");
+	return (uint16_t) QueryResponse_int("ReadWORD 0x%x 0x%x 0x%x 0x%x\n", device, channel, page, address );
 }
 
-void BranchAccDDRI2C::WriteDWORD() /* Write DWORD using special format (DWORD must be hex), Todo:add arguments */
+//=============================================================================//
+//=============================================================================//
+
+void BranchAccDDRI2C::WriteBYTE(int device, int channel, int page, int address, uint8_t data) /* Write byte using special format */
 {
-    fprintf(stderr,"BranchAccDDRI2C::WriteDWORD(), Todo: add arguments if needed\n");
-    SendCommand("WriteDWORD\n");
+    SendCommand("WriteBYTE 0x%x 0x%x 0x%x 0x%x 0x%x\n", device, channel, page, address, (uint32_t)data );
 }
 
-void BranchAccDDRI2C::WriteWORD() /* Write WORD using special format (WORD must be hex), Todo:add arguments */
+void BranchAccDDRI2C::WriteDWORD(int device, int channel, int page, int address, uint32_t data) /* Write DWORD using special format (DWORD must be hex) */
 {
-    fprintf(stderr,"BranchAccDDRI2C::WriteWORD(), Todo: add arguments if needed\n");
-    SendCommand("WriteWORD\n");
+    SendCommand("WriteDWORD 0x%x 0x%x 0x%x 0x%x 0x%x\n", device, channel, page, address, (uint32_t)data );
+}
+
+void BranchAccDDRI2C::WriteWORD(int device, int channel, int page, int address, uint16_t data) /* Write WORD using special format (WORD must be hex) */
+{
+    SendCommand("WriteWORD 0x%x 0x%x 0x%x 0x%x 0x%x\n", device, channel, page, address, (uint32_t)data );
 }
 
 /* ================================================================ */
@@ -1134,9 +1161,8 @@ void BranchAccDDRTerm::setDQS(int index,DQS newValue )
     SendCommand("DQS[%d] \"%s\"\n",index,DQS_Strings[(int)newValue]);
 }
 
-void BranchAccDDRTerm::Program() /* Program Terminations, Todo:add arguments */
+void BranchAccDDRTerm::Program() /* Program Terminations */
 {
-    fprintf(stderr,"BranchAccDDRTerm::Program(), Todo: add arguments if needed\n");
     SendCommand("Program\n");
 }
 
@@ -1167,11 +1193,10 @@ int BranchAccDDRLB::getLogSEQ()
 
 void BranchAccDDRLB::ClearLog()
 {
-    fprintf(stderr,"BranchAccDDRLB::ClearLog()\n");
     SendCommand("ClearLog\n");
 }
 
-char *BranchAccDDRLB::FetchLog() /* Fetch Log - Must free() return value, Todo:add arguments */
+char *BranchAccDDRLB::FetchLog() /* Fetch Log - Must free() return value */
 {
     return QueryBinaryResponse(0,"FetchLog\n");
 }
@@ -1217,11 +1242,10 @@ int BranchAccDDRTools::getLogSEQ()
 
 void BranchAccDDRTools::ClearLog()
 {
-    fprintf(stderr,"BranchAccDDRTools::ClearLog()\n");
     SendCommand("ClearLog\n");
 }
 
-char *BranchAccDDRTools::FetchLog() /* Fetch Log - Must free() return value, Todo:add arguments */
+char *BranchAccDDRTools::FetchLog() /* Fetch Log - Must free() return value */
 {
     return QueryBinaryResponse(0,"FetchLog\n");
 }

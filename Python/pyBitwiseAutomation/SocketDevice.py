@@ -211,7 +211,7 @@ class SocketDevice(AutomationInterface):
 
         return None
 
-    def QueryBinaryResponse( self, command: str ) -> bytes :
+    def QueryBinaryResponse(self, command: str) -> bytes :
         """Query array of bytes response from command (ending with '\n') from socket device."""
 
         if not isinstance(command, str) :
@@ -223,7 +223,7 @@ class SocketDevice(AutomationInterface):
         if self.Debugging:
             print("QueryBinaryResponse() command: " + command)
 
-        self.Sock.send( bytes(command,'utf-8') )
+        self.Sock.send(bytes(command, 'utf-8'))
 
         countBytes = self.Sock.recv(4)
         if len(countBytes) != 4:

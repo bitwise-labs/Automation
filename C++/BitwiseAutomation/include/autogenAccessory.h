@@ -88,7 +88,7 @@ class BranchAccDDRDFE: /* DFE category */
     void setGain( Gain newValue);
     double getTapsMV(int index); /* DFE Tap values */
     void setTapsMV(int index, double newValue);
-    void Program(); /* Program DFE with current settings, Todo:add arguments */
+    void Program(); /* Program DFE with current settings,*/
 };
 
 /* ================================ */
@@ -103,15 +103,17 @@ class BranchAccDDRI2C: /* I2C Access */
 
     int getAux(); /* High 6 bits of control register */
     void setAux( int newValue);
-    void Read(); /* Read bytes, Todo:add arguments */
-    void ReadBYTE(); /* Read byte using special format, Todo:add arguments */
-    void ReadDWORD(); /* Read DWORD using special format, Todo:add arguments */
-    void ReadHost(); /* Read Host bytes, Todo:add arguments */
-    void ReadWORD(); /* Read WORD using special format, Todo:add arguments */
-    void Write(); /* Write bytes, Todo:add arguments */
-    void WriteBYTE(); /* Write byte using special format, Todo:add arguments */
-    void WriteDWORD(); /* Write DWORD using special format (DWORD must be hex), Todo:add arguments */
-    void WriteWORD(); /* Write WORD using special format (WORD must be hex), Todo:add arguments */
+    void Write(int device, int address, int count, uint8_t *src); /* Write bytes */
+    uint8_t *Read(int device, int address, int count, uint8_t *dest); /* Read bytes*/
+    uint8_t *ReadHost(int device, int address, int count, uint8_t *dest); /* Read Host bytes */
+
+    uint8_t ReadBYTE(int device, int channel, int page, int address); /* Read byte using special format  */
+    uint32_t ReadDWORD(int device, int channel, int page, int address); /* Read DWORD using special format */
+    uint16_t ReadWORD(int device, int channel, int page, int address); /* Read WORD using special format */
+
+    void WriteBYTE(int device, int channel, int page, int address, uint8_t data); /* Write byte using special format */
+    void WriteDWORD(int device, int channel, int page, int address, uint32_t data); /* Write DWORD using special format */
+    void WriteWORD(int device, int channel, int page, int address, uint16_t data); /* Write WORD using special format*/
 };
 
 /* ================================ */
@@ -261,7 +263,7 @@ class BranchAccDDRTerm: /* Termination category */
 
         DQS getDQS(int index);
         void setDQS( int index,DQS newValue);
-        void Program(); /* Program Terminations, Todo:add arguments */
+        void Program(); /* Program Terminations */
     };
 
 	/* ================================= */
@@ -274,8 +276,8 @@ class BranchAccDDRLB: /* Loopback category */
             AutomationExtender(baseDevice,prefix) {}
         virtual ~BranchAccDDRLB() {}
 
-        void Start(); /* Start loopback (asynchronous), Todo:add arguments */
-        void Cancel(); /* Loopback cancel, Todo:add arguments */
+        void Start(); /* Start loopback (asynchronous) */
+        void Cancel(); /* Loopback cancel */
         char* getStatus(char *buffer,int buflen); /* Loopback status */
 
         int getLogSEQ();
@@ -761,11 +763,21 @@ class BranchAccDDR: /* DDR5 accessory */
 
     Speed getSpeed();
     void setSpeed( Speed newValue);
-    void FetchDevices(); /* Fetch list of devices currently available, Todo:add arguments */
-    void FetchLanes(); /* Fetch list of lanes currently available, Todo:add arguments */
-    void FetchPhases(); /* Fetch list of phases currently available, Todo:add arguments */
-    void PowerOn(); /* Power-on MIC, Todo:add arguments */
-    void ProgramPhase(); /* Program Phase DRAM+RCD, Todo:add arguments */
+    char *FetchDevices(); /* Fetch list of devices currently available - Must free() return value. */
+    char *FetchLanes(); /* Fetch list of lanes currently available - Must free() return value. */
+    char *FetchPhases(); /* Fetch list of phases currently available - Must free() return value. */
+
+    enum class PowerOp
+	{
+    	pwrOn,
+		pwerOff,
+		pwrReset
+	};
+
+    static const char *PowerOp_Strings[];
+
+    void PowerOn( PowerOp arg = PowerOp::pwrReset ); /* Power-on MIC. */
+    void ProgramPhase(); /* Program Phase DRAM+RCD */
 };
 
 /* ================================ */

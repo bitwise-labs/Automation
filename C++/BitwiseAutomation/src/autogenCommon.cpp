@@ -304,8 +304,12 @@ char *BranchPatt::Fetch(const char *filePath, int *pcount) /* Fetch file - Must 
 
 char *BranchPatt::FetchDir( const char *pathName, GuiType optionalType ) /* Fetch directory - Must free() return value */
 {
-    return QueryBinaryResponse(0,"FetchDir \"%s\" %s\n",pathName,
-    		GuiType_Strings[(int)optionalType]);
+    return QueryBinaryResponse(
+    	0,
+		"FetchDir \"%s\" %s\n",
+		pathName,
+    	GuiType_Strings[(int)optionalType]
+		);
 }
 
 void BranchPatt::Grab( PatternChannel ch, int symSize, GuiFormat fmt, const char *filePath ) /* Grab pattern */

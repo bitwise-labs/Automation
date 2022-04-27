@@ -2065,4 +2065,4 @@ class BranchED(AutomationExtender):
         self.SendCommand("Resync\n")
         return None
 
-# EOF *TEST*
+# EOF

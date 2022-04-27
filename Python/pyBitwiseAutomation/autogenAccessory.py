@@ -28,7 +28,7 @@
 # ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 # ================================================================================
-
+import numpy
 
 from pyBitwiseAutomation.autogenCommon import *
 from enum import Enum
@@ -320,8 +320,7 @@ class BranchAccDDRDFE(AutomationExtender):
         return None
 
     def Program(self):
-        """Method for Program DFE with current settings. Todo: add arguments if needed"""
-        print("BranchAccDDRDFE:Program(), Todo: add arguments if needed")
+        """Method for Program DFE with current settings."""
         self.SendCommand("Program\n")
         return None
 
@@ -347,58 +346,66 @@ class BranchAccDDRI2C(AutomationExtender):
         self.SendCommand("Aux " + str(newvalue) + "\n")
         return None
 
-    def Read(self):
-        """Method for Read bytes. Todo: add arguments if needed"""
-        print("BranchAccDDRI2C:Read(), Todo: add arguments if needed")
-        self.SendCommand("Read\n")
+    def Write(self, device: int, address: int, src: list):
+        """Method for Write bytes. """
+        temp = ""
+        for n in range(len(list)):
+            temp = temp + " " + hex(list[n])
+
+        self.SendCommand("Write " + hex(device) + " " + hex(address) + temp + "\n")
         return None
 
-    def ReadBYTE(self):
-        """Method for Read byte using special format. Todo: add arguments if needed"""
-        print("BranchAccDDRI2C:ReadBYTE(), Todo: add arguments if needed")
-        self.SendCommand("ReadBYTE\n")
+    def Read(self, device: int, address: int, count: int) -> list:
+        """Method for Read bytes. Needs testing. """
+        response = self.QueryResponse("Read " + hex(device) + " " + hex(address) + " " + str(count) + "\n")
+        answer = numpy.empty(count, dtype=int)
+        buffer = response.split()
+        i = 0
+        while i < range(count) and i < len(buffer):
+            answer[i] = int(buffer[i])
+        return answer
+
+    def ReadHost(self, device: int, address: int, count: int) -> list:
+        """Method for Read Host bytes. """
+        response = self.QueryResponse("ReadHost " + hex(device) + " " + hex(address) + " " + str(count) + "\n")
+        answer = numpy.empty(count, dtype=int)
+        buffer = response.split()
+        i = 0
+        while i < range(count) and i < len(buffer):
+            answer[i] = int(buffer[i])
+        return answer
+
+    def ReadBYTE(self, device: int, channel: int, page: int, address: int) -> int:
+        """Method for Read byte using special format. """
+        return self.QueryResponse_int("ReadBYTE " + hex(device) + " " + hex(channel) + " " +
+                                    hex(page) + " " + hex(address) + "\n")
+
+    def ReadDWORD(self, device: int, channel: int, page: int, address: int) -> int:
+        """Method for Read DWORD using special format."""
+        return self.QueryResponse_int("ReadDWORD " + hex(device) + " " + hex(channel) + " " +
+                                    hex(page) + " " + hex(address) + "\n")
+
+    def ReadWORD(self, device: int, channel: int, page: int, address: int) -> int:
+        """Method for Read WORD using special format."""
+        return self.QueryResponse_int("ReadWORD " + hex(device) + " " + hex(channel) + " " +
+                                    hex(page) + " " + hex(address) + "\n")
+
+    def WriteBYTE(self, device: int, channel: int, page: int, address: int, data: int):
+        """Method for Write byte using special format."""
+        self.SendCommand("WriteByte " + hex(device) + " " + hex(channel) + " " +
+                                    hex(page) + " " + hex(address) + " " + hex(data) + "\n")
         return None
 
-    def ReadDWORD(self):
-        """Method for Read DWORD using special format. Todo: add arguments if needed"""
-        print("BranchAccDDRI2C:ReadDWORD(), Todo: add arguments if needed")
-        self.SendCommand("ReadDWORD\n")
+    def WriteDWORD(self, device: int, channel: int, page: int, address: int, data: int):
+        """Method for Write DWORD using special format. """
+        self.SendCommand("WriteDWORD " + hex(device) + " " + hex(channel) + " " +
+                                    hex(page) + " " + hex(address) + " " + hex(data) + "\n")
         return None
 
-    def ReadHost(self):
-        """Method for Read Host bytes. Todo: add arguments if needed"""
-        print("BranchAccDDRI2C:ReadHost(), Todo: add arguments if needed")
-        self.SendCommand("ReadHost\n")
-        return None
-
-    def ReadWORD(self):
-        """Method for Read WORD using special format. Todo: add arguments if needed"""
-        print("BranchAccDDRI2C:ReadWORD(), Todo: add arguments if needed")
-        self.SendCommand("ReadWORD\n")
-        return None
-
-    def Write(self):
-        """Method for Write bytes. Todo: add arguments if needed"""
-        print("BranchAccDDRI2C:Write(), Todo: add arguments if needed")
-        self.SendCommand("Write\n")
-        return None
-
-    def WriteBYTE(self):
-        """Method for Write byte using special format. Todo: add arguments if needed"""
-        print("BranchAccDDRI2C:WriteBYTE(), Todo: add arguments if needed")
-        self.SendCommand("WriteBYTE\n")
-        return None
-
-    def WriteDWORD(self):
-        """Method for Write DWORD using special format (DWORD must be hex). Todo: add arguments if needed"""
-        print("BranchAccDDRI2C:WriteDWORD(), Todo: add arguments if needed")
-        self.SendCommand("WriteDWORD\n")
-        return None
-
-    def WriteWORD(self):
-        """Method for Write WORD using special format (WORD must be hex). Todo: add arguments if needed"""
-        print("BranchAccDDRI2C:WriteWORD(), Todo: add arguments if needed")
-        self.SendCommand("WriteWORD\n")
+    def WriteWORD(self, device: int, channel: int, page: int, address: int, data: int):
+        """Method for Write WORD using special format. """
+        self.SendCommand("WriteWORD " + hex(device) + " " + hex(channel) + " " +
+                                    hex(page) + " " + hex(address) + " " + hex(data) + "\n")
         return None
 
 # ================================ #
@@ -597,8 +604,7 @@ class BranchAccDDRTerm(AutomationExtender):
         return None
 
     def Program(self):
-        """Method for Program Terminations. Todo: add arguments if needed"""
-        print("BranchAccDDRTerm:Program(), Todo: add arguments if needed")
+        """Method for Program Terminations. """
         self.SendCommand("Program\n")
         return None
 
@@ -620,16 +626,27 @@ class BranchAccDDRLB(AutomationExtender):
         return self.QueryResponse("Status?\n")
 
     def Start(self):
-        """Method for Start loopback (asynchronous). Todo: add arguments if needed"""
-        print("BranchAccDDRLB:Start(), Todo: add arguments if needed")
+        """Method for Start loopback (asynchronous)."""
         self.SendCommand("Start\n")
         return None
 
     def Cancel(self):
-        """Method for Loopback cancel. Todo: add arguments if needed"""
-        print("BranchAccDDRLB:Cancel(), Todo: add arguments if needed")
+        """Method for Loopback cancel."""
         self.SendCommand("Cancel\n")
         return None
+
+    def getLogSEQ(self, index: int) -> int:
+        """Get Log SEQ number  """
+        return self.QueryResponse_int("LogSEQ?\n")
+
+    def ClearLog(self):
+        """Method for Clear Log."""
+        self.SendCommand("ClearLog\n")
+        return None
+
+    def FetchLog(self) -> str:
+        """Binary string response method for Fetching log. """
+        return str(self.QueryBinaryResponse("FetchLog\n"), encoding='utf-8')
 
 # ================================ #
 
@@ -712,6 +729,19 @@ class BranchAccDDRTools(AutomationExtender):
         """Set Eye Thresh """
         self.SendCommand("EyeThresh " + str(newvalue) + "\n")
         return None
+
+    def getLogSEQ(self, index: int) -> int:
+        """Get Log SEQ number  """
+        return self.QueryResponse_int("LogSEQ?\n")
+
+    def ClearLog(self):
+        """Method for Clear Log."""
+        self.SendCommand("ClearLog\n")
+        return None
+
+    def FetchLog(self) -> str:
+        """Binary string response method for Fetching log. """
+        return str(self.QueryBinaryResponse("FetchLog\n"), encoding='utf-8')
 
 
 class BranchAccDDR(AutomationExtender):
@@ -1170,33 +1200,30 @@ class BranchAccDDR(AutomationExtender):
         self.SendCommand("Speed " + newvalue.value + "\n")
         return None
 
-    def FetchDevices(self):
-        """Method for Fetch list of devices currently available. Todo: add arguments if needed"""
-        print("BranchAccDDR:FetchDevices(), Todo: add arguments if needed")
-        self.SendCommand("FetchDevices\n")
-        return None
+    def FetchDevices(self) -> str:
+        """Method for Fetch list of devices currently available."""
+        return str(self.QueryBinaryResponse("FetchDevices\n"), encoding='utf-8')
 
-    def FetchLanes(self):
-        """Method for Fetch list of lanes currently available. Todo: add arguments if needed"""
-        print("BranchAccDDR:FetchLanes(), Todo: add arguments if needed")
-        self.SendCommand("FetchLanes\n")
-        return None
+    def FetchLanes(self) -> str:
+        """Method for Fetch list of lanes currently available."""
+        return str(self.QueryBinaryResponse("FetchLanes\n"), encoding='utf-8')
 
-    def FetchPhases(self):
-        """Method for Fetch list of phases currently available. Todo: add arguments if needed"""
-        print("BranchAccDDR:FetchPhases(), Todo: add arguments if needed")
-        self.SendCommand("FetchPhases\n")
-        return None
+    def FetchPhases(self) -> str:
+        """Method for Fetch list of phases currently available."""
+        return str(self.QueryBinaryResponse("FetchPhases\n"), encoding='utf-8')
 
-    def PowerOn(self):
-        """Method for Power-on MIC. Todo: add arguments if needed"""
-        print("BranchAccDDR:PowerOn(), Todo: add arguments if needed")
-        self.SendCommand("PowerOn\n")
+    class PowerOp(Enum):
+        On = "On"
+        Off = "Off"
+        Reset = "Reset"
+
+    def PowerOn(self, arg: PowerOp = PowerOp.Reset):
+        """Method for Power-on MIC."""
+        self.SendCommand("PowerOn " + str(arg) + "\n")
         return None
 
     def ProgramPhase(self):
-        """Method for Program Phase DRAM+RCD. Todo: add arguments if needed"""
-        print("BranchAccDDR:ProgramPhase(), Todo: add arguments if needed")
+        """Method for Program Phase DRAM+RCD."""
         self.SendCommand("ProgramPhase\n")
         return None
 

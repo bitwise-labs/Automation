@@ -301,9 +301,9 @@ class BranchPatt(AutomationExtender):
 
         return self.QueryBinaryResponse("Fetch \"" + filePath + "\"\n")
 
-    def FetchDir(self, pathName: str, optionalType: GuiType = GuiType.All ) -> str:
+    def FetchDir(self, pathName: str, optionalType: GuiType = GuiType.All) -> str:
         """Binary string response method for Fetch directory. """
-        return str(self.QueryBinaryResponse("FetchDir \""+pathName+"\" " + str(optionalType)+"\n"),encoding='utf-8')
+        return str(self.QueryBinaryResponse("FetchDir \""+pathName+"\" " + str(optionalType)+"\n"), encoding='utf-8')
 
     def Grab(self, ch: PatternChannel, symSize: int, fmt: GuiFormat, filePath: str):
         """Method for Grab pattern. """
