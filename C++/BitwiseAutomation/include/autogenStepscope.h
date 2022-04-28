@@ -59,9 +59,9 @@ class BranchCalib: /* Calibration features */
     static const char *Status_Strings[];
 
     Status getStatus();
-    void Cancel(); /* Cancel calibration, Todo:add arguments */
-    void RunDelay(); /* Run Delay calibration, Todo:add arguments */
-    void RunNoise(); /* Run Noise calibration, Todo:add arguments */
+    void Cancel(); /* Cancel calibration */
+    void RunDelay(); /* Run Delay calibration */
+    void RunNoise(); /* Run Noise calibration */
 };
 
 /* ================================ */
@@ -113,7 +113,7 @@ class BranchPulse: /* Pulser Access */
     void setSlaveAmplMV( double newValue);
     char* getSlaveIP(char *buffer,int buflen); /* Pulser Slave IP address */
     void setSlaveIP( const char* newValue);
-    void Reset(); /* Pulser reset, Todo:add arguments */
+    void Reset(); /* Pulser reset */
 };
 
 /* ================================ */
@@ -292,7 +292,7 @@ class BranchS11: /* S11 Application */
     bool getShowSettings(); /* Show Settings */
     void setShowSettings( bool newValue);
     char* getStatusMsg(char *buffer,int buflen); /* Status Message */
-    char* FileSave(char *buffer,int buflen); /* S21 file save, Todo:add arguments */
+    char* FileSave(char *buffer,int buflen, const char *optFilename=NULL); /* S21 file save */
     void Fit(); /* S11 Chart Fit */
     void Reset(); /* Reset position */
 
@@ -477,7 +477,7 @@ class BranchS21: /* S21 Application */
 	bool getShowSettings(); /* Show Settings */
 	void setShowSettings( bool newValue);
 	char* getStatusMsg(char *buffer,int buflen); /* Status Message */
-	char* FileSave(char *buffer,int buflen); /* S21 file save, Todo:add arguments */
+	char* FileSave(char *buffer,int buflen, const char *optFilename=NULL); /* S21 file save */
 	void Fit(); /* S21 Chart Fit */
 	void Reset(); /* Reset position */
 
@@ -677,9 +677,9 @@ class BranchStep: /* Step Response Application */
 
 	void Align( AlignMode mode, bool waitToComplete=true, double waitUntilAligningTimeout=10 ); /* Step Align */
 	void WaitForAlignmentToComplete( double timeoutSec=15 );
-	char* Csv(char *buffer,int buflen); /* Step Csv, Todo:add arguments */
+	char* Csv(char *buffer,int buflen, const char *optFilename=NULL); /* Step Csv */
 	void Fit(); /* Step Chart Fit */
-	char* PulseStats(char *buffer,int buflen); /* Pulse statistics, Todo:add arguments */
+    char *PulseStats(); /* Pulse statistics - Must free() return value */
 
 	public:
 	BranchStepChart Chart;
@@ -862,17 +862,17 @@ class BranchTdr: /* TDR Application */
 	void setShowSettings( bool newValue);
 	char* getStatusMsg(char *buffer,int buflen); /* Status Message */
 	char* getTermCalFile(char *buffer,int buflen); /* Term cal table file */
-	void CancelCal(); /* Cancel calibration, Todo:add arguments */
-	void ClearCal(); /* Clear calibration, Todo:add arguments */
-	char* Csv(char *buffer,int buflen); /* Tdr Csv, Todo:add arguments */
+	void CancelCal(); /* Cancel calibration*/
+	void ClearCal(); /* Clear calibration */
+	char* Csv(char *buffer,int buflen, const char *optFilename=NULL); /* Tdr Csv */
 	void Fit(); /* Tdr Chart Fit, */
-	void LoadShortCal(); /* Load short calibration, Todo:add arguments */
-	void LoadTermCal(); /* Load termination calibration, Todo:add arguments */
 	void Reset(); /* Reset position,  */
-	void RunShortCal(); /* Run Short calibration, Todo:add arguments */
-	void RunTermCal(); /* Run 50 Ohm calibration, Todo:add arguments */
-	void SaveShortCal(); /* Save short calibration, Todo:add arguments */
-	void SaveTermCal(); /* Save termination calibration, Todo:add arguments */
+	void RunShortCal(); /* Run Short calibration */
+	void RunTermCal(); /* Run 50 Ohm calibration */
+	void SaveShortCal(const char *fileName); /* Save short calibration */
+	void SaveTermCal(const char *fileName); /* Save termination calibration */
+	void LoadShortCal(const char *fileName); /* Load short calibration */
+	void LoadTermCal(const char *fileName); /* Load termination calibration */
 
 	public:
 	BranchTdrChart Chart;
@@ -1071,14 +1071,14 @@ class BranchTdt: /* TDR Application */
 	void setShowThrough( bool newValue);
 	char* getStatusMsg(char *buffer,int buflen); /* Status Message */
 	char* getThroughCalFile(char *buffer,int buflen); /* Through cal table file */
-	void CancelCal(); /* Cancel calibration, Todo:add arguments */
-	void ClearCal(); /* Clear calibration, Todo:add arguments */
-	char* Csv(char *buffer,int buflen); /* Tdt Csv, Todo:add arguments */
+	void CancelCal(); /* Cancel calibration*/
+	void ClearCal(); /* Clear calibration */
+	char* Csv(char *buffer,int buflen, const char *optFilename=NULL); /* Tdt Csv */
 	void Fit(); /* Tdt Chart Fit */
-	void LoadThroughCal(); /* Load through calibration, Todo:add arguments */
 	void Reset(); /* Reset position */
-	void RunThroughCal(); /* Run Through calibration, Todo:add arguments */
-	void SaveThroughCal(); /* Save through calibration, Todo:add arguments */
+	void RunThroughCal(); /* Run Through calibration */
+	void SaveThroughCal(const char *fileName); /* Save through calibration*/
+	void LoadThroughCal(const char *fileName); /* Load through calibration */
 
 	public:
 	BranchTdtChart Chart;

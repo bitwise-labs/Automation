@@ -409,28 +409,27 @@ void BranchBlockChannel::setWidth(double newValue) /* Chart Width */
     SendCommand("Width %lf\n",newValue);
 }
 
-char* BranchBlockChannel::Csv(char *buffer,int buflen) /* Download CSV File, Todo:add arguments */
+char* BranchBlockChannel::Csv(char *buffer,int buflen, const char *optFilename) /* Download CSV File*/
 {
-    fprintf(stderr,"BranchBlockChannel::Csv(), Todo: add arguments if needed\n");
-    return QueryResponse(buffer,buflen,"Csv?\n");
+	if( optFilename==NULL || optFilename[0]==0 )
+		return QueryResponse(buffer,buflen,"Csv\n");
+
+	return QueryResponse(buffer,buflen,"Csv \"%s\"\n", optFilename );
 }
 
-void BranchBlockChannel::Fit() /* Fit chart to data, Todo:add arguments */
+void BranchBlockChannel::Fit() /* Fit chart to data, */
 {
-    fprintf(stderr,"BranchBlockChannel::Fit(), Todo: add arguments if needed\n");
     SendCommand("Fit\n");
 }
 
-void BranchBlockChannel::MapRange() /* Map histogram to fit range, Todo:add arguments */
+void BranchBlockChannel::Reset() /* Reset chart */
 {
-    fprintf(stderr,"BranchBlockChannel::MapRange(), Todo: add arguments if needed\n");
-    SendCommand("MapRange\n");
+    SendCommand("Reset\n");
 }
 
-void BranchBlockChannel::Reset() /* Reset chart, Todo:add arguments */
+void BranchBlockChannel::MapRange(double fromValue, double toValue) /* Map histogram to fit range */
 {
-    fprintf(stderr,"BranchBlockChannel::Reset(), Todo: add arguments if needed\n");
-    SendCommand("Reset\n");
+    SendCommand("MapRange %lf %lf\n");
 }
 
 /* ================================================================ */
@@ -691,28 +690,27 @@ void BranchBurstChannel::setWidth(double newValue) /* Chart Width */
     SendCommand("Width %lf\n",newValue);
 }
 
-char* BranchBurstChannel::Csv(char *buffer,int buflen) /* Download CSV File, Todo:add arguments */
+char* BranchBurstChannel::Csv(char *buffer,int buflen, const char *optFilename) /* Download CSV File */
 {
-    fprintf(stderr,"BranchBurstChannel::Csv(), Todo: add arguments if needed\n");
-    return QueryResponse(buffer,buflen,"Csv?\n");
+	if( optFilename==NULL || optFilename[0]==0 )
+		return QueryResponse(buffer,buflen,"Csv\n");
+
+	return QueryResponse(buffer,buflen,"Csv \"%s\"\n", optFilename );
 }
 
-void BranchBurstChannel::Fit() /* Fit chart to data, Todo:add arguments */
+void BranchBurstChannel::Fit() /* Fit chart to data, */
 {
-    fprintf(stderr,"BranchBurstChannel::Fit(), Todo: add arguments if needed\n");
     SendCommand("Fit\n");
 }
 
-void BranchBurstChannel::MapRange() /* Map histogram to fit range, Todo:add arguments */
+void BranchBurstChannel::Reset() /* Reset chart,*/
 {
-    fprintf(stderr,"BranchBurstChannel::MapRange(), Todo: add arguments if needed\n");
-    SendCommand("MapRange\n");
+    SendCommand("Reset\n");
 }
 
-void BranchBurstChannel::Reset() /* Reset chart, Todo:add arguments */
+void BranchBurstChannel::MapRange(double fromValue, double toValue) /* Map histogram to fit range */
 {
-    fprintf(stderr,"BranchBurstChannel::Reset(), Todo: add arguments if needed\n");
-    SendCommand("Reset\n");
+    SendCommand("MapRange %lf %lf\n");
 }
 
 /* ================================================================ */
@@ -808,10 +806,12 @@ double BranchData::getTransferBytessec() /* Bytes per second */
     return QueryResponse_double("Transfer?\n");
 }
 
-char* BranchData::Csv(char *buffer,int buflen) /* Save ELA Results in CSV file, Todo:add arguments */
+char* BranchData::Csv(char *buffer,int buflen, const char *optFilename) /* Save ELA Results in CSV file */
 {
-    fprintf(stderr,"BranchData::Csv(), Todo: add arguments if needed\n");
-    return QueryResponse(buffer,buflen,"Csv?\n");
+	if( optFilename==NULL || optFilename[0]==0 )
+		return QueryResponse(buffer,buflen,"Csv\n");
+
+	return QueryResponse(buffer,buflen,"Csv \"%s\"\n", optFilename );
 }
 
 long long BranchData::getCommonBits() /* Common bit count */
@@ -1198,28 +1198,26 @@ bool BranchPelaED::getUsingEye() /* Using Eye Diagramming */
     return QueryResponse_bool("UsingEye?\n");
 }
 
-void BranchPelaED::AutosetData() /* Perform Data Autoset, Todo:add arguments */
+void BranchPelaED::ResetClock() /* Reset Clocking, */
 {
-    fprintf(stderr,"BranchPelaED::AutosetData(), Todo: add arguments if needed\n");
-    SendCommand("AutosetData\n");
-}
-
-void BranchPelaED::ResetClock() /* Reset Clocking, Todo:add arguments */
-{
-    fprintf(stderr,"BranchPelaED::ResetClock(), Todo: add arguments if needed\n");
     SendCommand("ResetClock\n");
 }
 
-void BranchPelaED::Resync() /* Manual Resync, Todo:add arguments */
+const char *BranchPelaED::EDChannels_Strings[] = { "All", "Ch0", "Ch1", 0 };
+
+void BranchPelaED::AutosetData(EDChannels ch) /* Perform Data Autoset */
 {
-    fprintf(stderr,"BranchPelaED::Resync(), Todo: add arguments if needed\n");
-    SendCommand("Resync\n");
+    SendCommand("AutosetData %s\n",EDChannels_Strings[(int)ch] );
 }
 
-void BranchPelaED::SetDefaults() /* Set Channel Defaults, Todo:add arguments */
+void BranchPelaED::Resync(EDChannels ch) /* Manual Resync */
 {
-    fprintf(stderr,"BranchPelaED::SetDefaults(), Todo: add arguments if needed\n");
-    SendCommand("SetDefaults\n");
+    SendCommand("Resync %s\n",EDChannels_Strings[(int)ch] );
+}
+
+void BranchPelaED::SetDefaults(EDChannels ch ) /* Set Channel Defaults, */
+{
+    SendCommand("SetDefaults %s\n",EDChannels_Strings[(int)ch] );
 }
 
 /* ================================================================ */
@@ -1470,28 +1468,27 @@ void BranchEfiChannel::setWidth(double newValue) /* Chart Width */
     SendCommand("Width %lf\n",newValue);
 }
 
-char* BranchEfiChannel::Csv(char *buffer,int buflen) /* Download CSV File, Todo:add arguments */
+char* BranchEfiChannel::Csv(char *buffer,int buflen, const char *optFilename) /* Download CSV File */
 {
-    fprintf(stderr,"BranchEfiChannel::Csv(), Todo: add arguments if needed\n");
-    return QueryResponse(buffer,buflen,"Csv?\n");
+	if( optFilename==NULL || optFilename[0]==0 )
+		return QueryResponse(buffer,buflen,"Csv\n");
+
+	return QueryResponse(buffer,buflen,"Csv \"%s\"\n", optFilename );
 }
 
-void BranchEfiChannel::Fit() /* Fit chart to data, Todo:add arguments */
+void BranchEfiChannel::Fit() /* Fit chart to data, */
 {
-    fprintf(stderr,"BranchEfiChannel::Fit(), Todo: add arguments if needed\n");
     SendCommand("Fit\n");
 }
 
-void BranchEfiChannel::MapRange() /* Map histogram to fit range, Todo:add arguments */
+void BranchEfiChannel::Reset() /* Reset chart, */
 {
-    fprintf(stderr,"BranchEfiChannel::MapRange(), Todo: add arguments if needed\n");
-    SendCommand("MapRange\n");
+    SendCommand("Reset\n");
 }
 
-void BranchEfiChannel::Reset() /* Reset chart, Todo:add arguments */
+void BranchEfiChannel::MapRange(double fromValue, double toValue) /* Map histogram to fit range */
 {
-    fprintf(stderr,"BranchEfiChannel::Reset(), Todo: add arguments if needed\n");
-    SendCommand("Reset\n");
+    SendCommand("MapRange %lf %lf\n");
 }
 
 /* ================================================================ */
@@ -1656,10 +1653,12 @@ double BranchEla::getTransferBytessec() /* Bytes per second */
     return QueryResponse_double("Transfer?\n");
 }
 
-char* BranchEla::Csv(char *buffer,int buflen) /* Save ELA Results in CSV file, Todo:add arguments */
+char* BranchEla::Csv(char *buffer,int buflen, const char *optFilename) /* Save ELA Results in CSV file */
 {
-    fprintf(stderr,"BranchEla::Csv(), Todo: add arguments if needed\n");
-    return QueryResponse(buffer,buflen,"Csv?\n");
+	if( optFilename==NULL || optFilename[0]==0 )
+		return QueryResponse(buffer,buflen,"Csv\n");
+
+	return QueryResponse(buffer,buflen,"Csv \"%s\"\n", optFilename );
 }
 
 double BranchEla::getCommonCapturePcnt() /* Common Capture percentage */
@@ -1822,27 +1821,29 @@ void BranchErr::setShowStripSettings(bool newValue) /* Show Strip Chart Settings
     SendCommand("ShowStripSettings %c\n",newValue?'T':'F');
 }
 
-char* BranchErr::Csv(char *buffer,int buflen) /* PelaED Csv, Todo:add arguments */
+char* BranchErr::Csv(char *buffer,int buflen, const char *optFilename) /* PelaED Csv */
 {
-    fprintf(stderr,"BranchErr::Csv(), Todo: add arguments if needed\n");
-    return QueryResponse(buffer,buflen,"Csv?\n");
+	if( optFilename==NULL || optFilename[0]==0 )
+		return QueryResponse(buffer,buflen,"Csv\n");
+
+	return QueryResponse(buffer,buflen,"Csv \"%s\"\n", optFilename );
 }
 
-char* BranchErr::Csv2(char *buffer,int buflen) /* PelaErr Csv, Todo:add arguments */
+char* BranchErr::Csv2(char *buffer,int buflen, const char *optFilename) /* PelaErr Csv */
 {
-    fprintf(stderr,"BranchErr::Csv2(), Todo: add arguments if needed\n");
-    return QueryResponse(buffer,buflen,"Csv2?\n");
+	if( optFilename==NULL || optFilename[0]==0 )
+		return QueryResponse(buffer,buflen,"Csv2\n");
+
+	return QueryResponse(buffer,buflen,"Csv2 \"%s\"\n", optFilename );
 }
 
-void BranchErr::Fit() /* PelaED Chart Fit, Todo:add arguments */
+void BranchErr::Fit() /* PelaED Chart Fit, */
 {
-    fprintf(stderr,"BranchErr::Fit(), Todo: add arguments if needed\n");
     SendCommand("Fit\n");
 }
 
-void BranchErr::Reset() /* Reset position, Todo:add arguments */
+void BranchErr::Reset() /* Reset position, */
 {
-    fprintf(stderr,"BranchErr::Reset(), Todo: add arguments if needed\n");
     SendCommand("Reset\n");
 }
 
@@ -2269,15 +2270,16 @@ void BranchMaxTChannel::setWidth(double newValue) /* Chart Width */
     SendCommand("Width %lf\n",newValue);
 }
 
-char* BranchMaxTChannel::Csv(char *buffer,int buflen) /* Download CSV File, Todo:add arguments */
+char* BranchMaxTChannel::Csv(char *buffer,int buflen, const char *optFilename) /* Download CSV File */
 {
-    fprintf(stderr,"BranchMaxTChannel::Csv(), Todo: add arguments if needed\n");
-    return QueryResponse(buffer,buflen,"Csv?\n");
+	if( optFilename==NULL || optFilename[0]==0 )
+		return QueryResponse(buffer,buflen,"Csv\n");
+
+	return QueryResponse(buffer,buflen,"Csv \"%s\"\n", optFilename );
 }
 
-void BranchMaxTChannel::Fit() /* Fit chart to data, Todo:add arguments */
+void BranchMaxTChannel::Fit() /* Fit chart to data,  */
 {
-    fprintf(stderr,"BranchMaxTChannel::Fit(), Todo: add arguments if needed\n");
     SendCommand("Fit\n");
 }
 
@@ -2571,28 +2573,27 @@ void BranchModChannel::setWidth(double newValue) /* Chart Width */
     SendCommand("Width %lf\n",newValue);
 }
 
-char* BranchModChannel::Csv(char *buffer,int buflen) /* Download CSV File, Todo:add arguments */
+char* BranchModChannel::Csv(char *buffer,int buflen, const char *optFilename) /* Download CSV File */
 {
-    fprintf(stderr,"BranchModChannel::Csv(), Todo: add arguments if needed\n");
-    return QueryResponse(buffer,buflen,"Csv?\n");
+	if( optFilename==NULL || optFilename[0]==0 )
+		return QueryResponse(buffer,buflen,"Csv\n");
+
+	return QueryResponse(buffer,buflen,"Csv \"%s\"\n", optFilename );
 }
 
-void BranchModChannel::Fit() /* Fit chart to data, Todo:add arguments */
+void BranchModChannel::Fit() /* Fit chart to data,*/
 {
-    fprintf(stderr,"BranchModChannel::Fit(), Todo: add arguments if needed\n");
     SendCommand("Fit\n");
 }
 
-void BranchModChannel::MapRange() /* Map histogram to fit range, Todo:add arguments */
+void BranchModChannel::Reset() /* Reset chart, */
 {
-    fprintf(stderr,"BranchModChannel::MapRange(), Todo: add arguments if needed\n");
-    SendCommand("MapRange\n");
+    SendCommand("Reset\n");
 }
 
-void BranchModChannel::Reset() /* Reset chart, Todo:add arguments */
+void BranchModChannel::MapRange(double fromValue, double toValue) /* Map histogram to fit range */
 {
-    fprintf(stderr,"BranchModChannel::Reset(), Todo: add arguments if needed\n");
-    SendCommand("Reset\n");
+    SendCommand("MapRange %lf %lf\n");
 }
 
 /* ================================================================ */
@@ -2820,22 +2821,22 @@ void BranchRLenChannel::setWidth(double newValue) /* Chart Width */
     SendCommand("Width %lf\n",newValue);
 }
 
-char* BranchRLenChannel::Csv(char *buffer,int buflen) /* Download CSV File, Todo:add arguments */
+char* BranchRLenChannel::Csv(char *buffer,int buflen, const char *optFilename) /* Download CSV File */
 {
-    fprintf(stderr,"BranchRLenChannel::Csv(), Todo: add arguments if needed\n");
-    return QueryResponse(buffer,buflen,"Csv?\n");
+	if( optFilename==NULL || optFilename[0]==0 )
+		return QueryResponse(buffer,buflen,"Csv\n");
+
+	return QueryResponse(buffer,buflen,"Csv \"%s\"\n", optFilename );
 }
 
-void BranchRLenChannel::Fit() /* Fit chart to data, Todo:add arguments */
+void BranchRLenChannel::Fit() /* Fit chart to data */
 {
-    fprintf(stderr,"BranchRLenChannel::Fit(), Todo: add arguments if needed\n");
     SendCommand("Fit\n");
 }
 
-void BranchRLenChannel::Reset() /* Reset chart, Todo:add arguments */
+void BranchRLenChannel::Reset() /* Reset chart*/
 {
-    fprintf(stderr,"BranchRLenChannel::Reset(), Todo: add arguments if needed\n");
-    SendCommand("Reset\n");
+     SendCommand("Reset\n");
 }
 
 /* ================================================================ */
@@ -3141,21 +3142,21 @@ void BranchWanderChannel::setWindowBits(int newValue) /* Bit window */
     SendCommand("Window %d\n",newValue);
 }
 
-char* BranchWanderChannel::Csv(char *buffer,int buflen) /* Download CSV File, Todo:add arguments */
+char* BranchWanderChannel::Csv(char *buffer,int buflen, const char *optFilename) /* Download CSV File */
 {
-    fprintf(stderr,"BranchWanderChannel::Csv(), Todo: add arguments if needed\n");
-    return QueryResponse(buffer,buflen,"Csv?\n");
+	if( optFilename==NULL || optFilename[0]==0 )
+		return QueryResponse(buffer,buflen,"Csv\n");
+
+	return QueryResponse(buffer,buflen,"Csv \"%s\"\n", optFilename );
 }
 
-void BranchWanderChannel::Fit() /* Fit chart to data, Todo:add arguments */
+void BranchWanderChannel::Fit() /* Fit chart to data */
 {
-    fprintf(stderr,"BranchWanderChannel::Fit(), Todo: add arguments if needed\n");
     SendCommand("Fit\n");
 }
 
-void BranchWanderChannel::Reset() /* Reset chart, Todo:add arguments */
+void BranchWanderChannel::Reset() /* Reset chart */
 {
-    fprintf(stderr,"BranchWanderChannel::Reset(), Todo: add arguments if needed\n");
     SendCommand("Reset\n");
 }
 
@@ -3194,16 +3195,14 @@ void BranchPelaEye::setShowSettings(bool newValue) /* Show gui settings panel */
     SendCommand("ShowSettings %c\n",newValue?'T':'F');
 }
 
-void BranchPelaEye::Fit() /* Fit chart, Todo:add arguments */
+void BranchPelaEye::Fit() /* Fit chart,  */
 {
-    fprintf(stderr,"BranchPelaEye::Fit(), Todo: add arguments if needed\n");
-    SendCommand("Fit\n");
+     SendCommand("Fit\n");
 }
 
-void BranchPelaEye::Reset() /* Reset position, Todo:add arguments */
+void BranchPelaEye::Reset() /* Reset position,  */
 {
-    fprintf(stderr,"BranchPelaEye::Reset(), Todo: add arguments if needed\n");
-    SendCommand("Reset\n");
+     SendCommand("Reset\n");
 }
 
 
@@ -3415,10 +3414,12 @@ void BranchPelaEyeChannel::setVoltOffsMV(double newValue) /* Volt Offset */
     SendCommand("VoltOffs %lf\n",newValue);
 }
 
-char* BranchPelaEyeChannel::Jpg(char *buffer,int buflen) /* PelaEye Jpg Image, Todo:add arguments */
+char* BranchPelaEyeChannel::Jpg(char *buffer,int buflen, const char *optFilename) /* PelaEye Jpg Image*/
 {
-    fprintf(stderr,"BranchPelaEyeChannel::Jpg(), Todo: add arguments if needed\n");
-    return QueryResponse(buffer,buflen,"Jpg?\n");
+	if( optFilename==NULL || optFilename[0]==0 )
+		return QueryResponse(buffer,buflen,"Jpg\n");
+
+	return QueryResponse(buffer,buflen,"Jpg \"%s\"\n", optFilename );
 }
 
 /* ================================================================ */

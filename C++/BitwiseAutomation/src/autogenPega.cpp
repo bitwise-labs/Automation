@@ -588,27 +588,29 @@ int BranchErr::getSerial() /* Serial Number of Integration */
     return QueryResponse_int("Serial?\n");
 }
 
-char* BranchErr::Csv(char *buffer,int buflen) /* PegaED Csv, Todo:add arguments */
+char* BranchErr::Csv(char *buffer,int buflen, const char *optFilename) /* PegaED Csv */
 {
-    fprintf(stderr,"BranchErr::Csv(), Todo: add arguments if needed\n");
-    return QueryResponse(buffer,buflen,"Csv?\n");
+	if( optFilename==NULL || optFilename[0]==0 )
+		return QueryResponse(buffer,buflen,"Csv\n");
+
+	return QueryResponse(buffer,buflen,"Csv \"%s\"\n", optFilename );
 }
 
-char* BranchErr::Csv2(char *buffer,int buflen) /* PegaErr Csv, Todo:add arguments */
+char* BranchErr::Csv2(char *buffer,int buflen, const char *optFilename) /* PegaErr Csv */
 {
-    fprintf(stderr,"BranchErr::Csv2(), Todo: add arguments if needed\n");
-    return QueryResponse(buffer,buflen,"Csv2?\n");
+	if( optFilename==NULL || optFilename[0]==0 )
+		return QueryResponse(buffer,buflen,"Csv2\n");
+
+	return QueryResponse(buffer,buflen,"Csv2 \"%s\"\n", optFilename );
 }
 
-void BranchErr::Fit() /* PegaED Chart Fit, Todo:add arguments */
+void BranchErr::Fit() /* PegaED Chart Fit */
 {
-    fprintf(stderr,"BranchErr::Fit(), Todo: add arguments if needed\n");
     SendCommand("Fit\n");
 }
 
-void BranchErr::Reset() /* Reset position, Todo:add arguments */
+void BranchErr::Reset() /* Reset position */
 {
-    fprintf(stderr,"BranchErr::Reset(), Todo: add arguments if needed\n");
     SendCommand("Reset\n");
 }
 
@@ -875,21 +877,21 @@ void BranchEye::setShowSettings(bool newValue) /* Show gui settings panel */
     SendCommand("ShowSettings %c\n",newValue?'T':'F');
 }
 
-void BranchEye::Fit() /* Fit chart, Todo:add arguments */
+void BranchEye::Fit() /* Fit chart */
 {
-    fprintf(stderr,"BranchEye::Fit(), Todo: add arguments if needed\n");
     SendCommand("Fit\n");
 }
 
-char* BranchEye::Jpg(char *buffer,int buflen) /* PegaEye Jpg Image, Todo:add arguments */
+char* BranchEye::Jpg(char *buffer,int buflen, const char *optFilename) /* PegaEye Jpg Image */
 {
-    fprintf(stderr,"BranchEye::Jpg(), Todo: add arguments if needed\n");
-    return QueryResponse(buffer,buflen,"Jpg?\n");
+	if( optFilename==NULL || optFilename[0]==0 )
+		return QueryResponse(buffer,buflen,"Jpg\n");
+
+	return QueryResponse(buffer,buflen,"Jpg \"%s\"\n", optFilename );
 }
 
-void BranchEye::Reset() /* Reset position, Todo:add arguments */
+void BranchEye::Reset() /* Reset position */
 {
-    fprintf(stderr,"BranchEye::Reset(), Todo: add arguments if needed\n");
     SendCommand("Reset\n");
 }
 
@@ -1446,16 +1448,14 @@ void BranchPG::setUserPage(int index,UserPage newValue )
     SendCommand("UserPage[%d] \"%s\"\n",index,UserPage_Strings[(int)newValue]);
 }
 
-void BranchPG::SetDefaults() /* Set defaults, Todo:add arguments */
+void BranchPG::SetDefaults() /* Set defaults */
 {
-    fprintf(stderr,"BranchPG::SetDefaults(), Todo: add arguments if needed\n");
     SendCommand("SetDefaults\n");
 }
 
-void BranchPG::UserPageFlip() /* User Page temporary flip, Todo:add arguments */
+void BranchPG::UserPageFlip(int pageIndex) /* User Page temporary flip */
 {
-    fprintf(stderr,"BranchPG::UserPageFlip(), Todo: add arguments if needed\n");
-    SendCommand("UserPageFlip\n");
+    SendCommand("UserPageFlip %d\n", pageIndex);
 }
 
 /* ================================================================ */
@@ -1695,9 +1695,8 @@ void BranchPGErr::setType(int index,Type newValue )
     SendCommand("Type[%d] \"%s\"\n",index,Type_Strings[(int)newValue]);
 }
 
-void BranchPGErr::Single() /* Do single error inject, Todo:add arguments */
+void BranchPGErr::Single() /* Do single error inject */
 {
-    fprintf(stderr,"BranchPGErr::Single(), Todo: add arguments if needed\n");
     SendCommand("Single\n");
 }
 
@@ -2003,16 +2002,17 @@ int BranchTub::getWkgSEQ() /* Working Serial number */
     return QueryResponse_int("WkgSEQ?\n");
 }
 
-char* BranchTub::Csv(char *buffer,int buflen) /* PegaTub Csv, Todo:add arguments */
+char* BranchTub::Csv(char *buffer,int buflen, const char *optFilename) /* PegaTub Csv */
 {
-    fprintf(stderr,"BranchTub::Csv(), Todo: add arguments if needed\n");
-    return QueryResponse(buffer,buflen,"Csv?\n");
+	if( optFilename==NULL || optFilename[0]==0 )
+		return QueryResponse(buffer,buflen,"Csv\n");
+
+	return QueryResponse(buffer,buflen,"Csv \"%s\"\n", optFilename );
 }
 
-char *BranchTub::FetchPoints() /* Fetch points - Must free() return value, Todo:add arguments */
+char *BranchTub::FetchPoints(int startingIndex) /* Fetch points - Must free() return value */
 {
-    fprintf(stderr,"BranchTub::FetchPoints(), Todo: add arguments if needed\n");
-    return QueryBinaryResponse(0,"FetchPoints\n");
+    return QueryBinaryResponse(0,"FetchPoints %d\n", startingIndex);
 }
 
 char *BranchTub::FetchResults() /* Fetch results - Must free() return value */
@@ -2020,9 +2020,8 @@ char *BranchTub::FetchResults() /* Fetch results - Must free() return value */
     return QueryBinaryResponse(0,"FetchResults\n");
 }
 
-char *BranchTub::FetchWkg() /* Fetch working values - Must free() return value, Todo:add arguments */
+char *BranchTub::FetchWkg() /* Fetch working values - Must free() return value*/
 {
-    fprintf(stderr,"BranchTub::FetchWkg(), Todo: add arguments if needed\n");
     return QueryBinaryResponse(0,"FetchWkg\n");
 }
 
@@ -2031,7 +2030,7 @@ void BranchTub::Fit() /* PegaTub Chart Fit */
     SendCommand("Fit\n");
 }
 
-void BranchTub::Reset() /* Reset position, Todo:add arguments */
+void BranchTub::Reset() /* Reset position */
 {
     SendCommand("Reset\n");
 }

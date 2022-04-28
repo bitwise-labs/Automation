@@ -304,7 +304,7 @@ class BitwiseDevice(SocketDevice):
             f.close()
 
     def ReceiveFileAs(self, sourceFilePath: str, localFilePath: str ):
-        """Receive file from device.  Todo: Is code - complete, needs testing. """
+        """Receive file from device.  Needs testing. """
         # print("BitwiseDevice::SendFileAs src=[" + sourceFilePath + "], localdest=[" + localFilePath + "]")
 
         if len(sourceFilePath)==0 :

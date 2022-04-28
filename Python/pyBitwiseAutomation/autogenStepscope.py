@@ -65,36 +65,20 @@ class BranchCalib(AutomationExtender):
         return self.Status(self.QueryResponse_enum(self.Status, "Status?\n"))
 
     def Cancel(self):
-        """Method for Cancel calibration. Todo: add arguments if needed"""
-        print("BranchCalib:Cancel(), Todo: add arguments if needed")
-
-    def getSlaveAmplMV(self)->float:
-        """Get Slave pulser amplitude """
-        return self.QueryResponse_float("SlaveAmpl?\n")
-
-    def setSlaveAmplMV(self, newvalue:float) :
-        """Set Slave pulser amplitude """
-        self.SendCommand("SlaveAmpl " + str(newvalue) + "\n")
+        """Method for Cancel calibration."""
+        self.SendCommand("Cancel\n")
         return None
 
-    def getSlaveIP(self) -> str:
-        """Get Pulser Slave IP address """
-        return self.QueryResponse("SlaveIP?\n")
-
-    def setSlaveIP(self, newvalue: str) :
-        """Set Pulser Slave IP address """
-        self.SendCommand("SlaveIP " + "\""+newvalue+"\"" + "\n")
+    def RunDelay(self):
+        """Method for Run Delay calibration."""
+        self.SendCommand("RunDelay")
         return None
 
-    def Reset(self):
-        """Method for Pulser reset. Todo: add arguments if needed"""
-        print("BranchPulse:Reset(), Todo: add arguments if needed")
-        self.SendCommand("Reset\n")
+    def RunNoise(self):
+        """Method for Run Delay calibration."""
+        self.SendCommand("RunNoise")
         return None
 
-    # ================================ #
-
-# ================================ #
 
 class BranchPulse(AutomationExtender):
     """BranchPulse class.  Pulser Access"""
@@ -180,8 +164,27 @@ class BranchPulse(AutomationExtender):
 
     def getSlaveAmplMV(self) -> float:
         """Get Slave pulser amplitude """
+        return self.QueryResponse_float("SlaveAmpl?\n")
 
-# ================================ #
+    def setSlaveAmplMV(self, newvalue: float):
+        """Set Slave pulser amplitude """
+        self.SendCommand("SlaveAmpl " + str(newvalue) + "\n")
+        return None
+
+    def getSlaveIP(self) -> str:
+        """Get Pulser Slave IP address """
+        return self.QueryResponse("SlaveIP?\n")
+
+    def setSlaveIP(self, newvalue: str):
+        """Set Pulser Slave IP address """
+        self.SendCommand("SlaveIP " + "\"" + newvalue + "\"" + "\n")
+        return None
+
+    def Reset(self):
+        """Method for Pulser reset."""
+        self.SendCommand("Reset\n")
+        return None
+
 
 class BranchS11Cfg(AutomationExtender):
     """BranchS11Cfg class.  Configuration"""
@@ -541,19 +544,17 @@ class BranchS11(AutomationExtender):
         """Get Status Message """
         return self.QueryResponse("StatusMsg?\n")
 
-    def FileSave(self, filename: str = "") -> str:
+    def FileSave(self, optFilename: str = "") -> str:
         """Response method for S11 file save. """
-        return self.QueryResponse("FileSave\n" if filename == "" else 'FileSave "'+filename+'"\n')
+        return self.QueryResponse("FileSave\n" if optFilename == "" else 'FileSave "'+optFilename+'"\n')
 
     def Fit(self):
-        """Method for S11 Chart Fit. Todo: add arguments if needed"""
-        print("BranchS11:Fit(), Todo: add arguments if needed")
+        """Method for S11 Chart Fit. """
         self.SendCommand("Fit\n")
         return None
 
     def Reset(self):
-        """Method for Reset position. Todo: add arguments if needed"""
-        print("BranchS11:Reset(), Todo: add arguments if needed")
+        """Method for Reset position."""
         self.SendCommand("Reset\n")
         return None
 
@@ -918,19 +919,17 @@ class BranchS21(AutomationExtender):
         """Get Status Message """
         return self.QueryResponse("StatusMsg?\n")
 
-    def FileSave(self, filename: str = "") -> str:
+    def FileSave(self, optFilename: str = "") -> str:
         """Response method for S21 file save. """
-        return self.QueryResponse("FileSave\n" if filename == "" else 'FileSave "'+filename+'"\n')
+        return self.QueryResponse("FileSave\n" if optFilename == "" else 'FileSave "'+optFilename+'"\n')
 
     def Fit(self):
-        """Method for S21 Chart Fit. Todo: add arguments if needed"""
-        print("BranchS21:Fit(), Todo: add arguments if needed")
+        """Method for S21 Chart Fit. """
         self.SendCommand("Fit\n")
         return None
 
     def Reset(self):
-        """Method for Reset position. Todo: add arguments if needed"""
-        print("BranchS21:Reset(), Todo: add arguments if needed")
+        """Method for Reset position."""
         self.SendCommand("Reset\n")
         return None
 
@@ -1336,9 +1335,9 @@ class BranchStep(AutomationExtender):
 
         return None
 
-    def Csv(self, filename: str = "") -> str:
+    def Csv(self, optFilename: str = "") -> str:
         """Response method for Step Csv. """
-        return self.QueryResponse("Csv\n" if filename == "" else 'Csv "'+filename+'"\n')
+        return self.QueryResponse("Csv\n" if optFilename == "" else 'Csv "'+optFilename+'"\n')
 
     def Fit(self):
         """Method for Step Chart Fit.  """
@@ -1346,11 +1345,11 @@ class BranchStep(AutomationExtender):
         return None
 
     def PulseStats(self) -> str:
-        """Response method for Pulse statistics. Todo: add arguments if needed"""
-        print("BranchStep:PulseStats(), Todo: add arguments if needed")
-        return self.QueryResponse("PulseStats\n")
+        """Binary string response method for Pulse statistics. """
+        return str(self.QueryBinaryResponse("PulseStats\n"), encoding='utf-8')
 
 # ================================ #
+
 
 class BranchTdrCfg(AutomationExtender):
     """BranchTdrCfg class.  Configuration"""
@@ -1728,37 +1727,22 @@ class BranchTdr(AutomationExtender):
         return self.QueryResponse("TermCalFile?\n")
 
     def CancelCal(self):
-        """Method for Cancel calibration. Todo: add arguments if needed"""
-        print("BranchTdr:CancelCal(), Todo: add arguments if needed")
+        """Method for Cancel calibration. """
         self.SendCommand("CancelCal\n")
         return None
 
     def ClearCal(self):
-        """Method for Clear calibration. Todo: add arguments if needed"""
-        print("BranchTdr:ClearCal(), Todo: add arguments if needed")
+        """Method for Clear calibration. """
         self.SendCommand("ClearCal\n")
         return None
 
-    def Csv(self, filename: str = "") -> str:
+    def Csv(self, optFilename: str = "") -> str:
         """Response method for Tdr Csv. """
-        return self.QueryResponse("Csv\n" if filename == "" else 'Csv "'+filename+'"\n')
+        return self.QueryResponse("Csv\n" if optFilename == "" else 'Csv "'+optFilename+'"\n')
 
     def Fit(self):
-        """Method for Tdr Chart Fit. Todo: add arguments if needed"""
-        print("BranchTdr:Fit(), Todo: add arguments if needed")
+        """Method for Tdr Chart Fit. """
         self.SendCommand("Fit\n")
-        return None
-
-    def LoadShortCal(self):
-        """Method for Load short calibration. Todo: add arguments if needed"""
-        print("BranchTdr:LoadShortCal(), Todo: add arguments if needed")
-        self.SendCommand("LoadShortCal\n")
-        return None
-
-    def LoadTermCal(self):
-        """Method for Load termination calibration. Todo: add arguments if needed"""
-        print("BranchTdr:LoadTermCal(), Todo: add arguments if needed")
-        self.SendCommand("LoadTermCal\n")
         return None
 
     def Reset(self):
@@ -1767,27 +1751,33 @@ class BranchTdr(AutomationExtender):
         return None
 
     def RunShortCal(self):
-        """Method for Run Short calibration. Todo: add arguments if needed"""
-        print("BranchTdr:RunShortCal(), Todo: add arguments if needed")
+        """Method for Run Short calibration."""
         self.SendCommand("RunShortCal\n")
         return None
 
     def RunTermCal(self):
-        """Method for Run 50 Ohm calibration. Todo: add arguments if needed"""
-        print("BranchTdr:RunTermCal(), Todo: add arguments if needed")
+        """Method for Run 50 Ohm calibration."""
         self.SendCommand("RunTermCal\n")
         return None
 
-    def SaveShortCal(self):
-        """Method for Save short calibration. Todo: add arguments if needed"""
-        print("BranchTdr:SaveShortCal(), Todo: add arguments if needed")
-        self.SendCommand("SaveShortCal\n")
+    def LoadShortCal(self, fileName: str):
+        """Method for Load short calibration."""
+        self.SendCommand("LoadShortCal \"" + fileName + "\"\n")
         return None
 
-    def SaveTermCal(self):
-        """Method for Save termination calibration. Todo: add arguments if needed"""
-        print("BranchTdr:SaveTermCal(), Todo: add arguments if needed")
-        self.SendCommand("SaveTermCal\n")
+    def LoadTermCal(self, fileName: str):
+        """Method for Load termination calibration."""
+        self.SendCommand("LoadTermCal \"" + fileName + "\"\n")
+        return None
+
+    def SaveShortCal(self, fileName: str):
+        """Method for Save short calibration."""
+        self.SendCommand("SaveShortCal \"" + fileName + "\"\n")
+        return None
+
+    def SaveTermCal(self, fileName: str):
+        """Method for Save termination calibration."""
+        self.SendCommand("SaveTermCal \"" + fileName + "\"\n")
         return None
 
 # ================================ #
@@ -2190,47 +2180,40 @@ class BranchTdt(AutomationExtender):
         return self.QueryResponse("ThroughCalFile?\n")
 
     def CancelCal(self):
-        """Method for Cancel calibration. Todo: add arguments if needed"""
-        print("BranchTdt:CancelCal(), Todo: add arguments if needed")
+        """Method for Cancel calibration."""
         self.SendCommand("CancelCal\n")
         return None
 
     def ClearCal(self):
-        """Method for Clear calibration. Todo: add arguments if needed"""
-        print("BranchTdt:ClearCal(), Todo: add arguments if needed")
+        """Method for Clear calibration."""
         self.SendCommand("ClearCal\n")
         return None
 
-    def Csv(self, filename: str = "") -> str:
+    def Csv(self, optFilename: str = "") -> str:
         """Response method for Tdt Csv. """
-        return self.QueryResponse("Csv\n" if filename == "" else 'Csv "'+filename+'"\n')
+        return self.QueryResponse("Csv\n" if optFilename == "" else 'Csv "'+optFilename+'"\n')
 
     def Fit(self):
-        """Method for Tdt Chart Fit. Todo: add arguments if needed"""
-        print("BranchTdt:Fit(), Todo: add arguments if needed")
+        """Method for Tdt Chart Fit. """
         self.SendCommand("Fit\n")
         return None
 
-    def LoadThroughCal(self):
-        """Method for Load through calibration. Todo: add arguments if needed"""
-        print("BranchTdt:LoadThroughCal(), Todo: add arguments if needed")
-        self.SendCommand("LoadThroughCal\n")
-        return None
-
     def Reset(self):
-        """Method for Reset position. Todo: add arguments if needed"""
-        print("BranchTdt:Reset(), Todo: add arguments if needed")
+        """Method for Reset position."""
         self.SendCommand("Reset\n")
         return None
 
     def RunThroughCal(self):
-        """Method for Run Through calibration. Todo: add arguments if needed"""
-        print("BranchTdt:RunThroughCal(), Todo: add arguments if needed")
+        """Method for Run Through calibration."""
         self.SendCommand("RunThroughCal\n")
         return None
 
-    def SaveThroughCal(self):
-        """Method for Save through calibration. Todo: add arguments if needed"""
-        print("BranchTdt:SaveThroughCal(), Todo: add arguments if needed")
-        self.SendCommand("SaveThroughCal\n")
+    def SaveThroughCal(self, fileName: str):
+        """Method for Save through calibration."""
+        self.SendCommand("SaveThroughCal \"" + fileName + "\"\n")
+        return None
+
+    def LoadThroughCal(self, fileName: str):
+        """Method for Load through calibration."""
+        self.SendCommand("LoadThroughCal \"" + fileName + "\"\n")
         return None

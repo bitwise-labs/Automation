@@ -253,7 +253,7 @@ class BranchED: /* Pega Calibration Input Access */
 	};
     static const char *AlignBy_Strings[];
 
-    void Resync(); /* Manual Resync, Todo:add arguments */
+    void Resync(); /* Manual Resync */
     bool AlignData( AlignBy alignType = AlignBy::All, bool waitToComplete=true ); /* Perform data alignment, parameter: Time, Volts, All (Dflt), PrbsVolts, PrbsAll */
     bool WaitForAlignmentToComplete();
     void AlignClearLog();
@@ -391,10 +391,10 @@ class BranchErr: /* Calibration channel error rate application */
     Running getRunning();
     int getSequence(); /* Run Sequence */
     int getSerial(); /* Serial Number of Integration */
-    char* Csv(char *buffer,int buflen); /* PegaED Csv, Todo:add arguments */
-    char* Csv2(char *buffer,int buflen); /* PegaErr Csv, Todo:add arguments */
-    void Fit(); /* PegaED Chart Fit, Todo:add arguments */
-    void Reset(); /* Reset position, Todo:add arguments */
+    char* Csv(char *buffer,int buflen, const char *optFilename=NULL); /* PegaED Csv*/
+    char* Csv2(char *buffer,int buflen, const char *optFilename=NULL); /* PegaErr Csv */
+    void Fit(); /* PegaED Chart Fit */
+    void Reset(); /* Reset position */
 };
 
     /* ================================ */
@@ -537,9 +537,9 @@ class BranchEye: /* Calibration channel eye diagram application */
     int getSequence(); /* Run Sequence */
     bool getShowSettings(); /* Show gui settings panel */
     void setShowSettings( bool newValue);
-    void Fit(); /* Fit chart, Todo:add arguments */
-    char* Jpg(char *buffer,int buflen); /* PegaEye Jpg Image, Todo:add arguments */
-    void Reset(); /* Reset position, Todo:add arguments */
+    void Fit(); /* Fit chart*/
+    char* Jpg(char *buffer,int buflen, const char *optFilename=NULL); /* PegaEye Jpg Image*/
+    void Reset(); /* Reset position */
 };
 
 
@@ -657,7 +657,7 @@ class BranchPGErr: /* Error injector */
 
     Type getType(int index);
     void setType(int index, Type newValue);
-    void Single(); /* Do single error inject, Todo:add arguments */
+    void Single(); /* Do single error inject */
 };
 
 /* ================================ */
@@ -842,10 +842,9 @@ class BranchPG: /* Pattern generator control */
 
     UserPage getUserPage(int index);
     void setUserPage(int index, UserPage newValue);
-    void SetDefaults(); /* Set defaults, Todo:add arguments */
-    void UserPageFlip(); /* User Page temporary flip, Todo:add arguments */
+    void SetDefaults(); /* Set defaults*/
+    void UserPageFlip(int pageIndex); /* User Page temporary flip */
 };
-
 
 class BranchTubChart: /* Chart View */
     public AutomationExtender
@@ -979,12 +978,12 @@ class BranchTub: /* BER Tub application */
     TubType getTubType();
     void setTubType( TubType newValue);
     int getWkgSEQ(); /* Working Serial number */
-    char* Csv(char *buffer,int buflen); /* PegaTub Csv, Todo:add arguments */
-    char *FetchPoints(); /* Fetch points - Must free() return value, Todo:add arguments */
+    char* Csv(char *buffer,int buflen, const char *optFilename=NULL); /* PegaTub Csv */
+    char *FetchPoints(int startingIndex=0); /* Fetch points - Must free() return value*/
     char *FetchResults(); /* Fetch results - Must free() return value */
-    char *FetchWkg(); /* Fetch working values - Must free() return value, Todo:add arguments */
-    void Fit(); /* PegaTub Chart Fit, Todo:add arguments */
-    void Reset(); /* Reset position, Todo:add arguments */
+    char *FetchWkg(); /* Fetch working values - Must free() return value,  */
+    void Fit(); /* PegaTub Chart Fit */
+    void Reset(); /* Reset position */
 };
 
 #endif // AUTOGEN_PEGA_H

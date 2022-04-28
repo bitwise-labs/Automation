@@ -186,10 +186,10 @@ class BranchBlockChannel: /* Channel Category */
 	char* getTitle(char *buffer,int buflen); /* Chart Title */
 	double getWidth(); /* Chart Width */
 	void setWidth( double newValue);
-	char* Csv(char *buffer,int buflen); /* Download CSV File, Todo:add arguments */
-	void Fit(); /* Fit chart to data, Todo:add arguments */
-	void MapRange(); /* Map histogram to fit range, Todo:add arguments */
-	void Reset(); /* Reset chart, Todo:add arguments */
+	char* Csv(char *buffer,int buflen, const char *optFilename=NULL); /* Download CSV File*/
+	void Fit(); /* Fit chart to data */
+	void Reset(); /* Reset chart */
+	void MapRange(double fromValue, double toValue); /* Map histogram to fit range,*/
 };
 /* ================================ */
 
@@ -298,10 +298,10 @@ class BranchBurstChannel: /* Channel Category */
 	char* getTitle(char *buffer,int buflen); /* Chart Title */
 	double getWidth(); /* Chart Width */
 	void setWidth( double newValue);
-	char* Csv(char *buffer,int buflen); /* Download CSV File, Todo:add arguments */
-	void Fit(); /* Fit chart to data, Todo:add arguments */
-	void MapRange(); /* Map histogram to fit range, Todo:add arguments */
-	void Reset(); /* Reset chart, Todo:add arguments */
+	char* Csv(char *buffer,int buflen, const char *optFilename=NULL); /* Download CSV File*/
+	void Fit(); /* Fit chart to data*/
+	void Reset(); /* Reset chart */
+	void MapRange(double fromValue, double toValue); /* Map histogram to fit range,*/
 };
 
 /* ================================ */
@@ -371,7 +371,7 @@ class BranchData: /* Data Application */
     int getSymbolSizeBits(int index); /* Global bits per symbol */
     void setSymbolSizeBits(int index, int newValue);
     double getTransferBytessec(); /* Bytes per second */
-    char* Csv(char *buffer,int buflen); /* Save ELA Results in CSV file, Todo:add arguments */
+    char* Csv(char *buffer,int buflen, const char *optFilename=NULL); /* Save ELA Results in CSV file */
     long long getCommonBits(); /* Common bit count */
     int getCommonBuffers(); /* Number of buffers */
     bool getCommonEnabled(); /* Common Enable processor */
@@ -559,10 +559,20 @@ class BranchPelaED: /* Pela Error Detector Access */
     int getUserWordsWords(int index); /* User words */
     void setUserWordsWords(int index, int newValue);
     bool getUsingEye(); /* Using Eye Diagramming */
-    void AutosetData(); /* Perform Data Autoset, Todo:add arguments */
-    void ResetClock(); /* Reset Clocking, Todo:add arguments */
-    void Resync(); /* Manual Resync, Todo:add arguments */
-    void SetDefaults(); /* Set Channel Defaults, Todo:add arguments */
+
+    void ResetClock(); /* Reset Clocking */
+
+    enum class EDChannels
+    {
+        All,
+        Ch0,
+        Ch1,
+    };
+    static const char *EDChannels_Strings[];
+
+    void AutosetData(EDChannels ch = EDChannels::All); /* Perform Data Autoset */
+    void Resync(EDChannels ch = EDChannels::All); /* Manual Resync */
+    void SetDefaults(EDChannels ch = EDChannels::All); /* Set Channel Defaults, */
 };
 
 /* ================================ */
@@ -652,10 +662,10 @@ class BranchEfiChannel: /* Channel Category */
 	char* getTitle(char *buffer,int buflen); /* Chart Title */
 	double getWidth(); /* Chart Width */
 	void setWidth( double newValue);
-	char* Csv(char *buffer,int buflen); /* Download CSV File, Todo:add arguments */
-	void Fit(); /* Fit chart to data, Todo:add arguments */
-	void MapRange(); /* Map histogram to fit range, Todo:add arguments */
-	void Reset(); /* Reset chart, Todo:add arguments */
+	char* Csv(char *buffer,int buflen, const char *optFilename=NULL); /* Download CSV File */
+	void Fit(); /* Fit chart to data,  */
+	void Reset(); /* Reset chart, */
+	void MapRange(double fromValue, double toValue); /* Map histogram to fit range,*/
 };
 
 /* ================================ */
@@ -746,7 +756,7 @@ class BranchEla: /* Pela ELA Application */
     int getSymbolSizeBits(int index); /* Global bits per symbol */
     void setSymbolSizeBits(int index, int newValue);
     double getTransferBytessec(); /* Bytes per second */
-    char* Csv(char *buffer,int buflen); /* Save ELA Results in CSV file, Todo:add arguments */
+    char* Csv(char *buffer,int buflen, const char *optFilename=NULL); /* Save ELA Results in CSV file */
     double getCommonCapturePcnt(); /* Common Capture percentage */
     bool getCommonEnabled(); /* Common Enable processor */
     int getCommonEvents(int index); /* Event Count M,R,S,B,P */
@@ -896,10 +906,10 @@ class BranchErr: /* Error Rate Application */
     void setShowSettings( bool newValue);
     bool getShowStripSettings(); /* Show Strip Chart Settings */
     void setShowStripSettings( bool newValue);
-    char* Csv(char *buffer,int buflen); /* PelaED Csv, Todo:add arguments */
-    char* Csv2(char *buffer,int buflen); /* PelaErr Csv, Todo:add arguments */
-    void Fit(); /* PelaED Chart Fit, Todo:add arguments */
-    void Reset(); /* Reset position, Todo:add arguments */
+    char* Csv(char *buffer,int buflen, const char *optFilename=NULL); /* PelaED Csv */
+    char* Csv2(char *buffer,int buflen, const char *optFilename=NULL); /* PelaErr Csv */
+    void Fit(); /* PelaED Chart Fit, */
+    void Reset(); /* Reset position, */
 };
 
 /* ================================ */
@@ -986,8 +996,8 @@ public AutomationExtender
 	char* getTitle(char *buffer,int buflen); /* Chart Title */
 	double getWidth(); /* Chart Width */
 	void setWidth( double newValue);
-	char* Csv(char *buffer,int buflen); /* Download CSV File, Todo:add arguments */
-	void Fit(); /* Fit chart to data, Todo:add arguments */
+	char* Csv(char *buffer,int buflen, const char *optFilename=NULL); /* Download CSV File */
+	void Fit(); /* Fit chart to data, */
 };
 
 /* ================================ */
@@ -1111,10 +1121,10 @@ class BranchModChannel: /* Channel Category */
 	char* getTitle(char *buffer,int buflen); /* Chart Title */
 	double getWidth(); /* Chart Width */
 	void setWidth( double newValue);
-	char* Csv(char *buffer,int buflen); /* Download CSV File, Todo:add arguments */
-	void Fit(); /* Fit chart to data, Todo:add arguments */
-	void MapRange(); /* Map histogram to fit range, Todo:add arguments */
-	void Reset(); /* Reset chart, Todo:add arguments */
+	char* Csv(char *buffer,int buflen, const char *optFilename=NULL); /* Download CSV File */
+	void Fit(); /* Fit chart to data,  */
+	void Reset(); /* Reset chart, */
+	void MapRange(double fromValue, double toValue); /* Map histogram to fit range,*/
 };
 
 /* ================================ */
@@ -1226,9 +1236,9 @@ class BranchRLenChannel: /* Channel Category */
 	int getUsed(); /* Number Used */
 	double getWidth(); /* Chart Width */
 	void setWidth( double newValue);
-	char* Csv(char *buffer,int buflen); /* Download CSV File, Todo:add arguments */
-	void Fit(); /* Fit chart to data, Todo:add arguments */
-	void Reset(); /* Reset chart, Todo:add arguments */
+	char* Csv(char *buffer,int buflen, const char *optFilename=NULL); /* Download CSV File */
+	void Fit(); /* Fit chart to data, */
+	void Reset(); /* Reset chart,  */
 };
 
 /* ================================ */
@@ -1379,9 +1389,9 @@ class BranchWanderChannel: /* Channel Category */
 	void setWidth( double newValue);
 	int getWindowBits(); /* Bit window */
 	void setWindowBits( int newValue);
-	char* Csv(char *buffer,int buflen); /* Download CSV File, Todo:add arguments */
-	void Fit(); /* Fit chart to data, Todo:add arguments */
-	void Reset(); /* Reset chart, Todo:add arguments */
+	char* Csv(char *buffer,int buflen, const char *optFilename=NULL); /* Download CSV File */
+	void Fit(); /* Fit chart to data, */
+	void Reset(); /* Reset chart,  */
 };
 
 /* ================================ */
@@ -1464,7 +1474,7 @@ class BranchPelaEyeChannel: /* Eye Channel */
     void setTimeOffsPS( double newValue);
     double getVoltOffsMV(); /* Volt Offset */
     void setVoltOffsMV( double newValue);
-    char* Jpg(char *buffer,int buflen); /* PelaEye Jpg Image, Todo:add arguments */
+    char* Jpg(char *buffer,int buflen, const char *optFilename=NULL); /* PelaEye Jpg Image */
 };
 
 /* ================================ */
@@ -1564,8 +1574,8 @@ class BranchPelaEye: /* Pela Eye Application */
     int getSequence(); /* Run Sequence */
     bool getShowSettings(); /* Show gui settings panel */
     void setShowSettings( bool newValue);
-    void Fit(); /* Fit chart, Todo:add arguments */
-    void Reset(); /* Reset position, Todo:add arguments */
+    void Fit(); /* Fit chart,  */
+    void Reset(); /* Reset position,*/
 };
 
 /* ================================ */

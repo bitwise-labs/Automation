@@ -352,31 +352,25 @@ class BranchBlockChannel(AutomationExtender):
         self.SendCommand("Width " + str(newvalue) + "\n")
         return None
 
-    def Csv(self, filename: str = "") -> str:
+    def Csv(self, optFilename: str = "") -> str:
         """Response method for Download Csv. """
-        return self.QueryResponse("Csv\n" if filename == "" else 'Csv "'+filename+'"\n')
+        return self.QueryResponse("Csv\n" if optFilename == "" else 'Csv "'+optFilename+'"\n')
 
     def Fit(self):
-        """Method for Fit chart to data. Todo: add arguments if needed"""
-        print("BranchBlockChannel:Fit(), Todo: add arguments if needed")
+        """Method for Fit chart to data."""
         self.SendCommand("Fit\n")
         return None
 
-    def MapRange(self):
-        """Method for Map histogram to fit range. Todo: add arguments if needed"""
-        print("BranchBlockChannel:MapRange(), Todo: add arguments if needed")
-        self.SendCommand("MapRange\n")
-        return None
-
     def Reset(self):
-        """Method for Reset chart. Todo: add arguments if needed"""
-        print("BranchBlockChannel:Reset(), Todo: add arguments if needed")
+        """Method for Reset chart. """
         self.SendCommand("Reset\n")
         return None
 
-    # ================================ #
+    def MapRange(self, fromValue: float, toValue: float ):
+        """Method for Map histogram to fit range. """
+        self.SendCommand("MapRange " + str(fromValue) + " " + str(toValue) + "\n")
+        return None
 
-    # ================================ #
 
 class BranchBlock(AutomationExtender):
     """BranchBlock class.  Block ELA Application"""
@@ -391,9 +385,6 @@ class BranchBlock(AutomationExtender):
         super().__del__()
         return None
 
-    # ================================ #
-
-    # ================================ #
 
 class BranchBurstChannel(AutomationExtender):
     """BranchBurstChannel class.  Channel Category"""
@@ -622,30 +613,24 @@ class BranchBurstChannel(AutomationExtender):
         self.SendCommand("Width " + str(newvalue) + "\n")
         return None
 
-    def Csv(self) -> str:
-        """Response method for Download CSV File. Todo: add arguments if needed"""
-        print("BranchBurstChannel:Csv(), Todo: add arguments if needed")
-        return self.QueryResponse("Csv\n")
+    def Csv(self, optFilename: str = "") -> str:
+        """Response method for Download CSV File."""
+        return self.QueryResponse("Csv\n" if optFilename == "" else 'Csv "'+optFilename+'"\n')
 
     def Fit(self):
-        """Method for Fit chart to data. Todo: add arguments if needed"""
-        print("BranchBurstChannel:Fit(), Todo: add arguments if needed")
+        """Method for Fit chart to data. """
         self.SendCommand("Fit\n")
         return None
 
-    def MapRange(self):
-        """Method for Map histogram to fit range. Todo: add arguments if needed"""
-        print("BranchBurstChannel:MapRange(), Todo: add arguments if needed")
-        self.SendCommand("MapRange\n")
-        return None
-
     def Reset(self):
-        """Method for Reset chart. Todo: add arguments if needed"""
-        print("BranchBurstChannel:Reset(), Todo: add arguments if needed")
+        """Method for Reset chart."""
         self.SendCommand("Reset\n")
         return None
 
-    # ================================ #
+    def MapRange(self, fromValue: float, toValue: float ):
+        """Method for Map histogram to fit range. """
+        self.SendCommand("MapRange " + str(fromValue) + " " + str(toValue) + "\n")
+        return None
 
     class BranchBurst(AutomationExtender):
         """BranchBurst class.  Burst ELA Application"""
@@ -757,9 +742,9 @@ class BranchData(AutomationExtender):
         """Get Bytes per second """
         return self.QueryResponse_float("Transfer?\n")
 
-    def Csv(self, filename: str = "") -> str:
+    def Csv(self, optFilename: str = "") -> str:
         """Response method for ELA Results Csv. """
-        return self.QueryResponse("Csv\n" if filename == "" else 'Csv "'+filename+'"\n')
+        return self.QueryResponse("Csv\n" if optFilename == "" else 'Csv "'+optFilename+'"\n')
 
     def getCommonBits(self) -> int:
         """Get Common bit count """
@@ -1076,28 +1061,31 @@ class BranchPelaED(AutomationExtender):
         """Get Using Eye Diagramming """
         return self.QueryResponse_bool("UsingEye?\n")
 
-    def AutosetData(self):
-        """Method for Perform Data Autoset. Todo: add arguments if needed"""
-        print("BranchPelaED:AutosetData(), Todo: add arguments if needed")
-        self.SendCommand("AutosetData\n")
-        return None
-
     def ResetClock(self):
-        """Method for Reset Clocking. Todo: add arguments if needed"""
-        print("BranchPelaED:ResetClock(), Todo: add arguments if needed")
+        """Method for Reset Clocking."""
         self.SendCommand("ResetClock\n")
         return None
 
-    def Resync(self):
-        """Method for Manual Resync. Todo: add arguments if needed"""
-        print("BranchPelaED:Resync(), Todo: add arguments if needed")
-        self.SendCommand("Resync\n")
+    class EDChannels(Enum):
+        All = "All"
+        Ch0 = "Ch0"
+        Ch1 = "Ch1"
+
+    def AutosetData(self, ch: EDChannels = EDChannels.All) :
+        """Method for Perform Data Autoset. """
+        self.SendCommand("AutosetData " + str(ch) + "\n")
         return None
 
-    def SetDefaults(self):
-        """Method for Set Channel Defaults. Todo: add arguments if needed"""
-        print("BranchPelaED:SetDefaults(), Todo: add arguments if needed")
-        self.SendCommand("SetDefaults\n")
+
+
+    def Resync(self, ch: EDChannels = EDChannels.All):
+        """Method for Manual Resync. """
+        self.SendCommand("Resync " + str(ch) + "\n")
+        return None
+
+    def SetDefaults(self, ch: EDChannels = EDChannels.All):
+        """Method for Set Channel Defaults. """
+        self.SendCommand("SetDefaults " + str(ch) + "\n")
         return None
 
 
@@ -1321,29 +1309,24 @@ class BranchEfiChannel(AutomationExtender):
         self.SendCommand("Width " + str(newvalue) + "\n")
         return None
 
-    def Csv(self, filename: str = "") -> str:
+    def Csv(self, optFilename: str = "") -> str:
         """Response method for Download Csv. """
-        return self.QueryResponse("Csv\n" if filename == "" else 'Csv "'+filename+'"\n')
+        return self.QueryResponse("Csv\n" if optFilename == "" else 'Csv "'+optFilename+'"\n')
 
     def Fit(self):
-        """Method for Fit chart to data. Todo: add arguments if needed"""
-        print("BranchEfiChannel:Fit(), Todo: add arguments if needed")
+        """Method for Fit chart to data. """
         self.SendCommand("Fit\n")
         return None
 
-    def MapRange(self):
-        """Method for Map histogram to fit range. Todo: add arguments if needed"""
-        print("BranchEfiChannel:MapRange(), Todo: add arguments if needed")
-        self.SendCommand("MapRange\n")
-        return None
-
     def Reset(self):
-        """Method for Reset chart. Todo: add arguments if needed"""
-        print("BranchEfiChannel:Reset(), Todo: add arguments if needed")
+        """Method for Reset chart. """
         self.SendCommand("Reset\n")
         return None
 
-    # ================================ #
+    def MapRange(self, fromValue: float, toValue: float ):
+        """Method for Map histogram to fit range. """
+        self.SendCommand("MapRange " + str(fromValue) + " " + str(toValue) + "\n")
+        return None
 
 class BranchEfi(AutomationExtender):
     """BranchEfi class.  Efi ELA Application"""
@@ -1497,9 +1480,9 @@ class BranchEla(AutomationExtender):
         """Get Bytes per second """
         return self.QueryResponse_float("Transfer?\n")
 
-    def Csv(self, filename: str = "") -> str:
+    def Csv(self, optFilename: str = "") -> str:
         """Response method for ELA Results Csv. """
-        return self.QueryResponse("Csv\n" if filename == "" else 'Csv "'+filename+'"\n')
+        return self.QueryResponse("Csv\n" if optFilename == "" else 'Csv "'+optFilename+'"\n')
 
     def getCommonCapturePcnt(self) -> float:
         """Get Common Capture percentage """
@@ -1814,24 +1797,21 @@ class BranchErr(AutomationExtender):
         self.SendCommand("ShowStripSettings " + ("T" if newvalue else "F") + "\n")
         return None
 
-    def Csv(self, filename: str = "") -> str:
+    def Csv(self, optFilename: str = "") -> str:
         """Response method for PelaED Csv. """
-        return self.QueryResponse("Csv\n" if filename == "" else 'Csv "'+filename+'"\n')
+        return self.QueryResponse("Csv\n" if optFilename == "" else 'Csv "'+optFilename+'"\n')
 
     def Csv2(self) -> str:
-        """Response method for PelaErr Csv. Todo: add arguments if needed"""
-        print("BranchErr:Csv2(), Todo: add arguments if needed")
-        return self.QueryResponse("Csv2\n")
+        """Response method for PelaErr Csv."""
+        return self.QueryResponse("Csv2\n" if optFilename == "" else 'Csv2 "'+optFilename+'"\n')
 
     def Fit(self):
-        """Method for PelaED Chart Fit. Todo: add arguments if needed"""
-        print("BranchErr:Fit(), Todo: add arguments if needed")
+        """Method for PelaED Chart Fit."""
         self.SendCommand("Fit\n")
         return None
 
     def Reset(self):
-        """Method for Reset position. Todo: add arguments if needed"""
-        print("BranchErr:Reset(), Todo: add arguments if needed")
+        """Method for Reset position. """
         self.SendCommand("Reset\n")
         return None
 
@@ -2036,10 +2016,9 @@ class BranchPelaEyeChannel(AutomationExtender):
         self.SendCommand("VoltOffs " + str(newvalue) + "\n")
         return None
 
-    def Jpg(self) -> str:
-        """Response method for PelaEye Jpg Image. Todo: add arguments if needed"""
-        print("BranchPelaEyeChannel:Jpg(), Todo: add arguments if needed")
-        return self.QueryResponse("Jpg\n")
+    def Jpg(self, optFilename: str = "") -> str:
+        """Response method for PelaEye Jpg Image."""
+        return self.QueryResponse("Jpg\n" if optFilename == "" else 'Jpg "' + optFilename + '"\n')
 
     # ================================ #
 
@@ -2233,20 +2212,15 @@ class BranchPelaEye(AutomationExtender):
         return None
 
     def Fit(self):
-        """Method for Fit chart. Todo: add arguments if needed"""
-        print("BranchPelaEye:Fit(), Todo: add arguments if needed")
+        """Method for Fit chart. """
         self.SendCommand("Fit\n")
         return None
 
     def Reset(self):
-        """Method for Reset position. Todo: add arguments if needed"""
-        print("BranchPelaEye:Reset(), Todo: add arguments if needed")
+        """Method for Reset position. """
         self.SendCommand("Reset\n")
         return None
 
-    # ================================ #
-
-   # ================================ #
 
 class BranchMaxTChannel(AutomationExtender):
     """BranchMaxTChannel class.  Channel Category"""
@@ -2452,19 +2426,15 @@ class BranchMaxTChannel(AutomationExtender):
         self.SendCommand("Width " + str(newvalue) + "\n")
         return None
 
-    def Csv(self, filename: str = "") -> str:
+    def Csv(self, optFilename: str = "") -> str:
         """Response method for Download Csv. """
-        return self.QueryResponse("Csv\n" if filename == "" else 'Csv "'+filename+'"\n')
+        return self.QueryResponse("Csv\n" if optFilename == "" else 'Csv "'+optFilename+'"\n')
 
     def Fit(self):
-        """Method for Fit chart to data. Todo: add arguments if needed"""
-        print("BranchMaxTChannel:Fit(), Todo: add arguments if needed")
+        """Method for Fit chart to data."""
         self.SendCommand("Fit\n")
         return None
-    
-    # ================================ #
 
-   # ================================ #
 
 class BranchMaxT(AutomationExtender):
     """BranchMaxT class.  MaxT ELA Application"""
@@ -2734,29 +2704,25 @@ class BranchModChannel(AutomationExtender):
         self.SendCommand("Width " + str(newvalue) + "\n")
         return None
 
-    def Csv(self, filename: str = "") -> str:
+    def Csv(self, optFilename: str = "") -> str:
         """Response method for Download Csv. """
-        return self.QueryResponse("Csv\n" if filename == "" else 'Csv "'+filename+'"\n')
+        return self.QueryResponse("Csv\n" if optFilename == "" else 'Csv "'+optFilename+'"\n')
 
     def Fit(self):
-        """Method for Fit chart to data. Todo: add arguments if needed"""
-        print("BranchModChannel:Fit(), Todo: add arguments if needed")
+        """Method for Fit chart to data."""
         self.SendCommand("Fit\n")
         return None
 
-    def MapRange(self):
-        """Method for Map histogram to fit range. Todo: add arguments if needed"""
-        print("BranchModChannel:MapRange(), Todo: add arguments if needed")
-        self.SendCommand("MapRange\n")
-        return None
-
     def Reset(self):
-        """Method for Reset chart. Todo: add arguments if needed"""
-        print("BranchModChannel:Reset(), Todo: add arguments if needed")
+        """Method for Reset chart."""
         self.SendCommand("Reset\n")
         return None
 
-    # ================================ #
+    def MapRange(self, fromValue: float, toValue: float ):
+        """Method for Map histogram to fit range. """
+        self.SendCommand("MapRange " + str(fromValue) + " " + str(toValue) + "\n")
+        return None
+
 
 class BranchMod(AutomationExtender):
     """BranchMod class.  Modulo ELA Application"""
@@ -2968,19 +2934,17 @@ class BranchRLenChannel(AutomationExtender):
         self.SendCommand("Width " + str(newvalue) + "\n")
         return None
 
-    def Csv(self, filename: str = "") -> str:
+    def Csv(self, optFilename: str = "") -> str:
         """Response method for Download Csv. """
-        return self.QueryResponse("Csv\n" if filename == "" else 'Csv "'+filename+'"\n')
+        return self.QueryResponse("Csv\n" if optFilename == "" else 'Csv "'+optFilename+'"\n')
 
     def Fit(self):
-        """Method for Fit chart to data. Todo: add arguments if needed"""
-        print("BranchRLenChannel:Fit(), Todo: add arguments if needed")
+        """Method for Fit chart to data. """
         self.SendCommand("Fit\n")
         return None
 
     def Reset(self):
-        """Method for Reset chart. Todo: add arguments if needed"""
-        print("BranchRLenChannel:Reset(), Todo: add arguments if needed")
+        """Method for Reset chart. """
         self.SendCommand("Reset\n")
         return None
 
@@ -3265,23 +3229,20 @@ class BranchWanderChannel(AutomationExtender):
         self.SendCommand("Window " + str(newvalue) + "\n")
         return None
 
-    def Csv(self, filename: str = "") -> str:
+    def Csv(self, optFilename: str = "") -> str:
         """Response method for Download Csv. """
-        return self.QueryResponse("Csv\n" if filename == "" else 'Csv "'+filename+'"\n')
+        return self.QueryResponse("Csv\n" if optFilename == "" else 'Csv "'+optFilename+'"\n')
 
     def Fit(self):
-        """Method for Fit chart to data. Todo: add arguments if needed"""
-        print("BranchWanderChannel:Fit(), Todo: add arguments if needed")
+        """Method for Fit chart to data."""
         self.SendCommand("Fit\n")
         return None
 
     def Reset(self):
-        """Method for Reset chart. Todo: add arguments if needed"""
-        print("BranchWanderChannel:Reset(), Todo: add arguments if needed")
+        """Method for Reset chart. """
         self.SendCommand("Reset\n")
         return None
 
-    # ================================ #
 
 class BranchWander(AutomationExtender):
     """BranchWander class.  Data Wander Application"""

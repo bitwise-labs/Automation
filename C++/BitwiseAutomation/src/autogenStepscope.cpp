@@ -63,21 +63,18 @@ BranchCalib::Status BranchCalib::getStatus()
     return (Status)QueryResponse_enum(Status_Strings,"Status?\n");
 }
 
-void BranchCalib::Cancel() /* Cancel calibration, Todo:add arguments */
+void BranchCalib::Cancel() /* Cancel calibration */
 {
-    fprintf(stderr,"BranchCalib::Cancel(), Todo: add arguments if needed\n");
     SendCommand("Cancel\n");
 }
 
-void BranchCalib::RunDelay() /* Run Delay calibration, Todo:add arguments */
+void BranchCalib::RunDelay() /* Run Delay calibration */
 {
-    fprintf(stderr,"BranchCalib::RunDelay(), Todo: add arguments if needed\n");
     SendCommand("RunDelay\n");
 }
 
-void BranchCalib::RunNoise() /* Run Noise calibration, Todo:add arguments */
+void BranchCalib::RunNoise() /* Run Noise calibration */
 {
-    fprintf(stderr,"BranchCalib::RunNoise(), Todo: add arguments if needed\n");
     SendCommand("RunNoise\n");
 }
 
@@ -188,9 +185,8 @@ void BranchPulse::setSlaveIP(const char* newValue) /* Pulser Slave IP address */
     SendCommand("SlaveIP \"%s\"\n",newValue);
 }
 
-void BranchPulse::Reset() /* Pulser reset, Todo:add arguments */
+void BranchPulse::Reset() /* Pulser reset */
 {
-    fprintf(stderr,"BranchPulse::Reset(), Todo: add arguments if needed\n");
     SendCommand("Reset\n");
 }
 
@@ -249,10 +245,12 @@ char* BranchS11::getStatusMsg(char *buffer,int buflen) /* Status Message */
     return QueryResponse(buffer,buflen,"StatusMsg?\n");
 }
 
-char* BranchS11::FileSave(char *buffer,int buflen) /* S21 file save, Todo:add arguments */
+char* BranchS11::FileSave(char *buffer,int buflen, const char *optFilename) /* S21 file save*/
 {
-    fprintf(stderr,"BranchS11::FileSave(), Todo: add arguments if needed\n");
-    return QueryResponse(buffer,buflen,"FileSave?\n");
+	if( optFilename==NULL || optFilename[0]==0 )
+		return QueryResponse(buffer,buflen,"FileSave\n");
+
+	return QueryResponse(buffer,buflen,"FileSave \"%s\"\n", optFilename );
 }
 
 void BranchS11::Fit() /* S11 Chart Fit */
@@ -655,10 +653,12 @@ char* BranchS21::getStatusMsg(char *buffer,int buflen) /* Status Message */
     return QueryResponse(buffer,buflen,"StatusMsg?\n");
 }
 
-char* BranchS21::FileSave(char *buffer,int buflen) /* S21 file save, Todo:add arguments */
+char* BranchS21::FileSave(char *buffer,int buflen, const char *optFilename) /* S21 file save */
 {
-    fprintf(stderr,"BranchS21::FileSave(), Todo: add arguments if needed\n");
-    return QueryResponse(buffer,buflen,"FileSave?\n");
+	if( optFilename==NULL || optFilename[0]==0 )
+		return QueryResponse(buffer,buflen,"FileSave\n");
+
+	return QueryResponse(buffer,buflen,"FileSave \"%s\"\n", optFilename );
 }
 
 void BranchS21::Fit() /* S21 Chart Fit */
@@ -1121,10 +1121,12 @@ void BranchStep::WaitForAlignmentToComplete( double timeoutSec )
 		throw "[Alignment_Timeout]";
 }
 
-char* BranchStep::Csv(char *buffer,int buflen) /* Step Csv, Todo:add arguments */
+char* BranchStep::Csv(char *buffer,int buflen, const char *optFilename) /* Step Csv */
 {
-    fprintf(stderr,"BranchStep::Csv(), Todo: add arguments if needed\n");
-    return QueryResponse(buffer,buflen,"Csv?\n");
+	if( optFilename==NULL || optFilename[0]==0 )
+		return QueryResponse(buffer,buflen,"Csv\n");
+
+	return QueryResponse(buffer,buflen,"Csv \"%s\"\n", optFilename );
 }
 
 void BranchStep::Fit() /* Step Chart Fit */
@@ -1132,10 +1134,9 @@ void BranchStep::Fit() /* Step Chart Fit */
     SendCommand("Fit\n");
 }
 
-char* BranchStep::PulseStats(char *buffer,int buflen) /* Pulse statistics, Todo:add arguments */
+char *BranchStep::PulseStats() /* Pulse statistics - Must free() return value */
 {
-    fprintf(stderr,"BranchStep::PulseStats(), Todo: add arguments if needed\n");
-    return QueryResponse(buffer,buflen,"PulseStats?\n");
+    return QueryBinaryResponse(0,"PulseStats\n");
 }
 
 /* ================================================================ */
@@ -1517,22 +1518,22 @@ char* BranchTdr::getTermCalFile(char *buffer,int buflen) /* Term cal table file 
     return QueryResponse(buffer,buflen,"TermCalFile?\n");
 }
 
-void BranchTdr::CancelCal() /* Cancel calibration, Todo:add arguments */
+void BranchTdr::CancelCal() /* Cancel calibration */
 {
-    fprintf(stderr,"BranchTdr::CancelCal(), Todo: add arguments if needed\n");
     SendCommand("CancelCal\n");
 }
 
-void BranchTdr::ClearCal() /* Clear calibration, Todo:add arguments */
+void BranchTdr::ClearCal() /* Clear calibration */
 {
-    fprintf(stderr,"BranchTdr::ClearCal(), Todo: add arguments if needed\n");
     SendCommand("ClearCal\n");
 }
 
-char* BranchTdr::Csv(char *buffer,int buflen) /* Tdr Csv, Todo:add arguments */
+char* BranchTdr::Csv(char *buffer,int buflen, const char *optFilename) /* Tdr Csv */
 {
-    fprintf(stderr,"BranchTdr::Csv(), Todo: add arguments if needed\n");
-    return QueryResponse(buffer,buflen,"Csv?\n");
+	if( optFilename==NULL || optFilename[0]==0 )
+		return QueryResponse(buffer,buflen,"Csv\n");
+
+	return QueryResponse(buffer,buflen,"Csv \"%s\"\n", optFilename );
 }
 
 void BranchTdr::Fit() /* Tdr Chart Fit*/
@@ -1540,45 +1541,39 @@ void BranchTdr::Fit() /* Tdr Chart Fit*/
     SendCommand("Fit\n");
 }
 
-void BranchTdr::LoadShortCal() /* Load short calibration, Todo:add arguments */
-{
-    fprintf(stderr,"BranchTdr::LoadShortCal(), Todo: add arguments if needed\n");
-    SendCommand("LoadShortCal\n");
-}
-
-void BranchTdr::LoadTermCal() /* Load termination calibration, Todo:add arguments */
-{
-    fprintf(stderr,"BranchTdr::LoadTermCal(), Todo: add arguments if needed\n");
-    SendCommand("LoadTermCal\n");
-}
-
 void BranchTdr::Reset() /* Reset position */
 {
     SendCommand("Reset\n");
 }
 
-void BranchTdr::RunShortCal() /* Run Short calibration, Todo:add arguments */
+void BranchTdr::RunShortCal() /* Run Short calibration */
 {
-    fprintf(stderr,"BranchTdr::RunShortCal(), Todo: add arguments if needed\n");
     SendCommand("RunShortCal\n");
 }
 
-void BranchTdr::RunTermCal() /* Run 50 Ohm calibration, Todo:add arguments */
+void BranchTdr::RunTermCal() /* Run 50 Ohm calibration */
 {
-    fprintf(stderr,"BranchTdr::RunTermCal(), Todo: add arguments if needed\n");
     SendCommand("RunTermCal\n");
 }
 
-void BranchTdr::SaveShortCal() /* Save short calibration, Todo:add arguments */
+void BranchTdr::SaveShortCal(const char *fileName) /* Save short calibration */
 {
-    fprintf(stderr,"BranchTdr::SaveShortCal(), Todo: add arguments if needed\n");
-    SendCommand("SaveShortCal\n");
+    SendCommand("SaveShortCal \"%s\"\n",fileName);
 }
 
-void BranchTdr::SaveTermCal() /* Save termination calibration, Todo:add arguments */
+void BranchTdr::SaveTermCal(const char *fileName) /* Save termination calibration */
 {
-    fprintf(stderr,"BranchTdr::SaveTermCal(), Todo: add arguments if needed\n");
-    SendCommand("SaveTermCal\n");
+    SendCommand("SaveTermCal \"%s\"\n",fileName);
+}
+
+void BranchTdr::LoadShortCal(const char *fileName) /* Load short calibration */
+{
+    SendCommand("LoadShortCal \"%s\"\n",fileName);
+}
+
+void BranchTdr::LoadTermCal(const char *fileName) /* Load termination calibration */
+{
+    SendCommand("LoadTermCal \"%s\"\n",fileName);
 }
 
 /* ================================================================ */
@@ -2019,22 +2014,22 @@ char* BranchTdt::getThroughCalFile(char *buffer,int buflen) /* Through cal table
     return QueryResponse(buffer,buflen,"ThroughCalFile?\n");
 }
 
-void BranchTdt::CancelCal() /* Cancel calibration, Todo:add arguments */
+void BranchTdt::CancelCal() /* Cancel calibration */
 {
-    fprintf(stderr,"BranchTdt::CancelCal(), Todo: add arguments if needed\n");
     SendCommand("CancelCal\n");
 }
 
-void BranchTdt::ClearCal() /* Clear calibration, Todo:add arguments */
+void BranchTdt::ClearCal() /* Clear calibration */
 {
-    fprintf(stderr,"BranchTdt::ClearCal(), Todo: add arguments if needed\n");
     SendCommand("ClearCal\n");
 }
 
-char* BranchTdt::Csv(char *buffer,int buflen) /* Tdt Csv, Todo:add arguments */
+char* BranchTdt::Csv(char *buffer,int buflen, const char *optFilename) /* Tdt Csv*/
 {
-    fprintf(stderr,"BranchTdt::Csv(), Todo: add arguments if needed\n");
-    return QueryResponse(buffer,buflen,"Csv?\n");
+	if( optFilename==NULL || optFilename[0]==0 )
+		return QueryResponse(buffer,buflen,"Csv\n");
+
+	return QueryResponse(buffer,buflen,"Csv \"%s\"\n", optFilename );
 }
 
 void BranchTdt::Fit() /* Tdt Chart Fit */
@@ -2042,28 +2037,24 @@ void BranchTdt::Fit() /* Tdt Chart Fit */
     SendCommand("Fit\n");
 }
 
-void BranchTdt::LoadThroughCal() /* Load through calibration, Todo:add arguments */
+void BranchTdt::Reset() /* Reset position */
 {
-    fprintf(stderr,"BranchTdt::LoadThroughCal(), Todo: add arguments if needed\n");
-    SendCommand("LoadThroughCal\n");
-}
-
-void BranchTdt::Reset() /* Reset position, Todo:add arguments */
-{
-    fprintf(stderr,"BranchTdt::Reset(), Todo: add arguments if needed\n");
     SendCommand("Reset\n");
 }
 
-void BranchTdt::RunThroughCal() /* Run Through calibration, Todo:add arguments */
+void BranchTdt::RunThroughCal() /* Run Through calibration */
 {
-    fprintf(stderr,"BranchTdt::RunThroughCal(), Todo: add arguments if needed\n");
     SendCommand("RunThroughCal\n");
 }
 
-void BranchTdt::SaveThroughCal() /* Save through calibration, Todo:add arguments */
+void BranchTdt::SaveThroughCal(const char *fileName) /* Save through calibration */
 {
-    fprintf(stderr,"BranchTdt::SaveThroughCal(), Todo: add arguments if needed\n");
-    SendCommand("SaveThroughCal\n");
+    SendCommand("SaveThroughCal \"%s\"\n", fileName);
+}
+
+void BranchTdt::LoadThroughCal(const char *fileName) /* Load through calibration */
+{
+    SendCommand("LoadThroughCal \"%s\"\n", fileName);
 }
 
 /* ================================================================ */

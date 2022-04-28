@@ -361,23 +361,21 @@ class BranchTub(AutomationExtender):
         """Get Working Serial number """
         return self.QueryResponse_int("WkgSEQ?\n")
 
-    def Csv(self, filename: str = "") -> str:
+    def Csv(self, optFilename: str = "") -> str:
         """Response method for PegaTub Csv. """
-        return self.QueryResponse("Csv\n" if filename == "" else 'Csv "'+filename+'"\n')
+        return self.QueryResponse("Csv\n" if optFilename == "" else 'Csv "'+optFilename+'"\n')
 
-    def FetchPoints(self) -> str:
-        """Binary string response method for Fetch points. Todo: add arguments if needed"""
-        print("BranchTub:FetchPoints(), Todo: add arguments if needed")
-        return str(self.QueryBinaryResponse("FetchPoints\n"),encoding='utf-8')
+    def FetchPoints(self, startingIndex: int = 0) -> str:
+        """Binary string response method for Fetch points. """
+        return str(self.QueryBinaryResponse("FetchPoints " + str(startingIndex) + "\n"))
 
     def FetchResults(self) -> str:
         """Binary string response method for Fetch results. """
-        return str(self.QueryBinaryResponse("FetchResults\n"),encoding='utf-8')
+        return str(self.QueryBinaryResponse("FetchResults\n"), encoding='utf-8')
 
     def FetchWkg(self) -> str:
-        """Binary string response method for Fetch working values. Todo: add arguments if needed"""
-        print("BranchTub:FetchWkg(), Todo: add arguments if needed")
-        return str(self.QueryBinaryResponse("FetchWkg\n"),encoding='utf-8')
+        """Binary string response method for Fetch working values"""
+        return str(self.QueryBinaryResponse("FetchWkg\n"), encoding='utf-8')
 
     def Fit(self):
         """Method for PegaTub Chart Fit. """
@@ -642,8 +640,7 @@ class BranchPGErr(AutomationExtender):
         return None
 
     def Single(self):
-        """Method for Do single error inject. Todo: add arguments if needed"""
-        print("BranchPGErr:Single(), Todo: add arguments if needed")
+        """Method for Do single error inject."""
         self.SendCommand("Single\n")
         return None
 
@@ -978,15 +975,13 @@ class BranchPG(AutomationExtender):
         return None
 
     def SetDefaults(self):
-        """Method for Set defaults. Todo: add arguments if needed"""
-        print("BranchPG:SetDefaults(), Todo: add arguments if needed")
+        """Method for Set defaults."""
         self.SendCommand("SetDefaults\n")
         return None
 
-    def UserPageFlip(self):
-        """Method for User Page temporary flip. Todo: add arguments if needed"""
-        print("BranchPG:UserPageFlip(), Todo: add arguments if needed")
-        self.SendCommand("UserPageFlip\n")
+    def UserPageFlip(self, pageIndex: str):
+        """Method for User Page temporary flip."""
+        self.SendCommand("UserPageFlip " + str(pageIndex) + "\n")
         return None
 
 
@@ -1343,19 +1338,16 @@ class BranchEye(AutomationExtender):
         return None
 
     def Fit(self):
-        """Method for Fit chart. Todo: add arguments if needed"""
-        print("BranchEye:Fit(), Todo: add arguments if needed")
+        """Method for Fit chart."""
         self.SendCommand("Fit\n")
         return None
 
-    def Jpg(self) -> str:
-        """Response method for PegaEye Jpg Image. Todo: add arguments if needed"""
-        print("BranchEye:Jpg(), Todo: add arguments if needed")
-        return self.QueryResponse("Jpg\n")
+    def Jpg(self, optFilename: str = "") -> str:
+        """Response method for PegaEye Jpg Image."""
+        return self.QueryResponse("Jpg\n" if optFilename == "" else 'Jpg "' + optFilename + '"\n')
 
     def Reset(self):
-        """Method for Reset position. Todo: add arguments if needed"""
-        print("BranchEye:Reset(), Todo: add arguments if needed")
+        """Method for Reset position."""
         self.SendCommand("Reset\n")
         return None
 
@@ -1635,24 +1627,21 @@ class BranchErr(AutomationExtender):
         """Get Serial Number of Integration """
         return self.QueryResponse_int("Serial?\n")
 
-    def Csv(self, filename: str = "") -> str:
+    def Csv(self, optFilename: str = "") -> str:
         """Response method for PegaED Csv. """
-        return self.QueryResponse("Csv\n" if filename == "" else 'Csv "'+filename+'"\n')
+        return self.QueryResponse("Csv\n" if optFilename == "" else 'Csv "'+optFilename+'"\n')
 
-    def Csv2(self) -> str:
-        """Response method for PegaErr Csv. Todo: add arguments if needed"""
-        print("BranchErr:Csv2(), Todo: add arguments if needed")
-        return self.QueryResponse("Csv2\n")
+    def Csv2(self, optFilename: str = "") -> str:
+        """Response method for PegaErr Csv."""
+        return self.QueryResponse("Csv2\n" if optFilename == "" else 'Csv "'+optFilename+'"\n')
 
     def Fit(self):
-        """Method for PegaED Chart Fit. Todo: add arguments if needed"""
-        print("BranchErr:Fit(), Todo: add arguments if needed")
+        """Method for PegaED Chart Fit."""
         self.SendCommand("Fit\n")
         return None
 
     def Reset(self):
-        """Method for Reset position. Todo: add arguments if needed"""
-        print("BranchErr:Reset(), Todo: add arguments if needed")
+        """Method for Reset position."""
         self.SendCommand("Reset\n")
         return None
 
