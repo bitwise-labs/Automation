@@ -1248,6 +1248,23 @@ void BranchStepCfg::setSpanPS(double newValue) /* Record Span */
     SendCommand("Span %lf\n",newValue);
 }
 
+const char *BranchStepCfg::BaseAxis_Strings[] =
+{
+    "Pico",
+    "Nano",
+    0
+};
+
+BranchStepCfg::BaseAxis BranchStepCfg::getBaseAxis()
+{
+    return (BaseAxis)QueryResponse_enum(BaseAxis_Strings,"BaseAxis?\n");
+}
+
+void BranchStepCfg::setBaseAxis(BaseAxis newValue )
+{
+    SendCommand("BaseAxis \"%s\"\n",BaseAxis_Strings[(int)newValue]);
+}
+
 /* ================================================================ */
 
 double BranchStepChart::getBottom() /* Chart Bottom */
@@ -1714,6 +1731,48 @@ void BranchTdrCfg::setUseDiff(bool newValue) /* Use Differential */
 {
     SendCommand("UseDiff %c\n",newValue?'T':'F');
 }
+
+const char *BranchTdrCfg::BaseAxis_Strings[] =
+{
+    "Pico",
+    "Nano",
+    "Inch",
+    "Centimeter",
+    0
+};
+
+BranchTdrCfg::BaseAxis BranchTdrCfg::getBaseAxis()
+{
+    return (BaseAxis)QueryResponse_enum(BaseAxis_Strings,"BaseAxis?\n");
+}
+
+void BranchTdrCfg::setBaseAxis(BaseAxis newValue )
+{
+    SendCommand("BaseAxis \"%s\"\n",BaseAxis_Strings[(int)newValue]);
+}
+
+double BranchTdrCfg::getPermittivity() /* Relative permittivity, aka Dielectric constant, FR4 is 3.8 to 4.8 */
+{
+    return QueryResponse_double("Permittivity?\n");
+}
+
+void BranchTdrCfg::setPermittivity(double newValue) /* Relative permittivity, aka Dielectric constant, FR4 is 3.8 to 4.8 */
+{
+    SendCommand("Permittivity %lf\n",newValue);
+}
+
+
+double BranchTdrCfg::getResistivityOM() /* Resistivity, series resistance ohm per meter, requires Permittivity setting */
+{
+    return QueryResponse_double("Resistivity?\n");
+}
+
+void BranchTdrCfg::setResistivityOM(double newValue) /* Resistivity, series resistance ohm per meter, requires Permittivity setting */
+{
+    SendCommand("Resistivity %lf\n",newValue);
+}
+
+
 
 /* ================================================================ */
 
@@ -2195,6 +2254,22 @@ void BranchTdtCfg::setSpanPS(double newValue) /* Record Span */
     SendCommand("Span %lf\n",newValue);
 }
 
+const char *BranchTdtCfg::BaseAxis_Strings[] =
+{
+    "Pico",
+    "Nano",
+    0
+};
+
+BranchTdtCfg::BaseAxis BranchTdtCfg::getBaseAxis()
+{
+    return (BaseAxis)QueryResponse_enum(BaseAxis_Strings,"BaseAxis?\n");
+}
+
+void BranchTdtCfg::setBaseAxis(BaseAxis newValue )
+{
+    SendCommand("BaseAxis \"%s\"\n",BaseAxis_Strings[(int)newValue]);
+}
 /* ================================================================ */
 
 double BranchTdtChart::getBottom() /* Chart Bottom */

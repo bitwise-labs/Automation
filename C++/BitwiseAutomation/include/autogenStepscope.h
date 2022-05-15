@@ -533,6 +533,16 @@ class BranchStepCfg: /* Configuration */
 	void setReclen( int newValue);
 	double getSpanPS(); /* Record Span */
 	void setSpanPS( double newValue);
+
+    enum class BaseAxis
+    {
+        Pico,
+        Nano
+    };
+    static const char *BaseAxis_Strings[];
+
+    BaseAxis getBaseAxis();
+    void setBaseAxis( BaseAxis newValue);
 };
 
 /* ================================ */
@@ -730,6 +740,24 @@ class BranchTdrCfg: /* Configuration */
 	void setUseBeforeStep( bool newValue);
 	bool getUseDiff(); /* Use Differential */
 	void setUseDiff( bool newValue);
+
+    enum class BaseAxis
+    {
+        Pico,
+        Nano,
+        Inch,
+        Centimeter
+    };
+    static const char *BaseAxis_Strings[];
+
+    BaseAxis getBaseAxis();
+    void setBaseAxis( BaseAxis newValue);
+
+    double getPermittivity(); /* Relative permittivity, aka Dielectric constant, FR4 is 3.8 to 4.8 */
+    void setPermittivity( double newValue);
+
+    double getResistivityOM(); /* Resistivity, series resistance ohm per meter, requires Permittivity setting */
+    void setResistivityOM( double newValue);
 };
 
 /* ================================ */
@@ -931,6 +959,16 @@ class BranchTdtCfg: /* Configuration */
 	void setReclen( int newValue);
 	double getSpanPS(); /* Record Span */
 	void setSpanPS( double newValue);
+
+    enum class BaseAxis
+    {
+        Pico,
+        Nano
+    };
+    static const char *BaseAxis_Strings[];
+
+    BaseAxis getBaseAxis();
+    void setBaseAxis( BaseAxis newValue);
 };
 
 /* ================================ */

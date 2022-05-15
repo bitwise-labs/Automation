@@ -1037,6 +1037,19 @@ class BranchStepCfg(AutomationExtender):
         self.SendCommand("Span " + str(newvalue) + "\n")
         return None
 
+    class BaseAxis(Enum):
+        Pico = "Pico"
+        Nano = "Nano"
+
+    def getBaseAxis(self) -> BaseAxis:
+        """Get enum Base axis """
+        return self.BaseAxis(self.QueryResponse_enum(self.BaseAxis, "BaseAxis?\n"))
+
+    def setBaseAxis(self, newvalue: BaseAxis):
+        """Set enum Base axis """
+        self.SendCommand("BaseAxis " + newvalue.value + "\n")
+        return None
+
 # ================================ #
 
 class BranchStepChart(AutomationExtender):
@@ -1482,6 +1495,40 @@ class BranchTdrCfg(AutomationExtender):
         self.SendCommand("UseDiff " + ("T" if newvalue else "F") + "\n")
         return None
 
+    class BaseAxis(Enum):
+        Pico = "Pico"
+        Nano = "Nano"
+        Inch = "Inch"
+        Centimeter = "Centimeter"
+
+    def getBaseAxis(self) -> BaseAxis:
+        """Get enum Base axis """
+        return self.BaseAxis(self.QueryResponse_enum(self.BaseAxis, "BaseAxis?\n"))
+
+    def setBaseAxis(self, newvalue: BaseAxis) :
+        """Set enum Base axis """
+        self.SendCommand("BaseAxis " + newvalue.value + "\n")
+        return None
+
+    def getPermittivity(self) -> float:
+        """Get Relative permittivity, aka Dielectric constant, FR4 is 3.8 to 4.8 """
+        return self.QueryResponse_float("Permittivity?\n")
+
+    def setPermittivity(self, newvalue:float) :
+        """Set Relative permittivity, aka Dielectric constant, FR4 is 3.8 to 4.8 """
+        self.SendCommand("Permittivity " + str(newvalue) + "\n")
+        return None
+
+    def getResistivityOM(self) -> float:
+        """Get Resistivity, series resistance ohm per meter, requires Permittivity setting """
+        return self.QueryResponse_float("Resistivity?\n")
+
+    def setResistivityOM(self, newvalue:float) :
+        """Set Resistivity, series resistance ohm per meter, requires Permittivity setting """
+        self.SendCommand("Resistivity " + str(newvalue) + "\n")
+        return None
+
+
 # ================================ #
 
 class BranchTdrChart(AutomationExtender):
@@ -1908,6 +1955,19 @@ class BranchTdtCfg(AutomationExtender):
     def setSpanPS(self, newvalue:float) :
         """Set Record Span """
         self.SendCommand("Span " + str(newvalue) + "\n")
+        return None
+
+    class BaseAxis(Enum):
+        Pico = "Pico"
+        Nano = "Nano"
+
+    def getBaseAxis(self) -> BaseAxis:
+        """Get enum Base axis """
+        return self.BaseAxis(self.QueryResponse_enum(self.BaseAxis, "BaseAxis?\n"))
+
+    def setBaseAxis(self, newvalue: BaseAxis) :
+        """Set enum Base axis """
+        self.SendCommand("BaseAxis " + newvalue.value + "\n")
         return None
 
 # ================================ #
