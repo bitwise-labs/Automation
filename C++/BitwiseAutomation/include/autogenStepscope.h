@@ -861,7 +861,6 @@ class BranchTdr: /* TDR Application */
 
 	char *getBinary(int *pcount=0); /* Binary Data - Must free() return value */
 
-
 	enum class CalState
 	{
 		None,
@@ -885,11 +884,27 @@ class BranchTdr: /* TDR Application */
 
 	Running getRunning();
 	int getSequence(); /* Run Sequence */
+
+	/* deprecated: begin */
 	char* getShortCalFile(char *buffer,int buflen); /* Short cal table file */
+	char* getTermCalFile(char *buffer,int buflen); /* Term cal table file */
+	void SaveShortCal(const char *fileName); /* Save short calibration */
+	void SaveTermCal(const char *fileName); /* Save termination calibration */
+	void LoadShortCal(const char *fileName); /* Load short calibration */
+	void LoadTermCal(const char *fileName); /* Load termination calibration */
+	/* deprecated: end */
+
 	bool getShowSettings(); /* Show Settings */
 	void setShowSettings( bool newValue);
+	bool getShowCalibrations(); /* Show Calibrations */
+	void setShowCalibrations( bool newValue);
+	void SaveCal(const char *fileName); /* Save TDR calibration */
+	char* getCalFile(char *buffer,int buflen); /* Full path of TDR calibration table file */
+	char* getLoadCalFile(char *buffer,int buflen); /* TDR calibration load file */
+	void setLoadCalFile(const char *fileName); /* TDR calibration load file */
+
 	char* getStatusMsg(char *buffer,int buflen); /* Status Message */
-	char* getTermCalFile(char *buffer,int buflen); /* Term cal table file */
+
 	void CancelCal(); /* Cancel calibration*/
 	void ClearCal(); /* Clear calibration */
 	char* Csv(char *buffer,int buflen, const char *optFilename=NULL); /* Tdr Csv */
@@ -897,10 +912,6 @@ class BranchTdr: /* TDR Application */
 	void Reset(); /* Reset position,  */
 	void RunShortCal(); /* Run Short calibration */
 	void RunTermCal(); /* Run 50 Ohm calibration */
-	void SaveShortCal(const char *fileName); /* Save short calibration */
-	void SaveTermCal(const char *fileName); /* Save termination calibration */
-	void LoadShortCal(const char *fileName); /* Load short calibration */
-	void LoadTermCal(const char *fileName); /* Load termination calibration */
 
 	public:
 	BranchTdrChart Chart;
@@ -1105,18 +1116,30 @@ class BranchTdt: /* TDR Application */
 	void setShowDut( bool newValue);
 	bool getShowSettings(); /* Show Settings */
 	void setShowSettings( bool newValue);
+	bool getShowCalibrations(); /* Show Calibrations */
+	void setShowCalibrations( bool newValue);
+
 	bool getShowThrough(); /* Show Reference trace */
 	void setShowThrough( bool newValue);
 	char* getStatusMsg(char *buffer,int buflen); /* Status Message */
-	char* getThroughCalFile(char *buffer,int buflen); /* Through cal table file */
+
+	/* Deprecated: begin */
+	char* getThroughCalFile(char *buffer,int buflen); /* Through cal table file, deprecated, use Tdt:CalFile. */
+	void SaveThroughCal(const char *fileName); /* Save through calibration, deprecated, use Tdt:SaveCal.*/
+	void LoadThroughCal(const char *fileName); /* Load through calibration, deprecated, use Tdt:CalFile. */
+	/* Deprecated: end */
+
+	void SaveCal(const char *fileName); /* Save TDT calibration */
+	char* getCalFile(char *buffer,int buflen); /* Full path of TDT calibration table file */
+	char* getLoadCalFile(char *buffer,int buflen); /* TDT calibration load file */
+	void setLoadCalFile(const char *fileName); /* TDT calibration load file */
+
 	void CancelCal(); /* Cancel calibration*/
 	void ClearCal(); /* Clear calibration */
 	char* Csv(char *buffer,int buflen, const char *optFilename=NULL); /* Tdt Csv */
 	void Fit(); /* Tdt Chart Fit */
 	void Reset(); /* Reset position */
 	void RunThroughCal(); /* Run Through calibration */
-	void SaveThroughCal(const char *fileName); /* Save through calibration*/
-	void LoadThroughCal(const char *fileName); /* Load through calibration */
 
 	public:
 	BranchTdtChart Chart;

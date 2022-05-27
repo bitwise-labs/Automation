@@ -1510,11 +1510,6 @@ int BranchTdr::getSequence() /* Run Sequence */
     return QueryResponse_int("Sequence?\n");
 }
 
-char* BranchTdr::getShortCalFile(char *buffer,int buflen) /* Short cal table file */
-{
-    return QueryResponse(buffer,buflen,"ShortCalFile?\n");
-}
-
 bool BranchTdr::getShowSettings() /* Show Settings */
 {
     return QueryResponse_bool("ShowSettings?\n");
@@ -1525,14 +1520,19 @@ void BranchTdr::setShowSettings(bool newValue) /* Show Settings */
     SendCommand("ShowSettings %c\n",newValue?'T':'F');
 }
 
+bool BranchTdr::getShowCalibrations() /* Show Calibrations */
+{
+    return QueryResponse_bool("ShowCalibrations?\n");
+}
+
+void BranchTdr::setShowCalibrations(bool newValue) /* Show Calibrations */
+{
+    SendCommand("ShowCalibrations %c\n",newValue?'T':'F');
+}
+
 char* BranchTdr::getStatusMsg(char *buffer,int buflen) /* Status Message */
 {
     return QueryResponse(buffer,buflen,"StatusMsg?\n");
-}
-
-char* BranchTdr::getTermCalFile(char *buffer,int buflen) /* Term cal table file */
-{
-    return QueryResponse(buffer,buflen,"TermCalFile?\n");
 }
 
 void BranchTdr::CancelCal() /* Cancel calibration */
@@ -1573,21 +1573,57 @@ void BranchTdr::RunTermCal() /* Run 50 Ohm calibration */
     SendCommand("RunTermCal\n");
 }
 
+void BranchTdr::SaveCal(const char *fileName) /* Save TDR calibration */
+{
+    SendCommand("SaveCal \"%s\"\n",fileName);
+}
+
+char* BranchTdr::getCalFile(char *buffer,int buflen) /* Full path of TDR calibration table file  */
+{
+    return QueryResponse(buffer,buflen,"CalFile?\n");
+}
+
+char* BranchTdr::getLoadCalFile(char *buffer,int buflen) /* TDR calibration load file */
+{
+    return QueryResponse(buffer,buflen,"LoadCalFile?\n");
+}
+
+void BranchTdr::setLoadCalFile(const char *fileName) /* TDR calibration load file */
+{
+    SendCommand("LoadCalFile \"%s\"\n",fileName);
+}
+
+/* Deprecated */
+char* BranchTdr::getShortCalFile(char *buffer,int buflen) /* Short cal table file */
+{
+    return QueryResponse(buffer,buflen,"ShortCalFile?\n");
+}
+
+/* Deprecated */
+char* BranchTdr::getTermCalFile(char *buffer,int buflen) /* Term cal table file */
+{
+    return QueryResponse(buffer,buflen,"TermCalFile?\n");
+}
+
+/* Deprecated */
 void BranchTdr::SaveShortCal(const char *fileName) /* Save short calibration */
 {
     SendCommand("SaveShortCal \"%s\"\n",fileName);
 }
 
+/* Deprecated */
 void BranchTdr::SaveTermCal(const char *fileName) /* Save termination calibration */
 {
     SendCommand("SaveTermCal \"%s\"\n",fileName);
 }
 
+/* Deprecated */
 void BranchTdr::LoadShortCal(const char *fileName) /* Load short calibration */
 {
     SendCommand("LoadShortCal \"%s\"\n",fileName);
 }
 
+/* Deprecated */
 void BranchTdr::LoadTermCal(const char *fileName) /* Load termination calibration */
 {
     SendCommand("LoadTermCal \"%s\"\n",fileName);
@@ -2053,6 +2089,16 @@ void BranchTdt::setShowSettings(bool newValue) /* Show Settings */
     SendCommand("ShowSettings %c\n",newValue?'T':'F');
 }
 
+bool BranchTdt::getShowCalibrations() /* Show Calibrations */
+{
+    return QueryResponse_bool("ShowCalibrations?\n");
+}
+
+void BranchTdt::setShowCalibrations(bool newValue) /* Show Calibrations */
+{
+    SendCommand("ShowCalibrations %c\n",newValue?'T':'F');
+}
+
 bool BranchTdt::getShowThrough() /* Show Reference trace */
 {
     return QueryResponse_bool("ShowThrough?\n");
@@ -2066,11 +2112,6 @@ void BranchTdt::setShowThrough(bool newValue) /* Show Reference trace */
 char* BranchTdt::getStatusMsg(char *buffer,int buflen) /* Status Message */
 {
     return QueryResponse(buffer,buflen,"StatusMsg?\n");
-}
-
-char* BranchTdt::getThroughCalFile(char *buffer,int buflen) /* Through cal table file */
-{
-    return QueryResponse(buffer,buflen,"ThroughCalFile?\n");
 }
 
 void BranchTdt::CancelCal() /* Cancel calibration */
@@ -2106,14 +2147,42 @@ void BranchTdt::RunThroughCal() /* Run Through calibration */
     SendCommand("RunThroughCal\n");
 }
 
-void BranchTdt::SaveThroughCal(const char *fileName) /* Save through calibration */
+/* Deprecated */
+void BranchTdt::SaveThroughCal(const char *fileName) /* Save through calibration, deprecated, use Tdt:SaveCal.*/
 {
     SendCommand("SaveThroughCal \"%s\"\n", fileName);
 }
 
-void BranchTdt::LoadThroughCal(const char *fileName) /* Load through calibration */
+/* Deprecated */
+void BranchTdt::LoadThroughCal(const char *fileName) /* Load through calibration, deprecated, use Tdt:CalFile. */
 {
     SendCommand("LoadThroughCal \"%s\"\n", fileName);
+}
+
+/* Deprecated */
+char* BranchTdt::getThroughCalFile(char *buffer,int buflen) /* Through cal table file, deprecated, use Tdt:CalFile. */
+{
+    return QueryResponse(buffer,buflen,"ThroughCalFile?\n");
+}
+
+void BranchTdt::SaveCal(const char *fileName) /* Save TDT calibration */
+{
+    SendCommand("SaveCal \"%s\"\n", fileName);
+}
+
+char* BranchTdt::getCalFile(char *buffer,int buflen) /* Full path of TDT calibration table file. */
+{
+    return QueryResponse(buffer,buflen,"CalFile?\n");
+}
+
+char* BranchTdt::getLoadCalFile(char *buffer,int buflen) /* TDT calibration load file */
+{
+    return QueryResponse(buffer,buflen,"CalFile?\n");
+}
+
+void BranchTdt::setLoadCalFile(const char *fileName) /* TDT calibration load file */
+{
+    SendCommand("LoadCalFile \"%s\"\n",fileName);
 }
 
 /* ================================================================ */

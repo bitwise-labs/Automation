@@ -588,9 +588,9 @@ class BranchFile(AutomationExtender):
         self.SendCommand("Length " + "\""+filepath+"\"" + "\n")
         return None
 
-    def List(self,dirpath: str) -> str:
+    def List(self,dirpath: str, otheroptions: str = "") -> str:
         """Binary string response method for List Directory."""
-        return str(self.QueryBinaryResponse("List " + "\""+dirpath+"\"" + "\n"), encoding='utf-8')
+        return str(self.QueryBinaryResponse("List " + "\""+dirpath+"\" " + otheroptions + "\n"), encoding='utf-8')
 
     def Rename(self,frompath: str, topath: str):
         """Method for Rename File."""

@@ -1752,8 +1752,19 @@ class BranchTdr(AutomationExtender):
         """Get Run Sequence """
         return self.QueryResponse_int("Sequence?\n")
 
+    def getCalFile(self) -> str:
+        """Full path of TDR calibration table file. """
+        return self.QueryResponse("CalFile?\n")
+
+    def getLoadCalFile(self) -> str:
+        """TDR Calibration load file. """
+        return self.QueryResponse("CalFile?\n")
+
+    def setLoadCalFile(self, newvalue: str) :
+        """Set TDR Calibration load file."""
+
     def getShortCalFile(self) -> str:
-        """Get Short cal table file """
+        """Get Short cal table file. Deprecated use Tdr:CalFile. """
         return self.QueryResponse("ShortCalFile?\n")
 
     def getShowSettings(self) -> bool:
@@ -1765,12 +1776,21 @@ class BranchTdr(AutomationExtender):
         self.SendCommand("ShowSettings " + ("T" if newvalue else "F") + "\n")
         return None
 
+    def getShowCalibrations(self) -> bool:
+        """Get Show Calibrations """
+        return self.QueryResponse_bool("ShowCalibrations?\n")
+
+    def setShowCalibrations(self, newvalue: bool):
+        """Set Show Calibrations """
+        self.SendCommand("ShowCalibrations " + ("T" if newvalue else "F") + "\n")
+        return None
+
     def getStatusMsg(self) -> str:
         """Get Status Message """
         return self.QueryResponse("StatusMsg?\n")
 
     def getTermCalFile(self) -> str:
-        """Get Term cal table file """
+        """Get Term cal table file. Deprecated use Tdr:CalFile. """
         return self.QueryResponse("TermCalFile?\n")
 
     def CancelCal(self):
@@ -1808,22 +1828,27 @@ class BranchTdr(AutomationExtender):
         return None
 
     def LoadShortCal(self, fileName: str):
-        """Method for Load short calibration."""
+        """Method for Load short calibration. Deprecated use Tdr:LoadCalFile."""
         self.SendCommand("LoadShortCal \"" + fileName + "\"\n")
         return None
 
     def LoadTermCal(self, fileName: str):
-        """Method for Load termination calibration."""
+        """Method for Load termination calibration. Deprecated use Tdr:LoadCalFile."""
         self.SendCommand("LoadTermCal \"" + fileName + "\"\n")
         return None
 
+    def SaveCal(self, fileName: str):
+        """Method for Save TDR calibration."""
+        self.SendCommand("SaveCal \"" + fileName + "\"\n")
+        return None
+
     def SaveShortCal(self, fileName: str):
-        """Method for Save short calibration."""
+        """Method for Save short calibration. Deprecated use Tdr:SaveCal."""
         self.SendCommand("SaveShortCal \"" + fileName + "\"\n")
         return None
 
     def SaveTermCal(self, fileName: str):
-        """Method for Save termination calibration."""
+        """Method for Save termination calibration. Deprecated use Tdr:SaveCal."""
         self.SendCommand("SaveTermCal \"" + fileName + "\"\n")
         return None
 
@@ -2222,6 +2247,15 @@ class BranchTdt(AutomationExtender):
         self.SendCommand("ShowSettings " + ("T" if newvalue else "F") + "\n")
         return None
 
+    def getShowCalibrations(self) -> bool:
+        """Get Show Calibrations """
+        return self.QueryResponse_bool("ShowCalibrations?\n")
+
+    def setShowCalibrations(self, newvalue:bool) :
+        """Set Show Calibrations """
+        self.SendCommand("ShowCalibrations " + ("T" if newvalue else "F") + "\n")
+        return None
+
     def getShowThrough(self) -> bool:
         """Get Show Reference trace """
         return self.QueryResponse_bool("ShowThrough?\n")
@@ -2235,8 +2269,19 @@ class BranchTdt(AutomationExtender):
         """Get Status Message """
         return self.QueryResponse("StatusMsg?\n")
 
+    def getLoadCalFile(self) -> str:
+        """TDT Calibration load file. """
+        return self.QueryResponse("CalFile?\n")
+
+    def setLoadCalFile(self, newvalue: str) :
+        """Set TDT Calibration load file."""
+
     def getThroughCalFile(self) -> str:
-        """Get Through cal table file """
+        """Get Through cal table file. Deprecated, use Tdt:CalFile """
+        return self.QueryResponse("ThroughCalFile?\n")
+
+    def getCalFile(self) -> str:
+        """Full path of TDT calibration table file. """
         return self.QueryResponse("ThroughCalFile?\n")
 
     def CancelCal(self):
@@ -2268,12 +2313,17 @@ class BranchTdt(AutomationExtender):
         self.SendCommand("RunThroughCal\n")
         return None
 
+    def SaveCal(self, fileName: str):
+        """Method for Save TDT calibration to file."""
+        self.SendCommand("SaveCal \"" + fileName + "\"\n")
+        return None
+
     def SaveThroughCal(self, fileName: str):
-        """Method for Save through calibration."""
+        """Method for Save through calibration. Deprecated, use Tdt:SaveCal"""
         self.SendCommand("SaveThroughCal \"" + fileName + "\"\n")
         return None
 
     def LoadThroughCal(self, fileName: str):
-        """Method for Load through calibration."""
+        """Method for Load through calibration. Deprecated, use Tdt:CalFile."""
         self.SendCommand("LoadThroughCal \"" + fileName + "\"\n")
         return None

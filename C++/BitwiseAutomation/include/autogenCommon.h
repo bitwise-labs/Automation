@@ -97,10 +97,9 @@ class BranchFile: /* File System Access */
     char* Exists(char *buffer,int buflen,char *filepath); /* File Exists */
     char *Fetch(char *filepath,int *pcount=0); /* Fetch File - Must free() return value */
     void Length(char *filepath); /* File Length */
-    char *List(char *dirpath); /* List Directory - Must free() return value */
+    char *List(char *dirpath, char *otheroptions = (char*)""); /* List Directory - Must free() return value */
     void Rename(char *frompath, char *topath); /* Rename File */
 };
-
 
 /* ================================ */
 

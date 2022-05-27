@@ -619,9 +619,9 @@ void BranchFile::Length(char *filepath) /* File Length */
     SendCommand("Length \"%s\"\n",filepath);
 }
 
-char *BranchFile::List(char *dirpath) /* List Directory - Must free() return value */
+char *BranchFile::List(char *dirpath, char *otheroptions) /* List Directory - Must free() return value */
 {
-    return QueryBinaryResponse(0,"List \"%s\"\n",dirpath);
+    return QueryBinaryResponse(0,"List \"%s\" %s\n",dirpath, otheroptions);
 }
 
 void BranchFile::Rename(char *frompath, char *topath) /* Rename File */
