@@ -256,6 +256,8 @@ class BranchED: /* Pega Calibration Input Access */
     void Resync(); /* Manual Resync */
     bool AlignData( AlignBy alignType = AlignBy::All, bool waitToComplete=true ); /* Perform data alignment, parameter: Time, Volts, All (Dflt), PrbsVolts, PrbsAll */
     bool WaitForAlignmentToComplete();
+    DetPatt WaitForDetPattToSettle( double timeoutSec = 30.0 );
+
     void AlignClearLog();
     void AlignCancel();
     char *AlignFetchLog();/* Fetch align log - Must free() return value */

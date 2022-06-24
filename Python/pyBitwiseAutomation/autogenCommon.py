@@ -293,6 +293,7 @@ class BranchPatt(AutomationExtender):
 
     def Deploy(self, ch: PatternChannel, filename: str, bitShift: int = 0):
         """Method for Deploy pattern"""
+
         self.SendCommand("Deploy "+ch.value+" "+str(bitShift)+" \"" + filename + "\"\n")
         return None
 

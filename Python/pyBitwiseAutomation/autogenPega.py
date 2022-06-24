@@ -783,7 +783,6 @@ class BranchPGTrig(AutomationExtender):
 
 # ================================ #
 
-
 class BranchPG(AutomationExtender):
     """BranchPG class.  Pattern generator control"""
 
@@ -2048,6 +2047,38 @@ class BranchED(AutomationExtender):
 
         message = self.getAlignDataMsg()
         return message.upper().startswith("SUCCESS")
+
+    def WaitForDetPattToSettle(self, timeoutSec: float = 30.0) -> DetPatt:
+        now = SocketDevice.timestamp()
+        timeout = now + timeoutSec
+        lastReadPattern = self.getDetPatt()
+        countSame = 0
+        SAMETHRESH = 4
+        EACHPAUSE = 0.200
+
+        while now < timeout and countSame < SAMETHRESH:
+            readPattern = self.getDetPatt()
+
+            if self.getDebugging():
+                print("Settle " + str(readPattern))
+
+            # if readPattern != BranchED.DetPatt._None and readPattern != BranchED.DetPatt.Unknown
+            #                  and readPattern == lastReadPattern :
+
+            if readPattern == lastReadPattern:
+                countSame = countSame + 1
+            else:
+                countSame = 0
+
+            time.sleep(EACHPAUSE)
+            now = SocketDevice.timestamp()
+            lastReadPattern = readPattern = self.getDetPatt()
+
+        if now >= timeout:
+            raise Exception("[Timeout_During_Data_Type_Settle]")
+
+        return readPattern
+
 
     def Resync(self):
         """Method for Manual Resync."""

@@ -96,7 +96,7 @@ def test_Pega(ip_address: str, stopOnError: bool, run: int, fromGHz: float = 1, 
             print("," + "{:.2f}".format(Pega.ED.Sampler.getVoltsMV()), end='')
             print("," + "{:.2f}".format(Pega.ED.Sampler.getTimePS()), end='')
 
-            if stopOnError and alignStatus.upper().startswith("SUCCESS"):
+            if stopOnError and not(alignStatus.upper().startswith("SUCCESS")):
                 raise Exception("[Stop_On_No_Alignment]")
 
             #= == == == == == == == == == == == == == == == == ==== == == == == == == == == == == == == == =

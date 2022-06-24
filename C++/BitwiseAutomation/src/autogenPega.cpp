@@ -341,6 +341,42 @@ char *BranchED::AlignFetchLog() /* Fetch align log - Must free() return value */
 }
 
 
+BranchED::DetPatt BranchED::WaitForDetPattToSettle( double timeoutSec )
+{
+	double now = SocketDevice::timestamp();
+
+	double timeout = now + 30.0;
+	int countSame=0;
+
+	DetPatt last_detected_pattern = getDetPatt();
+
+	while( now < timeout && countSame<4 )
+	{
+		DetPatt detected_pattern = getDetPatt();
+
+#ifdef DEBUG
+		if(getDebugging())
+			fprintf(stderr,"Settle %s\n", DetPatt_Strings[(int)detected_pattern]);
+#endif
+
+		if( detected_pattern == last_detected_pattern )
+			countSame ++ ;
+		else
+			countSame = 0;
+
+
+		usleep(200*1000);
+		now = SocketDevice::timestamp();
+		last_detected_pattern = detected_pattern;
+	}
+
+	if( now >=timeout )
+		throw "[Timeout_During_Data_Type_Settle]";
+
+	return last_detected_pattern;
+}
+
+
 bool BranchED::WaitForAlignmentToComplete()
 {
 	double now = SocketDevice::timestamp();
@@ -397,6 +433,7 @@ bool BranchED::WaitForAlignmentToComplete()
 //		throw( (const char *)static_buffer );
 //	}
 }
+
 
 void BranchED::Resync() /* Manual Resync */
 {
