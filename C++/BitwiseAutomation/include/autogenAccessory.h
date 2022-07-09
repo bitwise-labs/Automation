@@ -636,6 +636,10 @@ class BranchAccDDR: /* DDR5 accessory */
 
     Host getHost();
     void setHost( Host newValue);
+    Host getRCDHost();
+    void setRCDHost( Host newValue);
+    Host getGpioHost();
+    void setGpioHost( Host newValue);
 
     enum class Lane
     {

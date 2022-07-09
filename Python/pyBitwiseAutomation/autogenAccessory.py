@@ -1054,6 +1054,24 @@ class BranchAccDDR(AutomationExtender):
         self.SendCommand("Host " + newvalue.value + "\n")
         return None
 
+    def getRCDHost(self) -> Host:
+        """Get enum SM Bus RCD device host ID """
+        return self.Host(self.QueryResponse_enum(self.Host, "RCDHost?\n"))
+
+    def setRCDHost(self, newvalue: Host) :
+        """Set enum SM Bus RCD device host ID """
+        self.SendCommand("RCDHost " + newvalue.value + "\n")
+        return None
+
+    def getGpioHost(self) -> Host:
+        """Get enum SM Bus Gpio device host ID """
+        return self.Host(self.QueryResponse_enum(self.Host, "GpioHost?\n"))
+
+    def setGpioHost(self, newvalue: Host) :
+        """Set enum SM Bus Gpio device host ID """
+        self.SendCommand("GpioHost " + newvalue.value + "\n")
+        return None
+
     class Lane(Enum):
         DQ0_A = "DQ0_A"
         DQ1_A = "DQ1_A"

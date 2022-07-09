@@ -380,6 +380,26 @@ void BranchAccDDR::setHost(Host newValue )
     SendCommand("Host \"%s\"\n",Host_Strings[(int)newValue]);
 }
 
+BranchAccDDR::Host BranchAccDDR::getRCDHost()
+{
+    return (Host)QueryResponse_enum(Host_Strings,"RCDHost?\n");
+}
+
+BranchAccDDR::Host BranchAccDDR::getGpioHost()
+{
+    return (Host)QueryResponse_enum(Host_Strings,"GpioHost?\n");
+}
+
+void BranchAccDDR::setRCDHost(Host newValue )
+{
+    SendCommand("RCDHost \"%s\"\n",Host_Strings[(int)newValue]);
+}
+
+void BranchAccDDR::setGpioHost(Host newValue )
+{
+    SendCommand("GpioHost \"%s\"\n",Host_Strings[(int)newValue]);
+}
+
 const char *BranchAccDDR::Lane_Strings[] =
 {
     "DQ0_A",
