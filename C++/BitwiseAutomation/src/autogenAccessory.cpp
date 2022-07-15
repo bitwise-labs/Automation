@@ -369,6 +369,19 @@ const char *BranchAccDDR::Host_Strings[] =
     "Host7",
     0
 };
+const char *BranchAccDDR::HostNone_Strings[] =
+{
+    "Host0",
+    "Host1",
+    "Host2",
+    "Host3",
+    "Host4",
+    "Host5",
+    "Host6",
+    "Host7",
+	"None",
+    0
+};
 
 BranchAccDDR::Host BranchAccDDR::getHost()
 {
@@ -382,22 +395,30 @@ void BranchAccDDR::setHost(Host newValue )
 
 BranchAccDDR::Host BranchAccDDR::getRCDHost()
 {
+	// DDR-5 RCD host ID selection in case RCD on separate PCB.  Otherwise set to same as Host ID.
+
     return (Host)QueryResponse_enum(Host_Strings,"RCDHost?\n");
 }
 
-BranchAccDDR::Host BranchAccDDR::getGpioHost()
+BranchAccDDR::HostNone BranchAccDDR::getGpioHost()
 {
-    return (Host)QueryResponse_enum(Host_Strings,"GpioHost?\n");
+	// DDR-5 GPIO host ID selection.  Used if GPIO Chip provides signals from separate PCB.  Otherwise set to None.
+
+    return (HostNone)QueryResponse_enum(HostNone_Strings,"GpioHost?\n");
 }
 
 void BranchAccDDR::setRCDHost(Host newValue )
 {
+	// DDR-5 RCD host ID selection in case RCD on separate PCB.  Otherwise set to same as Host ID.
+
     SendCommand("RCDHost \"%s\"\n",Host_Strings[(int)newValue]);
 }
 
-void BranchAccDDR::setGpioHost(Host newValue )
+void BranchAccDDR::setGpioHost(HostNone newValue )
 {
-    SendCommand("GpioHost \"%s\"\n",Host_Strings[(int)newValue]);
+	// DDR-5 GPIO host ID selection.  Used if GPIO Chip provides signals from separate PCB.  Otherwise set to None.
+
+    SendCommand("GpioHost \"%s\"\n",HostNone_Strings[(int)newValue]);
 }
 
 const char *BranchAccDDR::Lane_Strings[] =

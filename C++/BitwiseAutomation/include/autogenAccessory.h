@@ -636,10 +636,30 @@ class BranchAccDDR: /* DDR5 accessory */
 
     Host getHost();
     void setHost( Host newValue);
+
+	// DDR-5 RCD host ID selection in case RCD on separate PCB.  Otherwise set to same as Host ID.
+
     Host getRCDHost();
     void setRCDHost( Host newValue);
-    Host getGpioHost();
-    void setGpioHost( Host newValue);
+
+    enum class HostNone
+    {
+        Host0,
+        Host1,
+        Host2,
+        Host3,
+        Host4,
+        Host5,
+        Host6,
+        Host7,
+		HostNone
+    };
+    static const char *HostNone_Strings[];
+
+	// DDR-5 GPIO host ID selection.  Used if GPIO Chip provides signals from separate PCB.  Otherwise set to None.
+
+    HostNone getGpioHost();
+    void setGpioHost( HostNone newValue);
 
     enum class Lane
     {

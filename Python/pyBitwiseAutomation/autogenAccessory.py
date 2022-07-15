@@ -1055,20 +1055,20 @@ class BranchAccDDR(AutomationExtender):
         return None
 
     def getRCDHost(self) -> Host:
-        """Get enum SM Bus RCD device host ID """
+        """get DDR-5 RCD host ID selection in case RCD on separate PCB.  Otherwise set to same as Host ID. """
         return self.Host(self.QueryResponse_enum(self.Host, "RCDHost?\n"))
 
     def setRCDHost(self, newvalue: Host) :
-        """Set enum SM Bus RCD device host ID """
+        """set DDR-5 RCD host ID selection in case RCD on separate PCB.  Otherwise set to same as Host ID. """
         self.SendCommand("RCDHost " + newvalue.value + "\n")
         return None
 
     def getGpioHost(self) -> Host:
-        """Get enum SM Bus Gpio device host ID """
+        """Get DDR-5 GPIO host ID selection.  Used if GPIO Chip provides signals from separate PCB.  Otherwise set to None. """
         return self.Host(self.QueryResponse_enum(self.Host, "GpioHost?\n"))
 
     def setGpioHost(self, newvalue: Host) :
-        """Set enum SM Bus Gpio device host ID """
+        """Set DDR-5 GPIO host ID selection.  Used if GPIO Chip provides signals from separate PCB.  Otherwise set to None. """
         self.SendCommand("GpioHost " + newvalue.value + "\n")
         return None
 
