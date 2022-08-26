@@ -93,28 +93,30 @@ class BranchAccDDRDFE: /* DFE category */
 
 /* ================================ */
 
-class BranchAccDDRI2C: /* I2C Access */
-    public AutomationExtender
-{
-    public:
-    BranchAccDDRI2C(AutomationInterface *baseDevice,const char *prefix) :
-        AutomationExtender(baseDevice,prefix) {}
-    virtual ~BranchAccDDRI2C() {}
-
-    int getAux(); /* High 6 bits of control register */
-    void setAux( int newValue);
-    void Write(int device, int address, int count, uint8_t *src); /* Write bytes */
-    uint8_t *Read(int device, int address, int count, uint8_t *dest); /* Read bytes*/
-    uint8_t *ReadHost(int device, int address, int count, uint8_t *dest); /* Read Host bytes */
-
-    uint8_t ReadBYTE(int device, int channel, int page, int address); /* Read byte using special format  */
-    uint32_t ReadDWORD(int device, int channel, int page, int address); /* Read DWORD using special format */
-    uint16_t ReadWORD(int device, int channel, int page, int address); /* Read WORD using special format */
-
-    void WriteBYTE(int device, int channel, int page, int address, uint8_t data); /* Write byte using special format */
-    void WriteDWORD(int device, int channel, int page, int address, uint32_t data); /* Write DWORD using special format */
-    void WriteWORD(int device, int channel, int page, int address, uint16_t data); /* Write WORD using special format*/
-};
+// REMOVED BECAUSE ONLY FOR DEVELOPMENT/DIAGNOSTICS
+//
+//class BranchAccDDRI2C: /* I2C Access */
+//    public AutomationExtender
+//{
+//    public:
+//    BranchAccDDRI2C(AutomationInterface *baseDevice,const char *prefix) :
+//        AutomationExtender(baseDevice,prefix) {}
+//    virtual ~BranchAccDDRI2C() {}
+//
+//    int getAux(); /* High 6 bits of control register */
+//    void setAux( int newValue);
+//    void Write(int device, int address, int count, uint8_t *src); /* Write bytes */
+//    uint8_t *Read(int device, int address, int count, uint8_t *dest); /* Read bytes*/
+//    uint8_t *ReadHost(int device, int address, int count, uint8_t *dest); /* Read Host bytes */
+//
+//    uint8_t ReadBYTE(int device, int channel, int page, int address); /* Read byte using special format  */
+//    uint32_t ReadDWORD(int device, int channel, int page, int address); /* Read DWORD using special format */
+//    uint16_t ReadWORD(int device, int channel, int page, int address); /* Read WORD using special format */
+//
+//    void WriteBYTE(int device, int channel, int page, int address, uint8_t data); /* Write byte using special format */
+//    void WriteDWORD(int device, int channel, int page, int address, uint32_t data); /* Write DWORD using special format */
+//    void WriteWORD(int device, int channel, int page, int address, uint16_t data); /* Write WORD using special format*/
+//};
 
 /* ================================ */
 
@@ -268,6 +270,23 @@ class BranchAccDDRTerm: /* Termination category */
 
 	/* ================================= */
 
+
+class BranchAccDDRCommand: /* Command category */
+        public AutomationExtender
+    {
+        public:
+		BranchAccDDRCommand(AutomationInterface *baseDevice,const char *prefix) :
+            AutomationExtender(baseDevice,prefix) {}
+        virtual ~BranchAccDDRCommand() {}
+
+        int getLogSEQ();
+        void ClearLog();
+        char *FetchLog(); /* Fetch log - Must free() return value */
+        char* getStatus(char *buffer,int buflen); /* Command status */
+    };
+
+/* ================================= */
+
 class BranchAccDDRLB: /* Loopback category */
         public AutomationExtender
     {
@@ -278,11 +297,6 @@ class BranchAccDDRLB: /* Loopback category */
 
         void Start(); /* Start loopback (asynchronous) */
         void Cancel(); /* Loopback cancel */
-        char* getStatus(char *buffer,int buflen); /* Loopback status */
-
-        int getLogSEQ();
-        void ClearLog();
-        char *FetchLog(); /* Fetch log - Must free() return value */
     };
 
 /* ================================= */
@@ -320,13 +334,7 @@ class BranchAccDDRTools: /* Tools category */
     void AutoDQS();
 
     void Cancel();
-    char* getStatus(char *buffer,int buflen); /* Tools status */
-
-    int getLogSEQ();
-    void ClearLog();
-    char *FetchLog(); /* Fetch tools log - Must free() return value */
 };
-
 
 	/* ================================= */
 
@@ -339,24 +347,28 @@ class BranchAccDDR: /* DDR5 accessory */
     BranchConst Const;
     BranchAccDDRCTC CTC;
     BranchAccDDRDFE DFE;
-    BranchAccDDRI2C I2C;
+// REMOVED BECAUSE ONLY FOR DEVELOPMENT/DIAGNOSTICS
+//    BranchAccDDRI2C I2C;
     BranchAccDDRRef  Ref;
     BranchAccDDRStress Stress;
     BranchAccDDRTerm Term;
     BranchAccDDRLB LB;
     BranchAccDDRTools Tools;
+    BranchAccDDRCommand Command;
 
     BranchAccDDR(AutomationInterface *baseDevice,const char *prefix) :
         AutomationExtender(baseDevice,prefix),
 	    Const(this,"Const:"),
 	    CTC(this,"CTC:"),
 	    DFE(this,"DFE:"),
-	    I2C(this,"I2C:"),
+// REMOVED BECAUSE ONLY FOR DEVELOPMENT/DIAGNOSTICS
+//	    I2C(this,"I2C:"),
 	    Ref(this,"Ref:"),
 	    Stress(this,"Stress:"),
 		Term(this,"Term:"),
 		LB(this,"LB:"),
-		Tools(this,"Tools:") {}
+		Tools(this,"Tools:"),
+		Command(this,"Command:") {}
     virtual ~BranchAccDDR() {}
 
     enum class CardType

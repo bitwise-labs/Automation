@@ -326,87 +326,88 @@ class BranchAccDDRDFE(AutomationExtender):
 
 # ================================ #
 
-
-class BranchAccDDRI2C(AutomationExtender):
-    """BranchAccDDRI2C class.  I2C Access"""
-
-    def __init__(self, parent: AutomationInterface, prefix: str):
-        super().__init__(parent, prefix)
-
-    def __del__(self):
-        super().__del__()
-        return None
-
-    def getAux(self) -> int:
-        """Get High 6 bits of control register """
-        return self.QueryResponse_int("Aux?\n")
-
-    def setAux(self, newvalue: int):
-        """Set High 6 bits of control register """
-        self.SendCommand("Aux " + str(newvalue) + "\n")
-        return None
-
-    def Write(self, device: int, address: int, src: list):
-        """Method for Write bytes. """
-        temp = ""
-        for n in range(len(list)):
-            temp = temp + " " + hex(list[n])
-
-        self.SendCommand("Write " + hex(device) + " " + hex(address) + temp + "\n")
-        return None
-
-    def Read(self, device: int, address: int, count: int) -> list:
-        """Method for Read bytes. Needs testing. """
-        response = self.QueryResponse("Read " + hex(device) + " " + hex(address) + " " + str(count) + "\n")
-        answer = numpy.empty(count, dtype=int)
-        buffer = response.split()
-        i = 0
-        while i < range(count) and i < len(buffer):
-            answer[i] = int(buffer[i])
-        return answer
-
-    def ReadHost(self, device: int, address: int, count: int) -> list:
-        """Method for Read Host bytes. """
-        response = self.QueryResponse("ReadHost " + hex(device) + " " + hex(address) + " " + str(count) + "\n")
-        answer = numpy.empty(count, dtype=int)
-        buffer = response.split()
-        i = 0
-        while i < range(count) and i < len(buffer):
-            answer[i] = int(buffer[i])
-        return answer
-
-    def ReadBYTE(self, device: int, channel: int, page: int, address: int) -> int:
-        """Method for Read byte using special format. """
-        return self.QueryResponse_int("ReadBYTE " + hex(device) + " " + hex(channel) + " " +
-                                    hex(page) + " " + hex(address) + "\n")
-
-    def ReadDWORD(self, device: int, channel: int, page: int, address: int) -> int:
-        """Method for Read DWORD using special format."""
-        return self.QueryResponse_int("ReadDWORD " + hex(device) + " " + hex(channel) + " " +
-                                    hex(page) + " " + hex(address) + "\n")
-
-    def ReadWORD(self, device: int, channel: int, page: int, address: int) -> int:
-        """Method for Read WORD using special format."""
-        return self.QueryResponse_int("ReadWORD " + hex(device) + " " + hex(channel) + " " +
-                                    hex(page) + " " + hex(address) + "\n")
-
-    def WriteBYTE(self, device: int, channel: int, page: int, address: int, data: int):
-        """Method for Write byte using special format."""
-        self.SendCommand("WriteByte " + hex(device) + " " + hex(channel) + " " +
-                                    hex(page) + " " + hex(address) + " " + hex(data) + "\n")
-        return None
-
-    def WriteDWORD(self, device: int, channel: int, page: int, address: int, data: int):
-        """Method for Write DWORD using special format. """
-        self.SendCommand("WriteDWORD " + hex(device) + " " + hex(channel) + " " +
-                                    hex(page) + " " + hex(address) + " " + hex(data) + "\n")
-        return None
-
-    def WriteWORD(self, device: int, channel: int, page: int, address: int, data: int):
-        """Method for Write WORD using special format. """
-        self.SendCommand("WriteWORD " + hex(device) + " " + hex(channel) + " " +
-                                    hex(page) + " " + hex(address) + " " + hex(data) + "\n")
-        return None
+# REMOVED BECAUSE ONLY FOR DEVELOPMENT/DIAGNOSTICS
+#
+# class BranchAccDDRI2C(AutomationExtender):
+#     """BranchAccDDRI2C class.  I2C Access"""
+#
+#     def __init__(self, parent: AutomationInterface, prefix: str):
+#         super().__init__(parent, prefix)
+#
+#     def __del__(self):
+#         super().__del__()
+#         return None
+#
+#     def getAux(self) -> int:
+#         """Get High 6 bits of control register """
+#         return self.QueryResponse_int("Aux?\n")
+#
+#     def setAux(self, newvalue: int):
+#         """Set High 6 bits of control register """
+#         self.SendCommand("Aux " + str(newvalue) + "\n")
+#         return None
+#
+#     def Write(self, device: int, address: int, src: list):
+#         """Method for Write bytes. """
+#         temp = ""
+#         for n in range(len(list)):
+#             temp = temp + " " + hex(list[n])
+#
+#         self.SendCommand("Write " + hex(device) + " " + hex(address) + temp + "\n")
+#         return None
+#
+#     def Read(self, device: int, address: int, count: int) -> list:
+#         """Method for Read bytes. Needs testing. """
+#         response = self.QueryResponse("Read " + hex(device) + " " + hex(address) + " " + str(count) + "\n")
+#         answer = numpy.empty(count, dtype=int)
+#         buffer = response.split()
+#         i = 0
+#         while i < range(count) and i < len(buffer):
+#             answer[i] = int(buffer[i])
+#         return answer
+#
+#     def ReadHost(self, device: int, address: int, count: int) -> list:
+#         """Method for Read Host bytes. """
+#         response = self.QueryResponse("ReadHost " + hex(device) + " " + hex(address) + " " + str(count) + "\n")
+#         answer = numpy.empty(count, dtype=int)
+#         buffer = response.split()
+#         i = 0
+#         while i < range(count) and i < len(buffer):
+#             answer[i] = int(buffer[i])
+#         return answer
+#
+#     def ReadBYTE(self, device: int, channel: int, page: int, address: int) -> int:
+#         """Method for Read byte using special format. """
+#         return self.QueryResponse_int("ReadBYTE " + hex(device) + " " + hex(channel) + " " +
+#                                     hex(page) + " " + hex(address) + "\n")
+#
+#     def ReadDWORD(self, device: int, channel: int, page: int, address: int) -> int:
+#         """Method for Read DWORD using special format."""
+#         return self.QueryResponse_int("ReadDWORD " + hex(device) + " " + hex(channel) + " " +
+#                                     hex(page) + " " + hex(address) + "\n")
+#
+#     def ReadWORD(self, device: int, channel: int, page: int, address: int) -> int:
+#         """Method for Read WORD using special format."""
+#         return self.QueryResponse_int("ReadWORD " + hex(device) + " " + hex(channel) + " " +
+#                                     hex(page) + " " + hex(address) + "\n")
+#
+#     def WriteBYTE(self, device: int, channel: int, page: int, address: int, data: int):
+#         """Method for Write byte using special format."""
+#         self.SendCommand("WriteByte " + hex(device) + " " + hex(channel) + " " +
+#                                     hex(page) + " " + hex(address) + " " + hex(data) + "\n")
+#         return None
+#
+#     def WriteDWORD(self, device: int, channel: int, page: int, address: int, data: int):
+#         """Method for Write DWORD using special format. """
+#         self.SendCommand("WriteDWORD " + hex(device) + " " + hex(channel) + " " +
+#                                     hex(page) + " " + hex(address) + " " + hex(data) + "\n")
+#         return None
+#
+#     def WriteWORD(self, device: int, channel: int, page: int, address: int, data: int):
+#         """Method for Write WORD using special format. """
+#         self.SendCommand("WriteWORD " + hex(device) + " " + hex(channel) + " " +
+#                                     hex(page) + " " + hex(address) + " " + hex(data) + "\n")
+#         return None
 
 # ================================ #
 
@@ -610,6 +611,29 @@ class BranchAccDDRTerm(AutomationExtender):
 
 # ================================ #
 
+class BranchAccDDRCommand(AutomationExtender):
+    """BranchAccDDRCommand class.  Command Log category"""
+
+    def __init__(self, parent: AutomationInterface, prefix: str):
+        super().__init__(parent, prefix)
+
+    def __del__(self):
+        super().__del__()
+        return None
+
+    def getLogSEQ(self, index: int) -> int:
+        """Get Log SEQ number  """
+        return self.QueryResponse_int("LogSEQ?\n")
+
+    def ClearLog(self):
+        """Method for Clear Log."""
+        self.SendCommand("ClearLog\n")
+        return None
+
+    def FetchLog(self) -> str:
+        """Binary string response method for Fetching log. """
+        return str(self.QueryBinaryResponse("FetchLog\n"), encoding='utf-8')
+
 
 class BranchAccDDRLB(AutomationExtender):
     """BranchAccDDRLB class.  Loopback category"""
@@ -635,19 +659,6 @@ class BranchAccDDRLB(AutomationExtender):
         self.SendCommand("Cancel\n")
         return None
 
-    def getLogSEQ(self, index: int) -> int:
-        """Get Log SEQ number  """
-        return self.QueryResponse_int("LogSEQ?\n")
-
-    def ClearLog(self):
-        """Method for Clear Log."""
-        self.SendCommand("ClearLog\n")
-        return None
-
-    def FetchLog(self) -> str:
-        """Binary string response method for Fetching log. """
-        return str(self.QueryBinaryResponse("FetchLog\n"), encoding='utf-8')
-
 # ================================ #
 
 
@@ -660,10 +671,6 @@ class BranchAccDDRTools(AutomationExtender):
     def __del__(self):
         super().__del__()
         return None
-
-    def getStatus(self) -> str:
-        """Get Tools status """
-        return self.QueryResponse("Status?\n")
 
     def Cancel(self):
         """Method for Tool cancel. """
@@ -730,19 +737,6 @@ class BranchAccDDRTools(AutomationExtender):
         self.SendCommand("EyeThresh " + str(newvalue) + "\n")
         return None
 
-    def getLogSEQ(self, index: int) -> int:
-        """Get Log SEQ number  """
-        return self.QueryResponse_int("LogSEQ?\n")
-
-    def ClearLog(self):
-        """Method for Clear Log."""
-        self.SendCommand("ClearLog\n")
-        return None
-
-    def FetchLog(self) -> str:
-        """Binary string response method for Fetching log. """
-        return str(self.QueryBinaryResponse("FetchLog\n"), encoding='utf-8')
-
 
 class BranchAccDDR(AutomationExtender):
     """BranchAccDDR class.  DDR5 accessory"""
@@ -752,12 +746,14 @@ class BranchAccDDR(AutomationExtender):
         self.Const = BranchConst(self, "Const:")
         self.CTC = BranchAccDDRCTC(self, "CTC:")
         self.DFE = BranchAccDDRDFE(self, "DFE:")
-        self.I2C = BranchAccDDRI2C(self, "I2C:")
+        # REMOVED BECAUSE ONLY FOR DEVELOPMENT/DIAGNOSTICS
+        # self.I2C = BranchAccDDRI2C(self, "I2C:")
         self.Ref = BranchAccDDRRef(self, "Ref:")
         self.Stress = BranchAccDDRStress(self, "Stress:")
         self.Term = BranchAccDDRTerm(self, "Term:")
         self.LB = BranchAccDDRLB(self, "LB:")
         self.Tools = BranchAccDDRTools(self, "Tools:")
+        self.Command = BranchAccDDRCommand(self, "Command:")
 
     def __del__(self):
         super().__del__()

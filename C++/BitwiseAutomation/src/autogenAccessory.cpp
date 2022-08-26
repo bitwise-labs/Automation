@@ -728,101 +728,104 @@ void BranchAccDDRDFE::Program() /* Program DFE with current settings */
 
 /* ================================================================ */
 
-int BranchAccDDRI2C::getAux() /* High 6 bits of control register */
-{
-    return QueryResponse_int("Aux?\n");
-}
 
-void BranchAccDDRI2C::setAux(int newValue) /* High 6 bits of control register */
-{
-    SendCommand("Aux %d\n",newValue);
-}
-
-void BranchAccDDRI2C::Write(int device, int address, int count, uint8_t *src ) /* Write bytes*/
-{
-	char temp[4096];
-	int slen=0;
-	temp[0]=0;
-	for( int n=0; n<count; n++ )
-	{
-		if( snprintf(temp+slen,4096-slen," 0x%02X", src[n] ) >= 4096-slen )
-			throw("[Input_Byte_List_Too_Long]");
-
-		slen = strlen(temp);
-	}
-
-    SendCommand("Write 0x%x 0x%x%s\n",device, address, temp );
-}
-
-uint8_t *BranchAccDDRI2C::Read(int device, int address, int count, uint8_t *dest ) /* Read bytes */
-{
-	char buffer[4096];
-    QueryResponse(buffer, 4096, "Read 0x%x 0x%x %d\n",device,address,count);
-    char *ptr = strtok(buffer," \n\t");
-    for( int n=0; n<count && ptr!=NULL; n++ )
-    {
-    	int number;
-    	if( sscanf(ptr,"%i",&number) != 1 )
-    		throw("[Invalid_Number_Response]");
-    	dest[n] = number;
-    }
-
-    return dest;
-}
-
-uint8_t * BranchAccDDRI2C::ReadHost(int device, int address, int count, uint8_t *dest) /* Read Host bytes */
-{
-    SendCommand("ReadHost\n");
-
-	char buffer[4096];
-    QueryResponse(buffer, 4096, "ReadHost 0x%x 0x%x %d\n",device,address,count);
-    char *ptr = strtok(buffer," \n\t");
-    for( int n=0; n<count && ptr!=NULL; n++ )
-    {
-    	int number;
-    	if( sscanf(ptr,"%i",&number) != 1 )
-    		throw("[Invalid_Number_Response]");
-    	dest[n] = number;
-    }
-
-    return dest;
-}
-
-//=============================================================================//
-//=============================================================================//
-
-uint8_t BranchAccDDRI2C::ReadBYTE(int device, int channel, int page, int address) /* Read byte using special format */
-{
-	return (uint8_t) QueryResponse_int("ReadBYTE 0x%x 0x%x 0x%x 0x%x\n", device, channel, page, address );
-}
-
-uint32_t BranchAccDDRI2C::ReadDWORD(int device, int channel, int page, int address) /* Read DWORD using special format */
-{
-	return (uint32_t) QueryResponse_int64("ReadDWORD 0x%x 0x%x 0x%x 0x%x\n", device, channel, page, address );
-}
-
-uint16_t BranchAccDDRI2C::ReadWORD(int device, int channel, int page, int address) /* Read WORD using special format */
-{
-	return (uint16_t) QueryResponse_int("ReadWORD 0x%x 0x%x 0x%x 0x%x\n", device, channel, page, address );
-}
-
-//=============================================================================//
-//=============================================================================//
-
-void BranchAccDDRI2C::WriteBYTE(int device, int channel, int page, int address, uint8_t data) /* Write byte using special format */
-{
-    SendCommand("WriteBYTE 0x%x 0x%x 0x%x 0x%x 0x%x\n", device, channel, page, address, (uint32_t)data );
-}
-
-void BranchAccDDRI2C::WriteDWORD(int device, int channel, int page, int address, uint32_t data) /* Write DWORD using special format (DWORD must be hex) */
-{
-    SendCommand("WriteDWORD 0x%x 0x%x 0x%x 0x%x 0x%x\n", device, channel, page, address, (uint32_t)data );
-}
-
-void BranchAccDDRI2C::WriteWORD(int device, int channel, int page, int address, uint16_t data) /* Write WORD using special format (WORD must be hex) */
-{
-    SendCommand("WriteWORD 0x%x 0x%x 0x%x 0x%x 0x%x\n", device, channel, page, address, (uint32_t)data );
-}
+// REMOVED BECAUSE ONLY FOR DEVELOPMENT/DIAGNOSTICS
+//
+//int BranchAccDDRI2C::getAux() /* High 6 bits of control register */
+//{
+//    return QueryResponse_int("Aux?\n");
+//}
+//
+//void BranchAccDDRI2C::setAux(int newValue) /* High 6 bits of control register */
+//{
+//    SendCommand("Aux %d\n",newValue);
+//}
+//
+//void BranchAccDDRI2C::Write(int device, int address, int count, uint8_t *src ) /* Write bytes*/
+//{
+//	char temp[4096];
+//	int slen=0;
+//	temp[0]=0;
+//	for( int n=0; n<count; n++ )
+//	{
+//		if( snprintf(temp+slen,4096-slen," 0x%02X", src[n] ) >= 4096-slen )
+//			throw("[Input_Byte_List_Too_Long]");
+//
+//		slen = strlen(temp);
+//	}
+//
+//    SendCommand("Write 0x%x 0x%x%s\n",device, address, temp );
+//}
+//
+//uint8_t *BranchAccDDRI2C::Read(int device, int address, int count, uint8_t *dest ) /* Read bytes */
+//{
+//	char buffer[4096];
+//    QueryResponse(buffer, 4096, "Read 0x%x 0x%x %d\n",device,address,count);
+//    char *ptr = strtok(buffer," \n\t");
+//    for( int n=0; n<count && ptr!=NULL; n++ )
+//    {
+//    	int number;
+//    	if( sscanf(ptr,"%i",&number) != 1 )
+//    		throw("[Invalid_Number_Response]");
+//    	dest[n] = number;
+//    }
+//
+//    return dest;
+//}
+//
+//uint8_t * BranchAccDDRI2C::ReadHost(int device, int address, int count, uint8_t *dest) /* Read Host bytes */
+//{
+//    SendCommand("ReadHost\n");
+//
+//	char buffer[4096];
+//    QueryResponse(buffer, 4096, "ReadHost 0x%x 0x%x %d\n",device,address,count);
+//    char *ptr = strtok(buffer," \n\t");
+//    for( int n=0; n<count && ptr!=NULL; n++ )
+//    {
+//    	int number;
+//    	if( sscanf(ptr,"%i",&number) != 1 )
+//    		throw("[Invalid_Number_Response]");
+//    	dest[n] = number;
+//    }
+//
+//    return dest;
+//}
+//
+////=============================================================================//
+////=============================================================================//
+//
+//uint8_t BranchAccDDRI2C::ReadBYTE(int device, int channel, int page, int address) /* Read byte using special format */
+//{
+//	return (uint8_t) QueryResponse_int("ReadBYTE 0x%x 0x%x 0x%x 0x%x\n", device, channel, page, address );
+//}
+//
+//uint32_t BranchAccDDRI2C::ReadDWORD(int device, int channel, int page, int address) /* Read DWORD using special format */
+//{
+//	return (uint32_t) QueryResponse_int64("ReadDWORD 0x%x 0x%x 0x%x 0x%x\n", device, channel, page, address );
+//}
+//
+//uint16_t BranchAccDDRI2C::ReadWORD(int device, int channel, int page, int address) /* Read WORD using special format */
+//{
+//	return (uint16_t) QueryResponse_int("ReadWORD 0x%x 0x%x 0x%x 0x%x\n", device, channel, page, address );
+//}
+//
+////=============================================================================//
+////=============================================================================//
+//
+//void BranchAccDDRI2C::WriteBYTE(int device, int channel, int page, int address, uint8_t data) /* Write byte using special format */
+//{
+//    SendCommand("WriteBYTE 0x%x 0x%x 0x%x 0x%x 0x%x\n", device, channel, page, address, (uint32_t)data );
+//}
+//
+//void BranchAccDDRI2C::WriteDWORD(int device, int channel, int page, int address, uint32_t data) /* Write DWORD using special format (DWORD must be hex) */
+//{
+//    SendCommand("WriteDWORD 0x%x 0x%x 0x%x 0x%x 0x%x\n", device, channel, page, address, (uint32_t)data );
+//}
+//
+//void BranchAccDDRI2C::WriteWORD(int device, int channel, int page, int address, uint16_t data) /* Write WORD using special format (WORD must be hex) */
+//{
+//    SendCommand("WriteWORD 0x%x 0x%x 0x%x 0x%x 0x%x\n", device, channel, page, address, (uint32_t)data );
+//}
 
 /* ================================================================ */
 
@@ -1222,24 +1225,27 @@ void BranchAccDDRLB::Cancel() /* Loopback cancel */
     SendCommand("Cancel\n");
 }
 
-char* BranchAccDDRLB::getStatus(char *buffer,int buflen) /* Loopback status */
-{
-    return QueryResponse(buffer,buflen,"Status?\n");
-}
+//=============
+//=============
 
-int BranchAccDDRLB::getLogSEQ()
+int BranchAccDDRCommand::getLogSEQ()
 {
 	return QueryResponse_int("LogSEQ?\n");
 }
 
-void BranchAccDDRLB::ClearLog()
+void BranchAccDDRCommand::ClearLog()
 {
     SendCommand("ClearLog\n");
 }
 
-char *BranchAccDDRLB::FetchLog() /* Fetch Log - Must free() return value */
+char *BranchAccDDRCommand::FetchLog() /* Fetch Log - Must free() return value */
 {
     return QueryBinaryResponse(0,"FetchLog\n");
+}
+
+char* BranchAccDDRCommand::getStatus(char *buffer,int buflen) /* Command status */
+{
+    return QueryResponse(buffer,buflen,"Status?\n");
 }
 
 //=============
@@ -1269,26 +1275,6 @@ void BranchAccDDRTools::Cancel() /* Loopback cancel */
 {
     fprintf(stderr,"BranchAccDDRTools::Cancel()\n");
     SendCommand("Cancel\n");
-}
-
-char* BranchAccDDRTools::getStatus(char *buffer,int buflen) /* Tools status */
-{
-    return QueryResponse(buffer,buflen,"Status?\n");
-}
-
-int BranchAccDDRTools::getLogSEQ()
-{
-	return QueryResponse_int("LogSEQ?\n");
-}
-
-void BranchAccDDRTools::ClearLog()
-{
-    SendCommand("ClearLog\n");
-}
-
-char *BranchAccDDRTools::FetchLog() /* Fetch Log - Must free() return value */
-{
-    return QueryBinaryResponse(0,"FetchLog\n");
 }
 
 double BranchAccDDRTools::getDQOffsMV()
