@@ -34,6 +34,7 @@ from pyBitwiseAutomation.AutomationInterface import AutomationInterface
 from pyBitwiseAutomation.AutomationExtender import AutomationExtender
 from enum import Enum
 
+
 # ================================ #
 
 
@@ -54,6 +55,7 @@ class BranchConst(AutomationExtender):
     def getSN(self) -> str:
         """Get Serial Number """
         return self.QueryResponse("SN?\n")
+
 
 # ================================ #
 
@@ -80,9 +82,9 @@ class BranchApp(AutomationExtender):
         """Get Run Duration Limit """
         return self.QueryResponse("RunDurLimit?\n")
 
-    def setRunDurLimit(self, newvalue: str) :
+    def setRunDurLimit(self, newvalue: str):
         """Set Run Duration Limit """
-        self.SendCommand("RunDurLimit " + "\""+newvalue+"\"" + "\n")
+        self.SendCommand("RunDurLimit " + "\"" + newvalue + "\"" + "\n")
         return None
 
     def getRunList(self) -> str:
@@ -101,7 +103,7 @@ class BranchApp(AutomationExtender):
         """Get Show Navigation Toolbar """
         return self.QueryResponse_bool("ShowNav?\n")
 
-    def setShowNav(self, newvalue:bool) :
+    def setShowNav(self, newvalue: bool):
         """Set Show Navigation Toolbar """
         self.SendCommand("ShowNav " + ("T" if newvalue else "F") + "\n")
         return None
@@ -110,7 +112,7 @@ class BranchApp(AutomationExtender):
         """Get Show Text on GUI """
         return self.QueryResponse_bool("ShowText?\n")
 
-    def setShowText(self, newvalue:bool) :
+    def setShowText(self, newvalue: bool):
         """Set Show Text on GUI """
         self.SendCommand("ShowText " + ("T" if newvalue else "F") + "\n")
         return None
@@ -119,9 +121,9 @@ class BranchApp(AutomationExtender):
         """Get Application Tab """
         return self.QueryResponse("Tab?\n")
 
-    def setTab(self, newvalue: str) :
+    def setTab(self, newvalue: str):
         """Set Application Tab """
-        self.SendCommand("Tab " + "\""+newvalue+"\"" + "\n")
+        self.SendCommand("Tab " + "\"" + newvalue + "\"" + "\n")
         return None
 
     def Clear(self):
@@ -149,6 +151,7 @@ class BranchApp(AutomationExtender):
         self.SendCommand("Stop\n")
         return None
 
+
 # ================================ #
 
 
@@ -164,15 +167,15 @@ class BranchPatt(AutomationExtender):
 
     def getFile(self, index: int) -> str:
         """Get User pattern filename[] """
-        return self.QueryResponse("File["+str(index)+"]?\n")
+        return self.QueryResponse("File[" + str(index) + "]?\n")
 
     def getFolder(self) -> str:
         """Get Current folder """
         return self.QueryResponse("Folder?\n")
 
-    def setFolder(self, newvalue: str) :
+    def setFolder(self, newvalue: str):
         """Set Current folder """
-        self.SendCommand("Folder " + "\""+newvalue+"\"" + "\n")
+        self.SendCommand("Folder " + "\"" + newvalue + "\"" + "\n")
         return None
 
     class GuiCh(Enum):
@@ -184,7 +187,7 @@ class BranchPatt(AutomationExtender):
         """Get enum Gui channel """
         return self.GuiCh(self.QueryResponse_enum(self.GuiCh, "GuiCh?\n"))
 
-    def setGuiCh(self, newvalue: GuiCh) :
+    def setGuiCh(self, newvalue: GuiCh):
         """Set enum Gui channel """
         self.SendCommand("GuiCh " + newvalue.value + "\n")
         return None
@@ -199,7 +202,7 @@ class BranchPatt(AutomationExtender):
         """Get enum Gui number format """
         return self.GuiFormat(self.QueryResponse_enum(self.GuiFormat, "GuiFormat?\n"))
 
-    def setGuiFormat(self, newvalue: GuiFormat) :
+    def setGuiFormat(self, newvalue: GuiFormat):
         """Set enum Gui number format """
         self.SendCommand("GuiFormat " + newvalue.value + "\n")
         return None
@@ -208,7 +211,7 @@ class BranchPatt(AutomationExtender):
         """Get Gui number of symbols """
         return self.QueryResponse_int("GuiSymbols?\n")
 
-    def setGuiSymbols(self, newvalue:int) :
+    def setGuiSymbols(self, newvalue: int):
         """Set Gui number of symbols """
         self.SendCommand("GuiSymbols " + str(newvalue) + "\n")
         return None
@@ -217,7 +220,7 @@ class BranchPatt(AutomationExtender):
         """Get Gui bits per symbol """
         return self.QueryResponse_int("GuiSymbolSize?\n")
 
-    def setGuiSymbolSize(self, newvalue:int) :
+    def setGuiSymbolSize(self, newvalue: int):
         """Set Gui bits per symbol """
         self.SendCommand("GuiSymbolSize " + str(newvalue) + "\n")
         return None
@@ -231,27 +234,27 @@ class BranchPatt(AutomationExtender):
         """Get enum Gui file type """
         return self.GuiType(self.QueryResponse_enum(self.GuiType, "GuiType?\n"))
 
-    def setGuiType(self, newvalue: GuiType) :
+    def setGuiType(self, newvalue: GuiType):
         """Set enum Gui file type """
         self.SendCommand("GuiType " + newvalue.value + "\n")
         return None
 
     def getRestoreBitShift(self, index: int) -> int:
         """Get Restore bit shift[] """
-        return self.QueryResponse_int("RestoreBitShift["+str(index)+"]?\n")
+        return self.QueryResponse_int("RestoreBitShift[" + str(index) + "]?\n")
 
-    def setRestoreBitShift(self, index: int, newvalue:int) :
+    def setRestoreBitShift(self, index: int, newvalue: int):
         """Set Restore bit shift[] """
-        self.SendCommand("RestoreBitShift["+str(index)+"] " + str(newvalue) + "\n")
+        self.SendCommand("RestoreBitShift[" + str(index) + "] " + str(newvalue) + "\n")
         return None
 
     def getRestoreFile(self, index: int) -> str:
         """Get Restore user pattern files[] """
-        return self.QueryResponse("RestoreFile["+str(index)+"]?\n")
+        return self.QueryResponse("RestoreFile[" + str(index) + "]?\n")
 
-    def setRestoreFile(self, index: int, newvalue: str) :
+    def setRestoreFile(self, index: int, newvalue: str):
         """Set Restore user pattern files[] """
-        self.SendCommand("RestoreFile["+str(index)+"] " + "\""+newvalue+"\"" + "\n")
+        self.SendCommand("RestoreFile[" + str(index) + "] " + "\"" + newvalue + "\"" + "\n")
         return None
 
     def getRootFolder(self) -> str:
@@ -278,7 +281,7 @@ class BranchPatt(AutomationExtender):
 
     def Copy(self, fromPath: str, toPath: str):
         """Method for File copy."""
-        self.SendCommand("Copy \""+fromPath+"\" \""+toPath+"\"\n")
+        self.SendCommand("Copy \"" + fromPath + "\" \"" + toPath + "\"\n")
         return None
 
     def Delete(self, filePath: str):
@@ -294,7 +297,7 @@ class BranchPatt(AutomationExtender):
     def Deploy(self, ch: PatternChannel, filename: str, bitShift: int = 0):
         """Method for Deploy pattern"""
 
-        self.SendCommand("Deploy "+ch.value+" "+str(bitShift)+" \"" + filename + "\"\n")
+        self.SendCommand("Deploy " + ch.value + " " + str(bitShift) + " \"" + filename + "\"\n")
         return None
 
     def Fetch(self, filePath: str) -> bytes:
@@ -304,7 +307,8 @@ class BranchPatt(AutomationExtender):
 
     def FetchDir(self, pathName: str, optionalType: GuiType = GuiType.All) -> str:
         """Binary string response method for Fetch directory. """
-        return str(self.QueryBinaryResponse("FetchDir \""+pathName+"\" " + str(optionalType)+"\n"), encoding='utf-8')
+        return str(self.QueryBinaryResponse("FetchDir \"" + pathName + "\" " + str(optionalType) + "\n"),
+                   encoding='utf-8')
 
     def Grab(self, ch: PatternChannel, symSize: int, fmt: GuiFormat, filePath: str):
         """Method for Grab pattern. """
@@ -319,7 +323,7 @@ class BranchPatt(AutomationExtender):
 
     def Rename(self, fromPath: str, toName: str):
         """Method for File rename."""
-        self.SendCommand("Rename \""+fromPath+"\" \""+toName+"\"\n")
+        self.SendCommand("Rename \"" + fromPath + "\" \"" + toName + "\"\n")
         return None
 
     def Save(self, filePath: str):
@@ -331,6 +335,7 @@ class BranchPatt(AutomationExtender):
         """Method for Verify file."""
         self.SendCommand("Verify \"" + filePath + "\"\n")
         return None
+
 
 # ================================ #
 
@@ -373,9 +378,9 @@ class BranchSys(AutomationExtender):
         """Get System nickname """
         return self.QueryResponse("Nickname?\n")
 
-    def setNickname(self, newvalue: str) :
+    def setNickname(self, newvalue: str):
         """Set System nickname """
-        self.SendCommand("Nickname " + "\""+newvalue+"\"" + "\n")
+        self.SendCommand("Nickname " + "\"" + newvalue + "\"" + "\n")
         return None
 
     def getPmuTempC(self) -> float:
@@ -390,7 +395,7 @@ class BranchSys(AutomationExtender):
         """Get Show Settings """
         return self.QueryResponse_bool("ShowSettings?\n")
 
-    def setShowSettings(self, newvalue:bool) :
+    def setShowSettings(self, newvalue: bool):
         """Set Show Settings """
         self.SendCommand("ShowSettings " + ("T" if newvalue else "F") + "\n")
         return None
@@ -398,6 +403,7 @@ class BranchSys(AutomationExtender):
     def getUsers(self) -> int:
         """Get Number of users """
         return self.QueryResponse_int("Users?\n")
+
 
 # ================================ #
 
@@ -415,7 +421,7 @@ class BranchSyn(AutomationExtender):
         """Get Internal clock rate """
         return self.QueryResponse_float("ClockRate?\n")
 
-    def setClockRateGHz(self, newvalue:float) :
+    def setClockRateGHz(self, newvalue: float):
         """Set Internal clock rate """
         self.SendCommand("ClockRate " + str(newvalue) + "\n")
         return None
@@ -424,10 +430,9 @@ class BranchSyn(AutomationExtender):
         """Get Doubled clock rate """
         return self.QueryResponse_float("DataRate?\n")
 
-    def setDataRateGbps(self, newvalue:float) :
+    def setDataRateGbps(self, newvalue: float):
         """Set Doubled clock rate """
         self.SendCommand("DataRate " + str(newvalue) + "\n")
-
 
         return None
 
@@ -439,11 +444,11 @@ class BranchSyn(AutomationExtender):
 
     def getDest(self, index: int) -> Dest:
         """Get enum Clock Destinations[] """
-        return self.Dest(self.QueryResponse_enum(self.Dest, "Dest["+str(index)+"]?\n"))
+        return self.Dest(self.QueryResponse_enum(self.Dest, "Dest[" + str(index) + "]?\n"))
 
-    def setDest(self, index: int, newvalue: Dest) :
+    def setDest(self, index: int, newvalue: Dest):
         """Set enum Clock Destinations[] """
-        self.SendCommand("Dest["+str(index)+"] " + newvalue.value + "\n")
+        self.SendCommand("Dest[" + str(index) + "] " + newvalue.value + "\n")
         return None
 
     class DivCalib(Enum):
@@ -456,7 +461,7 @@ class BranchSyn(AutomationExtender):
         """Get enum Output clock divider """
         return self.DivCalib(self.QueryResponse_enum(self.DivCalib, "DivCalib?\n"))
 
-    def setDivCalib(self, newvalue: DivCalib) :
+    def setDivCalib(self, newvalue: DivCalib):
         """Set enum Output clock divider """
         self.SendCommand("DivCalib " + newvalue.value + "\n")
         return None
@@ -471,7 +476,7 @@ class BranchSyn(AutomationExtender):
         """Get enum Output clock divider """
         return self.DivOutput(self.QueryResponse_enum(self.DivOutput, "DivOutput?\n"))
 
-    def setDivOutput(self, newvalue: DivOutput) :
+    def setDivOutput(self, newvalue: DivOutput):
         """Set enum Output clock divider """
         self.SendCommand("DivOutput " + newvalue.value + "\n")
         return None
@@ -488,11 +493,11 @@ class BranchSyn(AutomationExtender):
 
     def getLed(self, index: int) -> Led:
         """Get enum LED State[] """
-        return self.Led(self.QueryResponse_enum(self.Led, "Led["+str(index)+"]?\n"))
+        return self.Led(self.QueryResponse_enum(self.Led, "Led[" + str(index) + "]?\n"))
 
-    def setLed(self, index: int, newvalue: Led) :
+    def setLed(self, index: int, newvalue: Led):
         """Set enum LED State[] """
-        self.SendCommand("Led["+str(index)+"] " + newvalue.value + "\n")
+        self.SendCommand("Led[" + str(index) + "] " + newvalue.value + "\n")
         return None
 
     def getLockDetect(self) -> bool:
@@ -503,7 +508,7 @@ class BranchSyn(AutomationExtender):
         """Get Operating clock rate, -1 means not set """
         return self.QueryResponse_float("OpRate?\n")
 
-    def setOpRateGHz(self, newvalue:float) :
+    def setOpRateGHz(self, newvalue: float):
         """Set Operating clock rate, -1 means not set """
         self.SendCommand("OpRate " + str(newvalue) + "\n")
         return None
@@ -516,7 +521,7 @@ class BranchSyn(AutomationExtender):
         """Get enum 100 MHz Reference Source setting """
         return self.RefSource(self.QueryResponse_enum(self.RefSource, "RefSource?\n"))
 
-    def setRefSource(self, newvalue: RefSource) :
+    def setRefSource(self, newvalue: RefSource):
         """Set enum 100 MHz Reference Source setting """
         self.SendCommand("RefSource " + newvalue.value + "\n")
         return None
@@ -528,17 +533,18 @@ class BranchSyn(AutomationExtender):
 
     def getSource(self, index: int) -> Source:
         """Get enum Clock Sources[] """
-        return self.Source(self.QueryResponse_enum(self.Source, "Source["+str(index)+"]?\n"))
+        return self.Source(self.QueryResponse_enum(self.Source, "Source[" + str(index) + "]?\n"))
 
-    def setSource(self, index: int, newvalue: Source) :
+    def setSource(self, index: int, newvalue: Source):
         """Set enum Clock Sources[] """
-        self.SendCommand("Source["+str(index)+"] " + newvalue.value + "\n")
+        self.SendCommand("Source[" + str(index) + "] " + newvalue.value + "\n")
         return None
 
     def Map(self, clockSource: Source, clockDest: Dest):
         """Method for Map clock source to destination(s). """
         self.SendCommand("Map " + str(clockSource) + " " + str(clockDest) + "\n")
         return None
+
 
 # ================================ #
 
@@ -557,43 +563,43 @@ class BranchFile(AutomationExtender):
         """Get Current Directory """
         return self.QueryResponse("Dir?\n")
 
-    def setDir(self, newvalue: str) :
+    def setDir(self, newvalue: str):
         """Set Current Directory """
-        self.SendCommand("Dir " + "\""+newvalue+"\"" + "\n")
+        self.SendCommand("Dir " + "\"" + newvalue + "\"" + "\n")
         return None
 
     def Checksum(self, filepath: str) -> str:
         """Response method for Checksum File."""
-        return self.QueryResponse("Checksum " + "\""+filepath+"\"" + "\n")
+        return self.QueryResponse("Checksum " + "\"" + filepath + "\"" + "\n")
 
-    def Copy(self,frompath: str, topath: str):
+    def Copy(self, frompath: str, topath: str):
         """Method for Copy File."""
         self.SendCommand("Copy " + "\"" + frompath + "\"" + " " + "\"" + topath + "\"" + "\n")
         return None
 
     def Del(self, filepath: str):
         """Method for Delete File."""
-        self.SendCommand("Del " + "\""+filepath+"\"" + "\n")
+        self.SendCommand("Del " + "\"" + filepath + "\"" + "\n")
         return None
 
     def Exists(self, filepath: str) -> str:
         """Response method for File Exists."""
-        return self.QueryResponse("Exists " + "\""+filepath+"\"" + "\n")
+        return self.QueryResponse("Exists " + "\"" + filepath + "\"" + "\n")
 
     def Fetch(self, filepath: str) -> bytes:
         """Binary response method for Fetch File."""
-        return self.QueryBinaryResponse("Fetch " + "\""+filepath+"\"" + "\n")
+        return self.QueryBinaryResponse("Fetch " + "\"" + filepath + "\"" + "\n")
 
     def Length(self, filepath: str):
         """Method for File Length. """
-        self.SendCommand("Length " + "\""+filepath+"\"" + "\n")
+        self.SendCommand("Length " + "\"" + filepath + "\"" + "\n")
         return None
 
-    def List(self,dirpath: str, otheroptions: str = "") -> str:
+    def List(self, dirpath: str, otheroptions: str = "") -> str:
         """Binary string response method for List Directory."""
-        return str(self.QueryBinaryResponse("List " + "\""+dirpath+"\" " + otheroptions + "\n"), encoding='utf-8')
+        return str(self.QueryBinaryResponse("List " + "\"" + dirpath + "\" " + otheroptions + "\n"), encoding='utf-8')
 
-    def Rename(self,frompath: str, topath: str):
+    def Rename(self, frompath: str, topath: str):
         """Method for Rename File."""
         self.SendCommand("Rename " + "\"" + frompath + "\"" + " " + "\"" + topath + "\"" + "\n")
         return None
