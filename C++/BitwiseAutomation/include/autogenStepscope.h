@@ -781,7 +781,9 @@ class BranchTdrChart: /* Chart View */
 	{
 		Manual,
 		AutoY,
-		AutoX
+		AutoX,
+		S11Window  /* 3-15-2024 */
+
 	};
 	static const char *Cursor1_Strings[];
 
@@ -792,7 +794,8 @@ class BranchTdrChart: /* Chart View */
 	{
 		Manual,
 		AutoY,
-		AutoX
+		AutoX,
+		S11Window /* 3-15-2024 */
 	};
 	static const char *Cursor2_Strings[];
 
@@ -845,6 +848,24 @@ class BranchTdrChart: /* Chart View */
 	double getWidthPS(); /* Chart Width */
 	void setWidthPS( double newValue);
 };
+    /* ================================ */
+
+class BranchTdrWindow: /* Region of interest window */ /* 03-15-2024 */
+    public AutomationExtender
+{
+    public:
+    BranchTdrWindow(AutomationInterface *baseDevice,const char *prefix) :
+        AutomationExtender(baseDevice,prefix) {}
+    virtual ~BranchTdrWindow() {}
+
+    bool getEnabled(); /* Enable using Region of interest window */
+    void setEnabled( bool newValue);
+    double getRangePS(int index); /* Region of interest window range */
+    void setRangePS(int index, double newValue);
+    void setRangePS(double from_value, double to_value );
+    void Clear(); /* Clear region of interest window range, Todo:add arguments */
+    void Fit(); /* Fit region of interest window range to current acquisition, Todo:add arguments */
+};
 
 /* ================================ */
 
@@ -855,7 +876,8 @@ class BranchTdr: /* TDR Application */
 	BranchTdr(AutomationInterface *baseDevice,const char *prefix) :
 		AutomationExtender(baseDevice,prefix),
 		Chart(this,"Chart:"),
-		Cfg(this,"Cfg:")
+		Cfg(this,"Cfg:"),
+		Window(this,"Window:")  /* 03-15-2024 */
 		{}
 	virtual ~BranchTdr() {}
 
@@ -916,6 +938,7 @@ class BranchTdr: /* TDR Application */
 	public:
 	BranchTdrChart Chart;
 	BranchTdrCfg Cfg;
+	BranchTdrWindow Window; /* 03-15-2024 */
 };
 
 /* ================================ */

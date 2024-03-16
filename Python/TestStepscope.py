@@ -33,7 +33,8 @@ from pyBitwiseAutomation import *
 import sys
 import math
 
-def test_Stepscope(ip_address: str, stopOnError: bool, run: int ):
+
+def test_Stepscope(ip_address: str, stopOnError: bool, run: int):
     Stepscope = StepscopeDevice()
     try:
         Stepscope.Connect(ip_address)
@@ -41,9 +42,9 @@ def test_Stepscope(ip_address: str, stopOnError: bool, run: int ):
         serialNumber = Stepscope.Const.getSN()
 
         print("Stepscope TEST")
-        print("IP Address........"+ip_address)
-        print("Serial number....."+serialNumber)
-        print("Build............."+Stepscope.Sys.getBuild())
+        print("IP Address........" + ip_address)
+        print("Serial number....." + serialNumber)
+        print("Build............." + Stepscope.Sys.getBuild())
         print("StopOnError......." + str(stopOnError))
 
         Stepscope.Stop()
@@ -52,6 +53,13 @@ def test_Stepscope(ip_address: str, stopOnError: bool, run: int ):
         Stepscope.Pulse.setAmplMV(300.0)
         Stepscope.Pulse.setMode(BranchPulse.Mode.Local)
         Stepscope.Pulse.setLength(8)
+
+        Stepscope.Tdr.Window.Enabled = False    # 03-15-2024 (begin)
+        Stepscope.Tdr.Window.setRangePS(0.0, 1e6)
+        value_from = Stepscope.Tdr.Window.getRangePS(0)
+        value_to = Stepscope.Tdr.Window.getRangePS(1)
+        print("TDR Window range is set to: " + str(value_from) + " - " + str(value_to))
+        Stepscope.Tdr.Window.Clear()   # 03-15-2024 (end)
 
         Stepscope.App.setTab("STEP")
 
@@ -65,11 +73,11 @@ def test_Stepscope(ip_address: str, stopOnError: bool, run: int ):
 
         data = Stepscope.Step.getBinary()
 
-        if len(data)>0:
+        if len(data) > 0:
             minimum = data[0]
             maximum = data[0]
 
-            for n in range(1,len(data)):
+            for n in range(1, len(data)):
                 if data[n] < minimum:
                     minimum = data[n]
                 if data[n] > maximum:
@@ -77,7 +85,7 @@ def test_Stepscope(ip_address: str, stopOnError: bool, run: int ):
 
             print("Minimum....." + "{:.2f}".format(minimum))
             print("Maximum....." + "{:.2f}".format(maximum))
-            print("Amplitude..." + "{:.2f}".format(maximum-minimum))
+            print("Amplitude..." + "{:.2f}".format(maximum - minimum))
         else:
             print("No step response data returned")
             pass
@@ -88,7 +96,10 @@ def test_Stepscope(ip_address: str, stopOnError: bool, run: int ):
 
 
 if __name__ == '__main__':
-    print("TestStepscope, Version 1.1\n")
+    print("TestStepscope, Version 1.2\n")
+
+    # Version 1.1 ...            ... original
+    # Version 1.2 ... 03-15-2024 ... add "Window" features
 
     stopOnError = False
     ipCount = 0
@@ -96,22 +107,22 @@ if __name__ == '__main__':
     ip = [32]
 
     i = 1
-    while i<len(sys.argv):
-        if sys.argv[i] == "-stop" :
+    while i < len(sys.argv):
+        if sys.argv[i] == "-stop":
             stopOnError = True
         elif sys.argv[i] == "-repeat":
             repeat = int(sys.argv[i + 1])
-            i = i+1
-        elif ipCount<32:
+            i = i + 1
+        elif ipCount < 32:
             ip[ipCount] = sys.argv[i]
-            ipCount = ipCount+1
+            ipCount = ipCount + 1
         else:
-            print( "Too many IP addresses, maximum is 32")
+            print("Too many IP addresses, maximum is 32")
             exit()
 
-        i = i+1
+        i = i + 1
 
-    if ipCount == 0 or repeat < 1 :
+    if ipCount == 0 or repeat < 1:
         print("Usage:  TestStepscope [options] IP0 IP1 ... IPn")
         print("Options:  -stop ..... stop on first error")
         print("          -repeat N.. number of tests for each IP")
@@ -119,11 +130,10 @@ if __name__ == '__main__':
 
     try:
         for ip_address in ip:
-            for k in range(1,repeat+1):
-                test_Stepscope( ip_address, stopOnError, k)
+            for k in range(1, repeat + 1):
+                test_Stepscope(ip_address, stopOnError, k)
 
     except KeyboardInterrupt:
         print("\nCtrl-C encountered")
 
 # EOF
-

@@ -1851,6 +1851,7 @@ const char *BranchTdrChart::Cursor1_Strings[] =
     "Manual",
     "AutoY",
     "AutoX",
+    "S11Window",  /* 03-15-2024 */
     0
 };
 
@@ -1869,6 +1870,7 @@ const char *BranchTdrChart::Cursor2_Strings[] =
     "Manual",
     "AutoY",
     "AutoX",
+    "S11Window",  /* 03-15-2024 */
     0
 };
 
@@ -2008,6 +2010,46 @@ double BranchTdrChart::getWidthPS() /* Chart Width */
 void BranchTdrChart::setWidthPS(double newValue) /* Chart Width */
 {
     SendCommand("Width %lf\n",newValue);
+}
+
+/* ================================================================ */
+/* BranchTdrWindow ... 03-15-2024 */
+
+bool BranchTdrWindow::getEnabled() /* Enable using Region of interest window */
+{
+    return QueryResponse_bool("Enabled?\n");
+}
+
+void BranchTdrWindow::setEnabled(bool newValue) /* Enable using Region of interest window */
+{
+    SendCommand("Enabled %c\n",newValue?'T':'F');
+}
+
+double BranchTdrWindow::getRangePS(int index) /* Region of interest window range */
+{
+    if(index<0||index>=2) throw "[Index_Out_Of_Range]";
+    return QueryResponse_double("Range[%d]?\n",index);
+}
+
+void BranchTdrWindow::setRangePS(int index,double newValue) /* Region of interest window range */
+{
+    if(index<0||index>=2) throw "[Index_Out_Of_Range]";
+    SendCommand("Range[%d] %lf\n",index,newValue);
+}
+
+void BranchTdrWindow::setRangePS(double from_value, double to_value )
+{
+    SendCommand("Range { %lf, %lf }\n",from_value, to_value);
+}
+
+void BranchTdrWindow::Clear() /* Clear region of interest window range, Todo:add arguments */
+{
+    SendCommand("Clear\n");
+}
+
+void BranchTdrWindow::Fit() /* Fit region of interest window range to current acquisition, Todo:add arguments */
+{
+    SendCommand("Fit\n");
 }
 
 /* ================================================================ */
