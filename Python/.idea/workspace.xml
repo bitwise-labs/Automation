@@ -30,16 +30,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a8c4ec53-24da-45fa-99bc-831ed779b362" name="Default Changelist" comment="make simple change in python code">
-      <change beforePath="$PROJECT_DIR$/../C++/BitwiseAutomation/.cproject" beforeDir="false" afterPath="$PROJECT_DIR$/../C++/BitwiseAutomation/.cproject" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../C++/BitwiseAutomation/.settings/language.settings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../C++/BitwiseAutomation/.settings/language.settings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../C++/BitwiseAutomation/include/autogenStepscope.h" beforeDir="false" afterPath="$PROJECT_DIR$/../C++/BitwiseAutomation/include/autogenStepscope.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../C++/BitwiseAutomation/src/autogenStepscope.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../C++/BitwiseAutomation/src/autogenStepscope.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../C++/TestPega/.cproject" beforeDir="false" afterPath="$PROJECT_DIR$/../C++/TestPega/.cproject" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../C++/TestPega/.settings/language.settings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../C++/TestPega/.settings/language.settings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../C++/TestPela/.cproject" beforeDir="false" afterPath="$PROJECT_DIR$/../C++/TestPela/.cproject" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../C++/TestPela/.settings/language.settings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../C++/TestPela/.settings/language.settings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../C++/TestStepscope/.cproject" beforeDir="false" afterPath="$PROJECT_DIR$/../C++/TestStepscope/.cproject" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../C++/TestStepscope/.settings/language.settings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../C++/TestStepscope/.settings/language.settings.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TestStepscope.py" beforeDir="false" afterPath="$PROJECT_DIR$/TestStepscope.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pyBitwiseAutomation/autogenStepscope.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyBitwiseAutomation/autogenStepscope.py" afterDir="false" />

@@ -2025,19 +2025,19 @@ void BranchTdrWindow::setEnabled(bool newValue) /* Enable using Region of intere
     SendCommand("Enabled %c\n",newValue?'T':'F');
 }
 
-double BranchTdrWindow::getRangePS(int index) /* Region of interest window range */
+double BranchTdrWindow::getRange(int index) /* Region of interest window range */
 {
     if(index<0||index>=2) throw "[Index_Out_Of_Range]";
     return QueryResponse_double("Range[%d]?\n",index);
 }
 
-void BranchTdrWindow::setRangePS(int index,double newValue) /* Region of interest window range */
+void BranchTdrWindow::setRange(int index,double newValue) /* Region of interest window range */
 {
     if(index<0||index>=2) throw "[Index_Out_Of_Range]";
     SendCommand("Range[%d] %lf\n",index,newValue);
 }
 
-void BranchTdrWindow::setRangePS(double from_value, double to_value )
+void BranchTdrWindow::setRange(double from_value, double to_value )
 {
     SendCommand("Range { %lf, %lf }\n",from_value, to_value);
 }

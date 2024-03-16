@@ -1739,16 +1739,16 @@ class BranchTdrWindow(AutomationExtender):  # 3-15-2024
         self.SendCommand("Enabled " + ("T" if newvalue else "F") + "\n")
         return None
 
-    def getRangePS(self, index: int) -> float:
+    def getRange(self, index: int) -> float:
         """Get Region of interest window range[] """
         return self.QueryResponse_float("Range[" + str(index) + "]?\n")
 
-    def setRangePS(self, index: int, newvalue: float):
+    def setRange(self, index: int, newvalue: float):
         """Set Region of interest window range[] """
         self.SendCommand("Range[" + str(index) + "] " + str(newvalue) + "\n")
         return None
 
-    def setRangePS(self, from_new_value: float, to_new_value: float):
+    def setRange(self, from_new_value: float, to_new_value: float):
         """Set Region of interest window range[] """
         self.SendCommand("Range {" + str(from_new_value) + ", " + str(to_new_value) + " }\n")
         return None

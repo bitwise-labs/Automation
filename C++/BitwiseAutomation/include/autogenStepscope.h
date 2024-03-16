@@ -860,9 +860,9 @@ class BranchTdrWindow: /* Region of interest window */ /* 03-15-2024 */
 
     bool getEnabled(); /* Enable using Region of interest window */
     void setEnabled( bool newValue);
-    double getRangePS(int index); /* Region of interest window range */
-    void setRangePS(int index, double newValue);
-    void setRangePS(double from_value, double to_value );
+    double getRange(int index); /* Region of interest window range */
+    void setRange(int index, double newValue);
+    void setRange(double from_value, double to_value );
     void Clear(); /* Clear region of interest window range, Todo:add arguments */
     void Fit(); /* Fit region of interest window range to current acquisition, Todo:add arguments */
 };

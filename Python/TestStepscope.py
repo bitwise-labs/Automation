@@ -55,9 +55,9 @@ def test_Stepscope(ip_address: str, stopOnError: bool, run: int):
         Stepscope.Pulse.setLength(8)
 
         Stepscope.Tdr.Window.Enabled = False    # 03-15-2024 (begin)
-        Stepscope.Tdr.Window.setRangePS(0.0, 1e6)
-        value_from = Stepscope.Tdr.Window.getRangePS(0)
-        value_to = Stepscope.Tdr.Window.getRangePS(1)
+        Stepscope.Tdr.Window.setRange(0.0, 1e6)
+        value_from = Stepscope.Tdr.Window.getRange(0)
+        value_to = Stepscope.Tdr.Window.getRange(1)
         print("TDR Window range is set to: " + str(value_from) + " - " + str(value_to))
         Stepscope.Tdr.Window.Clear()   # 03-15-2024 (end)
 

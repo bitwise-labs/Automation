@@ -113,9 +113,9 @@ void test_stepscope(char *ip_address, bool stopOnError, int run )
 	Stepscope.Pulse.setLength(8);
 
     Stepscope.Tdr.Window.setEnabled(false);    // 03-15-2024 (begin)
-    Stepscope.Tdr.Window.setRangePS(0.0, 1e6);
-    double value_from = Stepscope.Tdr.Window.getRangePS(0);
-    double value_to = Stepscope.Tdr.Window.getRangePS(1);
+    Stepscope.Tdr.Window.setRange(0.0, 1e6);
+    double value_from = Stepscope.Tdr.Window.getRange(0);
+    double value_to = Stepscope.Tdr.Window.getRange(1);
     printf("TDR Window range is set to: %lf - %lf\n", value_from, value_to );
     Stepscope.Tdr.Window.Clear();   // 03-15-2024 (end)
 
