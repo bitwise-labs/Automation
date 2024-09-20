@@ -43,6 +43,7 @@ def test_PegaStartup(ip_address: str, verboseFlag: bool = False, loopCount: int 
         print("IP Address........"+ip_address)
         print("Serial number....."+Pega.Const.getSN())
         print("Build............."+Pega.Sys.getBuild())
+        print("Architecture......" + Pega.Sys.getArchitecture())
         print("Loop.............."+str(loopCount))
         print("Verbose..........."+str(verboseFlag))
 

@@ -35,6 +35,7 @@ import re
 from pyBitwiseAutomation.SocketDevice import SocketDevice
 from pyBitwiseAutomation.autogenCommon import *
 
+
 class BitwiseDevice(SocketDevice):
     """Bitwise device class."""
 
@@ -44,35 +45,36 @@ class BitwiseDevice(SocketDevice):
         self.File = BranchFile(self, "File:")
         self.Sys = BranchSys(self, "Sys:")
         self.Const = BranchConst(self, "Const:")
+        self.Announce = BranchAnnounce(self, "Announce:")
 
     def __del__(self):
         super().__del__()
         return None
 
     # Override
-    def SendCommand(self, command: str ):
+    def SendCommand(self, command: str):
         """Send command (ending with '\n') to socket device, with error handling."""
 
-        super().SendCommand( "stc;"+command)
-        statusResponse = super().QueryResponse( "st?\n")
+        super().SendCommand("stc;" + command)
+        statusResponse = super().QueryResponse("st?\n")
 
-        if statusResponse.casefold() != "[none]".casefold() :
-            raise Exception("["+statusResponse+"]")
+        if statusResponse.casefold() != "[none]".casefold():
+            raise Exception("[" + statusResponse + "]")
 
         return None
 
-    #Override
-    def QueryResponse( self, command: str, maxLength:int = 4096 ) -> str:
+    # Override
+    def QueryResponse(self, command: str, maxLength: int = 4096) -> str:
         """Query response from command (ending with '\n') from socket device, with error handling."""
 
-        if not isinstance(command,str):
+        if not isinstance(command, str):
             raise Exception("[Command_Must_Be_String]")
 
-        if not isinstance(maxLength,int):
+        if not isinstance(maxLength, int):
             raise Exception("[MaxLen_Must_Be_Int]")
 
-        response = super().QueryResponse( "stc;"+command, maxLength)
-        statusResponse = super().QueryResponse( "st?\n")
+        response = super().QueryResponse("stc;" + command, maxLength)
+        statusResponse = super().QueryResponse("st?\n")
 
         if statusResponse.casefold() != "[none]".casefold():
             raise Exception("[" + statusResponse + "]")
@@ -90,11 +92,11 @@ class BitwiseDevice(SocketDevice):
         filename-only ... settings from file located in configuration folder
         """
 
-        super().SendCommand( "stc;"+"save \"" + configuration + "\"\n" )
-        super().SendCommand( "stc\n")
+        super().SendCommand("stc;" + "save \"" + configuration + "\"\n")
+        super().SendCommand("stc\n")
         return None
 
-    def RestoreConfiguration(self, configuration: str, waitToComplete:bool = True ):
+    def RestoreConfiguration(self, configuration: str, waitToComplete: bool = True):
         """Restore configuration file and optionally pause while operation completes.
 
         specifying configurations:
@@ -105,9 +107,9 @@ class BitwiseDevice(SocketDevice):
         filename-only ... settings from file located in configuration folder
         """
 
-        self.App.Stop() # just to make sure
+        self.App.Stop()  # just to make sure
 
-        super().SendCommand( "stc;"+"restore \"" + configuration + "\"\n" )
+        super().SendCommand("stc;" + "restore \"" + configuration + "\"\n")
 
         if waitToComplete:
             self.WaitForRestoreToComplete()
@@ -126,7 +128,7 @@ class BitwiseDevice(SocketDevice):
             now = SocketDevice.timestamp()
 
             if self.getDebugging():
-                print("Restoring configuration " + "{:.1f}".format(now - begin_time) )
+                print("Restoring configuration " + "{:.1f}".format(now - begin_time))
 
             response = super().QueryResponse("inprogress\n")
             if response == "F" or response == "0":
@@ -135,10 +137,10 @@ class BitwiseDevice(SocketDevice):
         if now >= timeout:
             raise Exception("[Timeout_Restoring_Configuration]")
 
-        super().SendCommand( "stc\n")
+        super().SendCommand("stc\n")
         return None
 
-    def getIsRunning(self) ->bool :
+    def getIsRunning(self) -> bool:
         response = self.QueryResponse("App:RunState?\n")
         if len(response) < 2:
             raise Exception("[Invalid_RunState_Response]")
@@ -212,8 +214,9 @@ class BitwiseDevice(SocketDevice):
         lines = string.split("\n")
         retn = None
         for tok in lines:
-            if tok.startswith(key+" ") or tok.startswith(key+"=") or tok.startswith(key+"\t") or tok.startswith(key+",") :
-                retn = tok[len(key)+1:]
+            if tok.startswith(key + " ") or tok.startswith(key + "=") or tok.startswith(key + "\t") or tok.startswith(
+                    key + ","):
+                retn = tok[len(key) + 1:]
 
         if retn == None:
             raise Exception("[Key_Not_Found]")
@@ -240,10 +243,10 @@ class BitwiseDevice(SocketDevice):
     # ============================================================================
     # ============================================================================
 
-    def fileXferBuffer(self, buffer_bytes: bytes, prefix: str = "" ):  # use prefix "Same" for retry
+    def fileXferBuffer(self, buffer_bytes: bytes, prefix: str = ""):  # use prefix "Same" for retry
         """Method for Transmit next buffer to device-requires count. """
         if len(buffer_bytes) == 0:
-            raise Exception("[Xfer"+prefix+"Buffer_Is_Empty]")
+            raise Exception("[Xfer" + prefix + "Buffer_Is_Empty]")
 
         cksum = 0
         for i in range(len(buffer_bytes)):
@@ -251,7 +254,8 @@ class BitwiseDevice(SocketDevice):
 
         cksum = cksum & 0xffffffff
 
-        super().SendCommand("stc; File:Xfer:" + prefix + "Buffer " + "{:.0f}".format(len(buffer_bytes))+" " + hex(cksum) + "\n")
+        super().SendCommand(
+            "stc; File:Xfer:" + prefix + "Buffer " + "{:.0f}".format(len(buffer_bytes)) + " " + hex(cksum) + "\n")
         super().Send(buffer_bytes)
 
         return None
@@ -260,10 +264,10 @@ class BitwiseDevice(SocketDevice):
         """Send file to device.  """
         # print("BitwiseDevice::SendFileAs src=[" + localfilepath + "], dest=[" + destinationfilepath + "]")
 
-        if len(localfilepath)==0 :
+        if len(localfilepath) == 0:
             raise Exception("[Local_Filename_Is_Missing]")
 
-        if len(destinationfilepath)==0 :
+        if len(destinationfilepath) == 0:
             raise Exception("[Destination_Filename_Is_Missing]")
 
         dt = datetime.datetime.fromtimestamp(os.path.getmtime(localfilepath))
@@ -281,7 +285,7 @@ class BitwiseDevice(SocketDevice):
 
                 retry = 0
                 while retry < 3 and status == "[Checksum_Error]":
-                    self.fileXferBuffer(byte_buffer,"Same")
+                    self.fileXferBuffer(byte_buffer, "Same")
                     status = super().QueryResponse("st?\n")
                     retry = retry + 1
 
@@ -303,14 +307,14 @@ class BitwiseDevice(SocketDevice):
         finally:
             f.close()
 
-    def ReceiveFileAs(self, sourceFilePath: str, localFilePath: str ):
+    def ReceiveFileAs(self, sourceFilePath: str, localFilePath: str):
         """Receive file from device.  Needs testing. """
         # print("BitwiseDevice::SendFileAs src=[" + sourceFilePath + "], localdest=[" + localFilePath + "]")
 
-        if len(sourceFilePath)==0 :
+        if len(sourceFilePath) == 0:
             raise Exception("[Source_Filename_Is_Missing]")
 
-        if len(localFilePath)==0 :
+        if len(localFilePath) == 0:
             raise Exception("[Local_Filename_Is_Missing]")
 
         # returns with long string containing fields separated by space:
@@ -322,14 +326,14 @@ class BitwiseDevice(SocketDevice):
         buffer = super().QueryResponse('File:Xfer:Get "' + sourceFilePath + '"\n')
 
         n = 0
-        for n in range(1,len(buffer)):
-            if buffer[n] == '"' :
+        for n in range(1, len(buffer)):
+            if buffer[n] == '"':
                 break
 
-        if buffer[0] != '"' or buffer[n] != '"' :
+        if buffer[0] != '"' or buffer[n] != '"':
             raise Exception("[Invalid_Response_From_Get_Command]")
 
-        sevenNumbers = re.split("[0-9]+",buffer[n+1:])
+        sevenNumbers = re.split("[0-9]+", buffer[n + 1:])
         if len(sevenNumbers) != 7:
             raise Exception("[Invalid_Response_Length_Date_Time]")
 
@@ -341,22 +345,22 @@ class BitwiseDevice(SocketDevice):
         minute = int(sevenNumbers[5])
         second = int(sevenNumbers[6])
 
-        f = open(localFilePath,"wb")
+        f = open(localFilePath, "wb")
         try:
 
-            totalTransferred=0
-            while totalTransferred<length:
+            totalTransferred = 0
+            while totalTransferred < length:
                 super().SendCommand("File:Xfer:Next\n")
                 headerBytes = super().Receive(12)
 
-                if len(headerBytes)!=12:
+                if len(headerBytes) != 12:
                     raise Exception("[No_Response_From_Next_Command]")
 
                 smagic = int.from_bytes(headerBytes[0:4], byteorder="little")
                 sbytes = int.from_bytes(headerBytes[4:8], byteorder="little")
                 ssum = int.from_bytes(headerBytes[8:12], byteorder="little")
 
-                if smagic!=0x12345678:
+                if smagic != 0x12345678:
                     raise Exception("[Response_From_Next_Command_Is_Invalid]")
 
                 if sbytes == 0:
@@ -364,21 +368,21 @@ class BitwiseDevice(SocketDevice):
 
                 cnt = 0
                 xfer = bytes(sbytes)
-                while cnt<sbytes:
-                    transfer = super().Receive(sbytes-cnt)
-                    if len(transfer)==0:
+                while cnt < sbytes:
+                    transfer = super().Receive(sbytes - cnt)
+                    if len(transfer) == 0:
                         raise Exception("[Binary_Xfer_Unsuccessful]")
 
                     for i in range(len(transfer)):
-                        xfer[cnt+i]=transfer[i]
+                        xfer[cnt + i] = transfer[i]
                     cnt = cnt + len(transfer)
 
-                xsum=0
+                xsum = 0
                 for i in range(len(xfer)):
                     xsum = xsum + xfer[i]
 
-                retry=3
-                while xsum != ssum and retry>0:
+                retry = 3
+                while xsum != ssum and retry > 0:
                     super().SendCommand("File:Xfer:Resend\n")
 
                     headerBytes = super().Receive(12)
@@ -395,16 +399,16 @@ class BitwiseDevice(SocketDevice):
 
                     cnt = 0
                     xfer = bytes(sbytes)
-                    while cnt<sbytes:
-                        transfer = super().Receive(sbytes-cnt)
-                        if len(transfer)==0:
+                    while cnt < sbytes:
+                        transfer = super().Receive(sbytes - cnt)
+                        if len(transfer) == 0:
                             raise Exception("[Binary_Retry_Unsuccessful]")
 
                         for i in range(len(transfer)):
-                            xfer[cnt+i]=transfer[i]
+                            xfer[cnt + i] = transfer[i]
                         cnt = cnt + len(transfer)
 
-                    xsum=0
+                    xsum = 0
                     for i in range(len(xfer)):
                         xsum = xsum + xfer[i]
 
@@ -420,16 +424,16 @@ class BitwiseDevice(SocketDevice):
             f = None
 
             statbuf = os.stat(localFilePath)
-            timeinfo = time.localtime( statbuf.st_mtime )
-            timeinfo.tm_year = year # careful - c/c++ is years since 1900, but python is all 4 digits
-            timeinfo.tm_mon = month # careful - c/c++ is 0-11, but python is 1-12
+            timeinfo = time.localtime(statbuf.st_mtime)
+            timeinfo.tm_year = year  # careful - c/c++ is years since 1900, but python is all 4 digits
+            timeinfo.tm_mon = month  # careful - c/c++ is 0-11, but python is 1-12
             timeinfo.tm_mday = day
             timeinfo.tm_hour = hour
             timeinfo.tm_min = minute
             timeinfo.tm_sec = second
 
-            new_times = (time.mktime(timeinfo),time.mktime(timeinfo))
-            os.utime(localFilePath,new_times)
+            new_times = (time.mktime(timeinfo), time.mktime(timeinfo))
+            os.utime(localFilePath, new_times)
 
         except Exception as e:
             print("Problem receiving file: " + str(e))

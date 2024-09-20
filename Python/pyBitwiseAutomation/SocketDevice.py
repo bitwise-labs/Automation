@@ -40,6 +40,7 @@ class SocketDevice(AutomationInterface):
     """Socket device class."""
 
     Start = float(0.0)
+
     # Sock = None
     # IsConnected = False
 
@@ -59,7 +60,7 @@ class SocketDevice(AutomationInterface):
         now = time.time()
         if SocketDevice.Start == 0.0:
             SocketDevice.Start = now
-        return now-SocketDevice.Start
+        return now - SocketDevice.Start
 
     def getDebugging(self) -> bool:
         return self.Debugging
@@ -70,7 +71,7 @@ class SocketDevice(AutomationInterface):
     def getIsConnected(self) -> bool:
         return self.IsConnected
 
-    def Connect( self, ipaddress: str, dflt_port:int = 923 ) :
+    def Connect(self, ipaddress: str, dflt_port: int = 923):
         """Connect to socket device."""
         if self.IsConnected:
             self.Disconnect()
@@ -93,29 +94,29 @@ class SocketDevice(AutomationInterface):
             self.IsConnected = True
         except Exception as e:
             print("self.Sock.connect() exception is: ", e)
-            self.Sock=None
+            self.Sock = None
             raise Exception("[Unable_To_Connect]")
 
         return None
 
-    def Disconnect( self ):
+    def Disconnect(self):
         """Disconnect from socket device."""
         if self.IsConnected:
             self.Sock.shutdown(socket.SHUT_RDWR)
             self.Sock.close()
             self.IsConnected = False
-        self.Sock=None
+        self.Sock = None
         return None
 
-    def Receive( self, buflen:int ) -> bytes:
+    def Receive(self, buflen: int) -> bytes:
         """Receive up to maximum number of bytes from socket device."""
         if not self.IsConnected:
             raise Exception("[Not_Connected]")
         return self.Sock.recv(buflen)
 
-    def Send( self, buffer: bytes):
+    def Send(self, buffer: bytes):
         """Send specified number of bytes to socket device."""
-        if not isinstance(buffer,bytes) :
+        if not isinstance(buffer, bytes):
             raise Exception("[Invalid_Type]")
 
         if not self.IsConnected:
@@ -125,9 +126,9 @@ class SocketDevice(AutomationInterface):
 
         return None
 
-    def SendCommand(self, command: str ):
+    def SendCommand(self, command: str):
         """Send command (ending with '\n') to socket device."""
-        if not isinstance(command,str) :
+        if not isinstance(command, str):
             raise Exception("[Invalid_Command_Type]")
 
         if not self.IsConnected:
@@ -136,51 +137,51 @@ class SocketDevice(AutomationInterface):
         if self.Debugging:
             print("SendCommand() command: " + command)
 
-        self.Sock.send(bytes(command,'utf-8'))
+        self.Sock.send(bytes(command, 'utf-8'))
         return None
 
-    def QueryResponse( self, command: str, maxLength:int = 4096 ) -> str:
+    def QueryResponse(self, command: str, maxLength: int = 4096) -> str:
         """Query response from command (ending with '\n') from socket device."""
 
-        if not isinstance(command, str) :
+        if not isinstance(command, str):
             raise Exception("[Invalid_Command_Type]")
 
         if not self.IsConnected:
             raise Exception("[Not_Connected]")
 
         if self.Debugging:
-            print( "QueryResponse() query: " + command )
+            print("QueryResponse() query: " + command)
 
-        self.Sock.send( bytes(command, 'utf-8'))
+        self.Sock.send(bytes(command, 'utf-8'))
 
         tempBytes = self.Sock.recv(maxLength)
         tempString = str(tempBytes, encoding='utf-8')
 
-        if len(tempString)>0 and tempString[-1]=="\n" :
+        if len(tempString) > 0 and tempString[-1] == "\n":
             tempString = tempString[0:-1]
 
-        if len(tempString)>1 and tempString[0] == '"' and tempString[-1] == '"' :
+        if len(tempString) > 1 and tempString[0] == '"' and tempString[-1] == '"':
             tempString = tempString[1:-1]
 
         if self.Debugging:
-            print( "QueryResponse() response: " + tempString )
+            print("QueryResponse() response: " + tempString)
 
         return tempString
 
-    def QueryResponse_int(self, command: str ) -> int:
+    def QueryResponse_int(self, command: str) -> int:
         """Query integer response from command (ending with '\n') from socket device."""
         return int(self.QueryResponse(command))
 
-    def QueryResponse_bool(self, command: str ) -> bool:
+    def QueryResponse_bool(self, command: str) -> bool:
         """Query boolean response from command (ending with '\n') from socket device."""
         response = self.QueryResponse(command)
-        return bool(  len(response) > 0 and (response[0] == 'T' or response[0] == 't' or response[0] == '1') )
+        return bool(len(response) > 0 and (response[0] == 'T' or response[0] == 't' or response[0] == '1'))
 
-    def QueryResponse_float(self, command: str ) -> float:
+    def QueryResponse_float(self, command: str) -> float:
         """Query float response from command (ending with '\n') from socket device."""
-        return float(self.QueryResponse( command))
+        return float(self.QueryResponse(command))
 
-    def QueryResponse_enum(self, enumeration:Enum, command: str) -> Enum:
+    def QueryResponse_enum(self, enumeration: Enum, command: str) -> Enum:
         """Query integer index of enum response from command (ending with '\n') from socket device."""
 
         if not isinstance(command, str):
@@ -205,16 +206,16 @@ class SocketDevice(AutomationInterface):
 
         count = len(buffer)
 
-        self.Sock.send(bytes(command,'utf-8'))
+        self.Sock.send(bytes(command, 'utf-8'))
         self.Sock.send(count.to_bytes(4, byteorder='little'))
         self.Sock.send(buffer)
 
         return None
 
-    def QueryBinaryResponse(self, command: str) -> bytes :
+    def QueryBinaryResponse(self, command: str) -> bytes:
         """Query array of bytes response from command (ending with '\n') from socket device."""
 
-        if not isinstance(command, str) :
+        if not isinstance(command, str):
             raise Exception("[Invalid_Command_Type]")
 
         if not self.IsConnected:
@@ -232,10 +233,10 @@ class SocketDevice(AutomationInterface):
         count = int.from_bytes(countBytes, byteorder="little")
         return_value = bytes(0)
 
-        if count>0 :
+        if count > 0:
             total = 0
-            while total<count :
-                portion = self.Sock.recv(count-total)
+            while total < count:
+                portion = self.Sock.recv(count - total)
                 amount = len(portion)
 
                 if amount == 0:
@@ -253,12 +254,12 @@ class SocketDevice(AutomationInterface):
         if not (len(data) % 4) == 0:
             raise Exception("[Binary_Float_Size_Invalid]")
 
-        count = int(len(data)/4)
+        count = int(len(data) / 4)
         retn = []
 
-        if count>0 :
+        if count > 0:
             for i in range(count):
-                retn.append(float(struct.unpack_from("<f", data, i*4)[0]))
+                retn.append(float(struct.unpack_from("<f", data, i * 4)[0]))
         return retn
 
     def QueryBinaryResponse_int(self, command: str) -> list:
@@ -267,11 +268,11 @@ class SocketDevice(AutomationInterface):
         if not (len(data) % 4) == 0:
             raise Exception("[Binary_Float_Size_Invalid]")
 
-        count = int(len(data)/4)
+        count = int(len(data) / 4)
         retn = [count]
-        if count>0 :
+        if count > 0:
             for i in range(count):
-                retn.append(int(struct.unpack_from("<i", data, i*4)[0]))
+                retn.append(int(struct.unpack_from("<i", data, i * 4)[0]))
         return retn
 
     def QueryBinaryResponse_double(self, command: str) -> list:
@@ -280,11 +281,11 @@ class SocketDevice(AutomationInterface):
         if not (len(data) % 8) == 0:
             raise Exception("[Binary_Float_Size_Invalid]")
 
-        count = int(len(data)/8)
+        count = int(len(data) / 8)
         retn = [count]
-        if count>0 :
+        if count > 0:
             for i in range(count):
-                retn.append(float(struct.unpack_from("<d", data, i*8)[0]))
+                retn.append(float(struct.unpack_from("<d", data, i * 8)[0]))
         return retn
 
 # EOF

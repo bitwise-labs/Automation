@@ -44,6 +44,7 @@ def test_Pega(ip_address: str, stopOnError: bool, run: int, fromGHz: float = 1, 
         print("IP Address........"+ip_address)
         print("Serial number....."+serialNumber)
         print("Build............."+Pega.Sys.getBuild())
+        print("Architecture......" + Pega.Sys.getArchitecture())
         print("StopOnError......."+ str(stopOnError))
         print("From GHz.........."+str(fromGHz))
         print("To GHz............"+str(toGHz))

@@ -1,8 +1,8 @@
-# TestStepscope.py
+# TestSSCommands.py
 # ================================================================================
 # BOOST SOFTWARE LICENSE
 #
-# Copyright 2020 BitWise Laboratories Inc.
+# Copyright 2024 BitWise Laboratories Inc.
 # Original Author.......Jim Waschura
 # Contact...............info@bitwiselabs.com
 #
@@ -31,110 +31,352 @@
 
 from pyBitwiseAutomation import *
 import sys
-import math
+import keyboard
+
+# constants
+
+_CALIBRATION_RECORD_LENGTH = 16384
+_CALIBRATION_FILE_NAME = "[Temp]/ss_test_cal.csv"
+_TEMPORARY_FILE_NAME = "[Temp]/ss_test_temp.csv"
+_DEFAULT_CALIBRATION_RECORD_LENGTH = 16384
+_DEFAULT_CALIBRATION_FILE_NAME = "/home/stepscope/Share/Tables/Tdr_Cal.csv"
+
+# global variables
+
+_verbose_flag = False
+_stepscope = StepscopeDevice()
 
 
-def test_Stepscope(ip_address: str, stopOnError: bool, run: int):
-    Stepscope = StepscopeDevice()
+def unit_test_set_diff_mode(new_value: bool):
+    if _verbose_flag:
+        print("Perform test unit_test_set_diff_mode: set to " + str(new_value))
+
+    if _verbose_flag:
+        print("  set UseDiff to " + str(new_value))
+
+    _stepscope.Tdr.Cfg.setUseDiff(new_value)
+    read_back_diff_mode = _stepscope.Tdr.Cfg.getUseDiff()
+
+    if _verbose_flag:
+        print("  read back UseDiff is " + str(read_back_diff_mode))
+
+    if read_back_diff_mode != new_value:
+        raise Exception("Error setting UseDiff")
+
+    if _verbose_flag:
+        print("  test unit_test_set_diff_mode is successful")
+
+    return None
+
+
+def unit_test_calibration_steps():
+    if _verbose_flag:
+        print("Perform test unit_test_calibration_steps:")
+
+    # =====================================================================
+    # =====================================================================
+
+    # if _verbose_flag:
+    #     print("  clear existing calibration")
+    # _stepscope.Tdr.ClearCal()
+
+    if _verbose_flag:
+        print("  set CalReclen to " + str(_CALIBRATION_RECORD_LENGTH))
+
+    _stepscope.Tdr.Cfg.setCalReclen(_CALIBRATION_RECORD_LENGTH)
+    read_back_cal_reclen = _stepscope.Tdr.Cfg.getCalReclen()
+
+    if read_back_cal_reclen != _CALIBRATION_RECORD_LENGTH:
+        raise Exception("Error setting CalReclen")
+
+    # ==================================
+    # ==================================
+
+    print("  CALIBRATION STEP ONE:")
+    print("    To perform TDR Short calibration, connect a 0-Ohm short to the signal at the")
+    print("    Reference Plane.  For single-ended case, connect a 50-Ohm terminator")
+    print("    directly to the port you are not using.  For differential case, use two 0-Ohm")
+    print("    shorts located at the Reference Plane.")
+    print("  Press any key to continue, or 'q' to quit")
+
+    key = keyboard.read_key()
+    if key == 'q':
+        raise Exception("User cancel")
+
+    _stepscope.Tdr.RunShortCal()
+    start_time = time.time()
+    end_time = start_time + 90
+
     try:
-        Stepscope.Connect(ip_address)
+        print("  ", end="")
 
-        serialNumber = Stepscope.Const.getSN()
+        while time.time() < end_time:
+            print(".", end="")
 
-        print("Stepscope TEST")
-        print("IP Address........" + ip_address)
-        print("Serial number....." + serialNumber)
-        print("Build............." + Stepscope.Sys.getBuild())
-        print("Architecture......" + Stepscope.Sys.getArchitecture())
-        print("StopOnError......." + str(stopOnError))
+            state = _stepscope.Tdr.getCalState()
+            if state == BranchTdr.CalState.Fail:
+                print("Failure message: " + _stepscope.Announce.getMsg())
+                raise Exception("Short Calibration failed")
 
-        Stepscope.Stop()
-        Stepscope.RestoreConfiguration("[factory]")
+            elif state == BranchTdr.CalState.Success:
+                break
 
-        Stepscope.Pulse.setAmplMV(300.0)
-        Stepscope.Pulse.setMode(BranchPulse.Mode.Local)
-        Stepscope.Pulse.setLength(8)
-
-        Stepscope.Tdr.Window.Enabled = False    # 03-15-2024 (begin)
-        Stepscope.Tdr.Window.setRange(0.0, 1e6)
-        value_from = Stepscope.Tdr.Window.getRange(0)
-        value_to = Stepscope.Tdr.Window.getRange(1)
-        print("TDR Window range is set to: " + str(value_from) + " - " + str(value_to))
-        Stepscope.Tdr.Window.Clear()   # 03-15-2024 (end)
-
-        Stepscope.App.setTab("STEP")
-
-        Stepscope.Step.Cfg.setReclen(1024)
-
-        Stepscope.Step.Align(BranchStep.AlignMode.align0101)
-
-        Stepscope.WaitForRunToComplete(90)
-        Stepscope.App.Stop()
-        Stepscope.Step.Fit()
-
-        data = Stepscope.Step.getBinary()
-
-        if len(data) > 0:
-            minimum = data[0]
-            maximum = data[0]
-
-            for n in range(1, len(data)):
-                if data[n] < minimum:
-                    minimum = data[n]
-                if data[n] > maximum:
-                    maximum = data[n]
-
-            print("Minimum....." + "{:.2f}".format(minimum))
-            print("Maximum....." + "{:.2f}".format(maximum))
-            print("Amplitude..." + "{:.2f}".format(maximum - minimum))
-        else:
-            print("No step response data returned")
-            pass
+            time.sleep(0.250)
+    except Exception as e:
+        raise e
     finally:
-        Stepscope.Disconnect()
-        Stepscope = None
+        print("")
+
+    if time.time() >= end_time:
+        if _verbose_flag:
+            print("  Canceling Short Calibration")
+        _stepscope.Tdr.CancelCal()
+        raise Exception("Timeout during Short Calibration")
+
+    # ==================================
+    # ==================================
+
+    print("  CALIBRATION STEP TWO:")
+    print("    To perform TDR Termination calibration, connect a 50-Ohm terminator to the")
+    print("    signal at the Reference Plane.  For single-ended case, connect another 50-Ohm")
+    print("    terminator directly to the port you are not using.  For differential case, use")
+    print("    two 50-Ohm terminators located at the Reference Plane.")
+    print("  Press any key to continue, or 'q' to quit")
+
+    key = keyboard.read_key()
+    if key == 'q':
+        raise Exception("User cancel")
+
+    _stepscope.Tdr.RunTermCal()
+    start_time = time.time()
+    end_time = start_time + 90
+
+    try:
+        print("  ", end="")
+
+        while time.time() < end_time:
+            print(".", end="")
+
+            status = _stepscope.Tdr.getStatusMsg()
+            state = _stepscope.Tdr.getCalState()
+            if state == BranchTdr.CalState.Fail:
+                print("Failure message: " + _stepscope.Announce.getMsg())
+                raise Exception("Termination Calibration failed")
+
+            elif state == BranchTdr.CalState.Success:
+                break
+
+            time.sleep(0.250)
+    except Exception as e:
+        raise e
+    finally:
+        print("")
+
+    if time.time() >= end_time:
+        if _verbose_flag:
+            print("  Canceling Termination Calibration")
+        _stepscope.Tdr.CancelCal()
+        raise Exception("Timeout during Termination Calibration")
+
+    if _verbose_flag:
+        print("  test unit_test_calibration_steps is successful")
+
+    return None
+
+
+def unit_test_calibration_files():
+    if _verbose_flag:
+        print("Perform test unit_test_calibration_files:")
+
+    cal_file_path = _stepscope.Tdr.getCalFile()
+
+    if _verbose_flag:
+        print("  cal file is " + cal_file_path)
+
+    clean_up_temporary_folder()
+
+    if cal_file_path != "[none]":
+        if _verbose_flag:
+            print("  backup calibration file to " + _TEMPORARY_FILE_NAME)
+
+        _stepscope.File.Copy(cal_file_path, _TEMPORARY_FILE_NAME)
+        time.sleep(2.0)
+
+        if _verbose_flag:
+            print("  rename temporary file to " + _CALIBRATION_FILE_NAME)
+
+        _stepscope.File.Rename(_TEMPORARY_FILE_NAME, _CALIBRATION_FILE_NAME)
+
+        if _verbose_flag:
+            print("  load calibration file " + _CALIBRATION_FILE_NAME)
+
+        _stepscope.Tdr.setLoadCalFile(_CALIBRATION_FILE_NAME)
+
+        if _verbose_flag:
+            print("  retrieve calibration file and save locally in saved_cal_file.csv")
+
+        file_contents = _stepscope.File.Fetch(_CALIBRATION_FILE_NAME)
+        with open("saved_cal_file.csv", "w") as file:
+            file.write(file_contents.decode("utf-8"))
+
+    # ==================================
+    # ==================================
+
+    if _verbose_flag:
+        print("  test unit_test_calibration_files is successful")
+
+    return None
+
+
+def clean_up_temporary_folder():
+    if _verbose_flag:
+        print("  clean temporary folder")
+
+    if _stepscope.File.Exists(_TEMPORARY_FILE_NAME):
+        print("SAYS FILE EXISTS")
+
+        if _verbose_flag:
+            print("  delete existing " + _TEMPORARY_FILE_NAME)
+
+        _stepscope.File.Del(_TEMPORARY_FILE_NAME)
+
+    if _stepscope.File.Exists(_CALIBRATION_FILE_NAME):
+        if _verbose_flag:
+            print("  delete existing " + _CALIBRATION_FILE_NAME)
+
+        _stepscope.File.Del(_CALIBRATION_FILE_NAME)
+
+    return None
+
+
+def unit_test_perform_TDR():
+    if _verbose_flag:
+        print("Perform unit_test_perform_TDR:")
+
+    if _verbose_flag:
+        print("  set Pulser")
+
+    _stepscope.Pulse.setAmplMV(300.0)
+    _stepscope.Pulse.setMode(BranchPulse.Mode.Local)
+    _stepscope.Pulse.setLength(8)
+
+    _stepscope.Tdr.Window.Enabled = False  # 03-15-2024 (begin)
+    _stepscope.Step.Cfg.setReclen(1024)
+    _stepscope.App.Stop()
+
+    if _verbose_flag:
+        print("  reset the TDR view")
+    _stepscope.Tdr.Reset()
+
+    if _verbose_flag:
+        print("  run single and wait until completed")
+    _stepscope.RunSingle()
+    _stepscope.WaitForRunToComplete(90)
+
+    _stepscope.App.Stop()  # in case timeout had been reached
+
+    data = _stepscope.Tdr.getBinary()
+
+    if len(data) > 0:
+        minimum = data[0]
+        maximum = data[0]
+
+        for n in range(1, len(data)):
+            if data[n] < minimum:
+                minimum = data[n]
+            if data[n] > maximum:
+                maximum = data[n]
+
+        print("  RETRIEVE DATA SUMMARY:")
+        print("    Minimum.....{:.2f} mV".format(minimum))
+        print("    Maximum.....{:.2f} mV".format(maximum))
+        print("    Amplitude...{:.2f} mV".format(maximum - minimum))
+    else:
+        print("No Tdr data retrieved")
+        pass
+
+    if _verbose_flag:
+        print("  test unit_test_perform_TDR is successful")
+
     return None
 
 
 if __name__ == '__main__':
-    print("TestStepscope, Version 1.2\n")
+    print("TestSSCommands, Version 1.0")
 
-    # Version 1.1 ...            ... original
-    # Version 1.2 ... 03-15-2024 ... add "Window" features
+    # Version 1.0 ... 09-19-2024 ... Begin with list from QTECH
 
-    stopOnError = False
-    ipCount = 0
-    repeat = 1
-    ip = [32]
+    ip_address = ""
+    use_diff = False
+    debugging = False
 
     i = 1
     while i < len(sys.argv):
-        if sys.argv[i] == "-stop":
-            stopOnError = True
-        elif sys.argv[i] == "-repeat":
-            repeat = int(sys.argv[i + 1])
-            i = i + 1
-        elif ipCount < 32:
-            ip[ipCount] = sys.argv[i]
-            ipCount = ipCount + 1
+        if sys.argv[i] == "-diff":
+            use_diff = True
+        elif sys.argv[i] == "-dbg":
+            debugging = True
+        elif sys.argv[i] == "-verbose" or sys.argv[i] == "-v":
+            _verbose_flag = True
+        elif ip_address == "":
+            ip_address = sys.argv[i]
         else:
-            print("Too many IP addresses, maximum is 32")
+            print("Unknown command-line option: " + sys.argv[i])
             exit()
 
         i = i + 1
 
-    if ipCount == 0 or repeat < 1:
-        print("Usage:  TestStepscope [options] IP0 IP1 ... IPn")
-        print("Options:  -stop ..... stop on first error")
-        print("          -repeat N.. number of tests for each IP")
+    if ip_address == "":
+        print("Usage:  TestSSCommands [options] IP")
+        print("Options:  -diff ......use differential mode")
+        print("          -dbg .......set debugging on")
+        print("          -verbose ...set verbose output on (-v)")
         exit()
 
     try:
-        for ip_address in ip:
-            for k in range(1, repeat + 1):
-                test_Stepscope(ip_address, stopOnError, k)
+        if _verbose_flag:
+            print("Attempt to connect to ip address " + ip_address)
 
-    except KeyboardInterrupt:
-        print("\nCtrl-C encountered")
+        _stepscope.setDebugging(debugging)
+        _stepscope.Connect(ip_address)
+
+        print("Stepscope Information:")
+        print("  IP Address........" + ip_address)
+        print("  Serial number....." + _stepscope.Const.getSN())
+        print("  UseDiff..........." + str(use_diff))
+        print("  Build............." + _stepscope.Sys.getBuild())
+        print("  Protocol.........." + _stepscope.Sys.getProtoVer())
+        # print("  Architecture......" + _stepscope.Sys.getArchitecture())
+
+        _stepscope.Stop()
+        _stepscope.RestoreConfiguration("[factory]")
+        _stepscope.App.setTab("TDR")
+
+        unit_test_set_diff_mode(use_diff)
+        unit_test_calibration_steps()
+        unit_test_calibration_files()
+        unit_test_perform_TDR()
+
+        if _verbose_flag:
+            print("Exiting normally")
+
+    except Exception as e:
+        print(f"Error: {str(e)}")  # Get the exception message
+
+    finally:
+        if _stepscope.IsConnected:
+            if _verbose_flag:
+                print("  restore default CalReclen to " + str(_DEFAULT_CALIBRATION_RECORD_LENGTH))
+            _stepscope.Tdr.Cfg.setCalReclen(_DEFAULT_CALIBRATION_RECORD_LENGTH)
+
+            if _verbose_flag:
+                print("  restore default calibration file to " + _DEFAULT_CALIBRATION_FILE_NAME)
+            _stepscope.Tdr.setLoadCalFile(_DEFAULT_CALIBRATION_FILE_NAME)
+
+            clean_up_temporary_folder()
+
+            if _verbose_flag:
+                print("  disconnect")
+            _stepscope.Disconnect()
 
 # EOF

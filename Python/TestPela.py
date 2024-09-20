@@ -45,6 +45,7 @@ def test_Pela(ip_address: str, stopOnError: bool, run: int):
         print("IP Address........"+ip_address)
         print("Serial number....."+serialNumber)
         print("Build............."+Pela.Sys.getBuild())
+        print("Architecture......" + Pela.Sys.getArchitecture())
         print("StopOnError......."+str(stopOnError))
         print("Clock rate........"+str(Pela.ED.getClockRateGHz()))
         print("Clock type........"+str(Pela.ED.getClockType()))

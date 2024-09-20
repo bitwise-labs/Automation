@@ -366,6 +366,10 @@ class BranchSys(AutomationExtender):
         """Get Gateway """
         return self.QueryResponse("Gateway?\n")
 
+    def getArchitecture(self) -> str:
+        """Get Architecture """
+        return self.QueryResponse("Architecture?\n")
+
     def getHostname(self) -> str:
         """Get Hostname """
         return self.QueryResponse("Hostname?\n")
@@ -582,18 +586,19 @@ class BranchFile(AutomationExtender):
         self.SendCommand("Del " + "\"" + filepath + "\"" + "\n")
         return None
 
-    def Exists(self, filepath: str) -> str:
+    def Exists(self, filepath: str) -> bool:
         """Response method for File Exists."""
-        return self.QueryResponse("Exists " + "\"" + filepath + "\"" + "\n")
+        return self.QueryResponse_bool("Exists " + "\"" + filepath + "\"" + "\n")
 
     def Fetch(self, filepath: str) -> bytes:
         """Binary response method for Fetch File."""
-        return self.QueryBinaryResponse("Fetch " + "\"" + filepath + "\"" + "\n")
+        return self.QueryBinaryResponse("Fetch " +
 
-    def Length(self, filepath: str):
+                                        "\"" + filepath + "\"" + "\n")
+
+    def Length(self, filepath: str) -> int:
         """Method for File Length. """
-        self.SendCommand("Length " + "\"" + filepath + "\"" + "\n")
-        return None
+        return self.QueryResponse_int("Length " + "\"" + filepath + "\"" + "\n")
 
     def List(self, dirpath: str, otheroptions: str = "") -> str:
         """Binary string response method for List Directory."""
@@ -602,6 +607,38 @@ class BranchFile(AutomationExtender):
     def Rename(self, frompath: str, topath: str):
         """Method for Rename File."""
         self.SendCommand("Rename " + "\"" + frompath + "\"" + " " + "\"" + topath + "\"" + "\n")
+        return None
+
+
+# ================================ #
+
+class BranchAnnounce(AutomationExtender):
+    """BranchAnnounce class.  Announcer features"""
+
+    def __init__(self, parent: AutomationInterface, prefix: str):
+        super().__init__(parent, prefix)
+
+    def __del__(self):
+        super().__del__()
+        return None
+
+    def getMsg(self) -> str:
+        """Get Message """
+        return self.QueryResponse("Msg?\n")
+
+    def setMsg(self, newvalue: str):
+        """Set Message """
+        self.SendCommand("Msg " + "\"" + newvalue + "\"" + "\n")
+        return None
+
+    def getSequence(self) -> int:
+        """Get Message sequence number """
+        return self.QueryResponse_int("Sequence?\n")
+
+    def Clear(self):
+        """Method for Clear message. Todo: add arguments if needed"""
+        print("BranchAnnounce:Clear(), Todo: add arguments if needed")
+        self.SendCommand("Clear\n")
         return None
 
 # EOF

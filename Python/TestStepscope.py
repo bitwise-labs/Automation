@@ -45,6 +45,7 @@ def test_Stepscope(ip_address: str, stopOnError: bool, run: int):
         print("IP Address........" + ip_address)
         print("Serial number....." + serialNumber)
         print("Build............." + Stepscope.Sys.getBuild())
+        print("Architecture......" + Stepscope.Sys.getArchitecture())
         print("StopOnError......." + str(stopOnError))
 
         Stepscope.Stop()

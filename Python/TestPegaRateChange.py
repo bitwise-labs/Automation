@@ -115,6 +115,7 @@ def test_rate_change(ip_address: bool, stopOnErrorFlag: bool = True, loopFlag: b
 
         print("Serial number....."+serialNumber)
         print("Build............."+Pega.Sys.getBuild())
+        print("Architecture......" + Pega.Sys.getArchitecture())
         print("Temperature......" + str(Pega.getTemperatureC()))
         print("Channel to test..." + str(CH))
         print("Channel Amplitude " + str(AMPL))

@@ -47,7 +47,7 @@ def test_PegaDeploy(
     # returns number of errors encountered
 
     print("ip_addr=" + ip_address + ", loop=" + str(loop_count) +
-          ", drate=" + str(data_rate_ghz) + ", ch=" + str(channel)   )
+          ", drate=" + str(data_rate_ghz) + ", ch=" + str(channel))
 
     errors = 0
     Pega = PegaDevice()
@@ -63,6 +63,7 @@ def test_PegaDeploy(
             print("IP Address........" + ip_address)
             print("Serial number....." + Pega.Const.getSN())
             print("Build............." + Pega.Sys.getBuild())
+            print("Architecture......" + Pega.Sys.getArchitecture())
             print("Loop.............." + str(loop_count))
             print("Verbose..........." + str(verbose_flag))
             print("Data rate GHz....." + str(data_rate_ghz))
@@ -75,6 +76,9 @@ def test_PegaDeploy(
 
         pg_clk = Pega.Syn.getDataRateGbps()
         print("Operating data rate: " + str(pg_clk) + " Gbps")
+
+        temp_c = Pega.getTemperatureC()
+        print("Temperature: {:.2f}".format(temp_c))
 
         fnames = []
         fnames.append("1100.patt")
@@ -164,11 +168,13 @@ if __name__ == '__main__':
         data_rate.append(5.5)
 
     summary = []
+    total_errors = 0
 
     try:
         for ch in channel:
             for dr in data_rate:
                 errors_encountered = test_PegaDeploy(ip, loop, verbose, dr, ch)
+                total_errors = total_errors + errors_encountered
                 summary.append(errors_encountered)
 
     except KeyboardInterrupt:
@@ -180,5 +186,7 @@ if __name__ == '__main__':
         print(str(channel[int(n / len(data_rate))]) +
               ", " + str(data_rate[int(n % len(data_rate))]) + " Gbps" +
               ", Errors=" + str(summary[n]))
+
+    print("Total errors: " + str(total_errors))
 
 # EOF

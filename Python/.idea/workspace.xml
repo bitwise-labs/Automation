@@ -30,9 +30,27 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a8c4ec53-24da-45fa-99bc-831ed779b362" name="Default Changelist" comment="make simple change in python code">
+      <change afterPath="$PROJECT_DIR$/TestSSCommands.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../C++/BitwiseAutomation/.settings/language.settings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../C++/BitwiseAutomation/.settings/language.settings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../C++/BitwiseAutomation/include/BitwiseDevice.h" beforeDir="false" afterPath="$PROJECT_DIR$/../C++/BitwiseAutomation/include/BitwiseDevice.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../C++/BitwiseAutomation/include/autogenCommon.h" beforeDir="false" afterPath="$PROJECT_DIR$/../C++/BitwiseAutomation/include/autogenCommon.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../C++/BitwiseAutomation/src/autogenCommon.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../C++/BitwiseAutomation/src/autogenCommon.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../C++/TestPega/.settings/language.settings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../C++/TestPega/.settings/language.settings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../C++/TestPega/TestPega.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../C++/TestPega/TestPega.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../C++/TestPela/.settings/language.settings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../C++/TestPela/.settings/language.settings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../C++/TestPela/TestPela.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../C++/TestPela/TestPela.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../C++/TestStepscope/.settings/language.settings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../C++/TestStepscope/.settings/language.settings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../C++/TestStepscope/TestStepscope.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../C++/TestStepscope/TestStepscope.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestPega.py" beforeDir="false" afterPath="$PROJECT_DIR$/TestPega.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestPegaDeploy.py" beforeDir="false" afterPath="$PROJECT_DIR$/TestPegaDeploy.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestPegaRateChange.py" beforeDir="false" afterPath="$PROJECT_DIR$/TestPegaRateChange.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestPegaStartup.py" beforeDir="false" afterPath="$PROJECT_DIR$/TestPegaStartup.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestPela.py" beforeDir="false" afterPath="$PROJECT_DIR$/TestPela.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TestStepscope.py" beforeDir="false" afterPath="$PROJECT_DIR$/TestStepscope.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pyBitwiseAutomation/autogenStepscope.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyBitwiseAutomation/autogenStepscope.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyBitwiseAutomation/BitwiseDevice.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyBitwiseAutomation/BitwiseDevice.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyBitwiseAutomation/SocketDevice.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyBitwiseAutomation/SocketDevice.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyBitwiseAutomation/autogenCommon.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyBitwiseAutomation/autogenCommon.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -67,12 +85,13 @@
     &quot;Python.GuiStepscope.executor&quot;: &quot;Run&quot;,
     &quot;Python.TestPega.executor&quot;: &quot;Run&quot;,
     &quot;Python.TestPegaDeploy.executor&quot;: &quot;Run&quot;,
+    &quot;Python.TestSSCommands.executor&quot;: &quot;Run&quot;,
     &quot;Python.TestStepscope.executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;master&quot;,
     &quot;last_opened_file_path&quot;: &quot;C:/Projects/Automation/Python&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;
   }
 }</component>
   <component name="RecentsManager">
@@ -85,7 +104,7 @@
       <recent name="C:\Projects\Automation\Python\GuiStepscope" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.TestStepscope">
+  <component name="RunManager" selected="Python.TestSSCommands">
     <configuration name="GuiStepscope" type="PythonConfigurationType" factoryName="Python">
       <module name="Python" />
       <option name="ENV_FILES" value="" />
@@ -95,6 +114,7 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="C:\Projects\Automation\Python\venv\Scripts\python.exe" />
+      <option name="SDK_NAME" value="Python 3.12 (Python)" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
@@ -145,7 +165,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/TestPegaDeploy.py" />
-      <option name="PARAMETERS" value="-loop 20 -drate 1 -drate 2 -drate 3 -drate 4 -drate 5 -drate 6 -drate 7 -drate 8 -drate 9 -drate 10 -drate 11  -drate 12  -drate 13  -drate 14  -drate 15  -drate 16  -drate 17  -drate 18  -drate 19  -drate 20 -drate 21 -drate 22 -drate 23 -drate 24  -drate 25  -drate 26  -ch 0 -ch 1 192.168.1.176" />
+      <option name="PARAMETERS" value="-verbose -loop 20 -drate 1 -drate 2 -drate 3 -drate 4 -drate 5 -drate 6 -drate 7 -drate 8 -drate 9 -drate 10 -drate 11  -drate 12  -drate 13  -drate 14  -drate 15  -drate 16  -drate 17  -drate 18  -drate 19  -drate 20 -drate 21 -drate 22 -drate 23 -drate 24  -drate 25  -drate 26  -ch 0 -ch 1 192.168.1.251" />
       <option name="SHOW_COMMAND_LINE" value="true" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
@@ -197,6 +217,29 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="TestSSCommands" type="PythonConfigurationType" factoryName="Python">
+      <module name="Python" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="SDK_NAME" value="Python 3.12 (Python)" />
+      <option name="WORKING_DIRECTORY" value="C:\Projects\Automation\Python" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/TestSSCommands.py" />
+      <option name="PARAMETERS" value="-verbose 192.168.1.79" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="TestStepscope" type="PythonConfigurationType" factoryName="Python">
       <module name="Python" />
       <option name="ENV_FILES" value="" />
@@ -212,7 +255,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/TestStepscope.py" />
-      <option name="PARAMETERS" value="192.168.1.25" />
+      <option name="PARAMETERS" value="192.168.1.25 -verbose" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="true" />
       <option name="MODULE_MODE" value="false" />
@@ -222,6 +265,7 @@
     </configuration>
     <list>
       <item itemvalue="Python.GuiStepscope" />
+      <item itemvalue="Python.TestSSCommands" />
       <item itemvalue="Python.TestPegaDeploy" />
       <item itemvalue="Python.TestPegaRateChange" />
       <item itemvalue="Python.TestPega" />
@@ -299,7 +343,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/pyBitwiseAutomation/SocketDevice.py</url>
-          <line>180</line>
+          <line>181</line>
           <option name="timeStamp" value="2" />
         </line-breakpoint>
       </breakpoints>
