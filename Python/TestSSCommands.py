@@ -261,7 +261,7 @@ def unit_test_perform_TDR():
     _stepscope.Pulse.setLength(8)
 
     _stepscope.Tdr.Window.Enabled = False  # 03-15-2024 (begin)
-    _stepscope.Step.Cfg.setReclen(1024)
+    _stepscope.Tdr.Cfg.setReclen(1024)
     _stepscope.App.Stop()
 
     if _verbose_flag:
