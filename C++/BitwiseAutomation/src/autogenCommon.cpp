@@ -536,6 +536,11 @@ char* BranchSys::getHostname(char *buffer,int buflen) /* Hostname */
     return QueryResponse(buffer,buflen,"Hostname?\n");
 }
 
+char* BranchSys::getArchitecture(char *buffer,int buflen) /* Architecture */
+{
+    return QueryResponse(buffer,buflen,"Architecture?\n");
+}
+
 char* BranchSys::getIP(char *buffer,int buflen) /* IP Address */
 {
     return QueryResponse(buffer,buflen,"IP?\n");
@@ -604,9 +609,9 @@ void BranchFile::Del(char *filepath) /* Delete File */
     SendCommand("Del \"%s\"\n",filepath);
 }
 
-char* BranchFile::Exists(char *buffer,int buflen, char *filepath) /* File Exists */
+bool BranchFile::Exists( char *filepath) /* File Exists */
 {
-    return QueryResponse(buffer,buflen,"Exists \"%s\"\n",filepath);
+    return QueryResponse_bool("Exists \"%s\"\n",filepath);
 }
 
 char *BranchFile::Fetch(char *filepath, int *pcount) /* Fetch File - Must free() return value */
@@ -614,9 +619,9 @@ char *BranchFile::Fetch(char *filepath, int *pcount) /* Fetch File - Must free()
     return QueryBinaryResponse(pcount,"Fetch \"%s\"\n",filepath);
 }
 
-void BranchFile::Length(char *filepath) /* File Length */
+int BranchFile::Length(char *filepath) /* File Length */
 {
-    SendCommand("Length \"%s\"\n",filepath);
+    return QueryResponse_int("Length \"%s\"\n",filepath);
 }
 
 char *BranchFile::List(char *dirpath, char *otheroptions) /* List Directory - Must free() return value */
@@ -629,4 +634,28 @@ void BranchFile::Rename(char *frompath, char *topath) /* Rename File */
     SendCommand("Rename \"%s\" \"%s\"\n",frompath,topath);
 }
 
+/* ================================================================ */
+
+char* BranchAnnounce::getMsg(char *buffer,int buflen) /* Message */
+{
+    return QueryResponse(buffer,buflen,"Msg?\n");
+}
+
+void BranchAnnounce::setMsg(const char* newValue) /* Message */
+{
+    SendCommand("Msg \"%s\"\n",newValue);
+}
+
+int BranchAnnounce::getSequence() /* Message sequence number */
+{
+    return QueryResponse_int("Sequence?\n");
+}
+
+void BranchAnnounce::Clear() /* Clear message, Todo:add arguments */
+{
+    fprintf(TRACE_STDOUT,"BranchAnnounce::Clear(), Todo: add arguments if needed\n");
+    SendCommand("Clear\n");
+}
+
+/* ================================================================ */
 

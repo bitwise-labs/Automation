@@ -94,9 +94,9 @@ class BranchFile: /* File System Access */
     char* Checksum(char *buffer,int buflen,char *filepath); /* Checksum File */
     void Copy(char *frompath, char *topath); /* Copy File */
     void Del(char *filepath); /* Delete File */
-    char* Exists(char *buffer,int buflen,char *filepath); /* File Exists */
+    bool Exists(char *buffer,int buflen,char *filepath); /* File Exists */
     char *Fetch(char *filepath,int *pcount=0); /* Fetch File - Must free() return value */
-    void Length(char *filepath); /* File Length */
+    int Length(char *filepath); /* File Length */
     char *List(char *dirpath, char *otheroptions = (char*)""); /* List Directory - Must free() return value */
     void Rename(char *frompath, char *topath); /* Rename File */
 };
@@ -197,6 +197,7 @@ class BranchSys: /* System */
     char* getCompile(char *buffer,int buflen); /* Compile type */
     char* getGateway(char *buffer,int buflen); /* Gateway */
     char* getHostname(char *buffer,int buflen); /* Hostname */
+    char *getArchitecture(char *buffer, int buflen); /* Architecture */
     char* getIP(char *buffer,int buflen); /* IP Address */
     char* getNickname(char *buffer,int buflen); /* System nickname */
     void setNickname( const char* newValue);
@@ -298,6 +299,23 @@ class BranchSyn: /* Clock source control */
     void Map(Source clockSource, Dest clockDest); /* Map clock source to destination(s) */
 };
 
+/* ================================================================ */
+
+class BranchAnnounce: /* Announcer features */
+    public AutomationExtender
+{
+    public:
+    BranchAnnounce(AutomationInterface *baseDevice,const char *prefix) :
+        AutomationExtender(baseDevice,prefix) {}
+    virtual ~BranchAnnounce() {}
+
+    char* getMsg(char *buffer,int buflen); /* Message */
+    void setMsg( const char* newValue);
+    int getSequence(); /* Message sequence number */
+    void Clear(); /* Clear message, Todo:add arguments */
+};
+
+/* ================================================================ */
 
 #endif // AUTOGEN_COMMON_H
 

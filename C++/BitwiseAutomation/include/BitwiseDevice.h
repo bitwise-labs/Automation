@@ -47,7 +47,8 @@ class BitwiseDevice :
 		App(this,"App:"),
 		File(this,"File:"),
 		Sys(this,"Sys:"),
-		Const(this,"Const:")
+		Const(this,"Const:"),
+		Announce(this,"Announce:")
 		{}
 
 	virtual ~BitwiseDevice() {}
@@ -94,6 +95,7 @@ class BitwiseDevice :
 	BranchFile File;
 	BranchSys Sys;
 	BranchConst Const;
+	BranchAnnounce Announce;
 };
 
 #endif // BITWISE_BITWISE_DEVICE

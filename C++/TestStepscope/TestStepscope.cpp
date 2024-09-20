@@ -100,6 +100,7 @@ void test_stepscope(char *ip_address, bool stopOnError, int run )
 	printf("IP Address........%s\n", ip_address );
 	printf("Serial number.....%s\n", serialNumber ) ;
 	printf("Build.............%s\n", Stepscope.Sys.getBuild( buffer, 4096 )) ;
+	printf("Architecture......%s\n", Stepscope.Sys.getArchitecture( buffer, 4096));
 	printf("StopOnError.......%c\n", stopOnError?'T':'F');
 
 	//================================================================================

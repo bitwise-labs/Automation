@@ -116,6 +116,7 @@ void test_pega(char *ip_address, bool stopOnError, int run, double fromGHz, doub
 	printf("IP Address........%s\n", ip_address );
 	printf("Serial number.....%s\n", serialNumber ) ;
 	printf("Build.............%s\n", Pega.Sys.getBuild( buffer, 4096 )) ;
+	printf("Architecture......%s\n", Pega.Sys.getArchitecture( buffer, 4096));
 	printf("StopOnError.......%c\n", stopOnError?'T':'F');
 	printf("From GHz..........%.3lf\n", fromGHz );
 	printf("To GHz............%.3lf\n", toGHz );
@@ -143,6 +144,10 @@ void test_pega(char *ip_address, bool stopOnError, int run, double fromGHz, doub
 	Pega.ED.setPatt(BranchED::Patt::Auto);
 
 	Pega.Tub.setResolutionPS(0.25);
+
+	double tempC = Pega.getTemperatureC();
+	printf("Temperature...%.3lf C\n", tempC );
+
 
 	printf("=================================================================================\n");
 	printf("SN,Run,DegreeC,Gbps,CalDiv,Align,Thresh,Delay,Sync,Errors,Resyncs,BER,LogBER,RJ,EWC,TubStatus\n");

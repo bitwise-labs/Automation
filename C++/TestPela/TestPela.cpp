@@ -103,6 +103,7 @@ void test_pela(char *ip_address, bool stopOnError, int run )
 	printf("IP Address........%s\n", ip_address );
 	printf("Serial number.....%s\n", serialNumber ) ;
 	printf("Build.............%s\n", Pela.Sys.getBuild( buffer, 4096 )) ;
+	printf("Architecture......%s\n", Pela.Sys.getArchitecture( buffer, 4096));
 	printf("StopOnError.......%c\n", stopOnError?'T':'F');
 	printf("Clock rate........%.3lf\n", Pela.ED.getClockRateGHz());
 	printf("Clock type........%s\n",BranchPelaED::ClockType_Strings[(int)Pela.ED.getClockType()]);
