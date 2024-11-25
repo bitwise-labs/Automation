@@ -105,6 +105,7 @@ class SocketDevice(AutomationInterface):
             self.Sock.shutdown(socket.SHUT_RDWR)
             self.Sock.close()
             self.IsConnected = False
+            time.sleep(3.0)  # ensure connection is torn-down completely before resuming
         self.Sock = None
         return None
 
@@ -170,7 +171,15 @@ class SocketDevice(AutomationInterface):
 
     def QueryResponse_int(self, command: str) -> int:
         """Query integer response from command (ending with '\n') from socket device."""
-        return int(self.QueryResponse(command))
+
+        response = self.QueryResponse(command)
+
+        if response.startswith("0x") or response.startswith("0X"):
+            answer = int(response, 16)
+        else:
+            answer = int(response)
+
+        return answer
 
     def QueryResponse_bool(self, command: str) -> bool:
         """Query boolean response from command (ending with '\n') from socket device."""

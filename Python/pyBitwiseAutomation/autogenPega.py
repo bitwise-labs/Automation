@@ -34,6 +34,7 @@ from pyBitwiseAutomation.SocketDevice import *
 from pyBitwiseAutomation.autogenCommon import *
 from enum import Enum
 
+
 # ================================ #
 
 class BranchClk(AutomationExtender):
@@ -46,6 +47,7 @@ class BranchClk(AutomationExtender):
     def __del__(self):
         super().__del__()
         return None
+
 
 # ================================ #
 
@@ -67,7 +69,7 @@ class BranchTubChart(AutomationExtender):
         """Get enum Y-Axis type """
         return self.AxisY(self.QueryResponse_enum(self.AxisY, "AxisY?\n"))
 
-    def setAxisY(self, newvalue: AxisY) :
+    def setAxisY(self, newvalue: AxisY):
         """Set enum Y-Axis type """
         self.SendCommand("AxisY " + newvalue.value + "\n")
         return None
@@ -76,42 +78,42 @@ class BranchTubChart(AutomationExtender):
         """Get Chart Bottom """
         return self.QueryResponse_float("Bottom?\n")
 
-    def setBottom(self, newvalue:float) :
+    def setBottom(self, newvalue: float):
         """Set Chart Bottom """
         self.SendCommand("Bottom " + str(newvalue) + "\n")
         return None
 
     def getCursAvail(self, index: int) -> bool:
         """Get Chart Cursor Available[] """
-        return self.QueryResponse_bool("CursAvail["+str(index)+"]?\n")
+        return self.QueryResponse_bool("CursAvail[" + str(index) + "]?\n")
 
     def getCursEnabled(self, index: int) -> bool:
         """Get Chart Cursor Enabled[] """
-        return self.QueryResponse_bool("CursEnabled["+str(index)+"]?\n")
+        return self.QueryResponse_bool("CursEnabled[" + str(index) + "]?\n")
 
-    def setCursEnabled(self, index: int, newvalue:bool) :
+    def setCursEnabled(self, index: int, newvalue: bool):
         """Set Chart Cursor Enabled[] """
-        self.SendCommand("CursEnabled["+str(index)+"] " + ("T" if newvalue else "F") + "\n")
+        self.SendCommand("CursEnabled[" + str(index) + "] " + ("T" if newvalue else "F") + "\n")
         return None
 
     def getCursLabel(self, index: int) -> str:
         """Get Chart Cursor Label[] """
-        return self.QueryResponse("CursLabel["+str(index)+"]?\n")
+        return self.QueryResponse("CursLabel[" + str(index) + "]?\n")
 
     def getCursValue(self, index: int) -> float:
         """Get Chart Cursor Value[] """
-        return self.QueryResponse_float("CursValue["+str(index)+"]?\n")
+        return self.QueryResponse_float("CursValue[" + str(index) + "]?\n")
 
-    def setCursValue(self, index: int, newvalue:float) :
+    def setCursValue(self, index: int, newvalue: float):
         """Set Chart Cursor Value[] """
-        self.SendCommand("CursValue["+str(index)+"] " + str(newvalue) + "\n")
+        self.SendCommand("CursValue[" + str(index) + "] " + str(newvalue) + "\n")
         return None
 
     def getHeight(self) -> float:
         """Get Chart Height """
         return self.QueryResponse_float("Height?\n")
 
-    def setHeight(self, newvalue:float) :
+    def setHeight(self, newvalue: float):
         """Set Chart Height """
         self.SendCommand("Height " + str(newvalue) + "\n")
         return None
@@ -120,20 +122,20 @@ class BranchTubChart(AutomationExtender):
         """Get Chart Left """
         return self.QueryResponse_float("Left?\n")
 
-    def setLeftPS(self, newvalue:float) :
+    def setLeftPS(self, newvalue: float):
         """Set Chart Left """
         self.SendCommand("Left " + str(newvalue) + "\n")
         return None
 
     def getLimits(self, index: int) -> float:
         """Get Chart Limits (LRBT)[] """
-        return self.QueryResponse_float("Limits["+str(index)+"]?\n")
+        return self.QueryResponse_float("Limits[" + str(index) + "]?\n")
 
     def getLocked(self) -> bool:
         """Get Chart Locked """
         return self.QueryResponse_bool("Locked?\n")
 
-    def setLocked(self, newvalue:bool) :
+    def setLocked(self, newvalue: bool):
         """Set Chart Locked """
         self.SendCommand("Locked " + ("T" if newvalue else "F") + "\n")
         return None
@@ -142,7 +144,7 @@ class BranchTubChart(AutomationExtender):
         """Get Chart LogScale """
         return self.QueryResponse_bool("Logscale?\n")
 
-    def setLogscale(self, newvalue:bool) :
+    def setLogscale(self, newvalue: bool):
         """Set Chart LogScale """
         self.SendCommand("Logscale " + ("T" if newvalue else "F") + "\n")
         return None
@@ -173,7 +175,7 @@ class BranchTubChart(AutomationExtender):
         """Get enum Chart Scroll Mode """
         return self.Scroll(self.QueryResponse_enum(self.Scroll, "Scroll?\n"))
 
-    def setScroll(self, newvalue: Scroll) :
+    def setScroll(self, newvalue: Scroll):
         """Set enum Chart Scroll Mode """
         self.SendCommand("Scroll " + newvalue.value + "\n")
         return None
@@ -182,7 +184,7 @@ class BranchTubChart(AutomationExtender):
         """Get Show memories """
         return self.QueryResponse_bool("ShowMemory?\n")
 
-    def setShowMemory(self, newvalue:bool) :
+    def setShowMemory(self, newvalue: bool):
         """Set Show memories """
         self.SendCommand("ShowMemory " + ("T" if newvalue else "F") + "\n")
         return None
@@ -191,7 +193,7 @@ class BranchTubChart(AutomationExtender):
         """Get Show overlays """
         return self.QueryResponse_bool("ShowOverlays?\n")
 
-    def setShowOverlays(self, newvalue:bool) :
+    def setShowOverlays(self, newvalue: bool):
         """Set Show overlays """
         self.SendCommand("ShowOverlays " + ("T" if newvalue else "F") + "\n")
         return None
@@ -204,10 +206,11 @@ class BranchTubChart(AutomationExtender):
         """Get Chart Width """
         return self.QueryResponse_float("Width?\n")
 
-    def setWidthPS(self, newvalue:float) :
+    def setWidthPS(self, newvalue: float):
         """Set Chart Width """
         self.SendCommand("Width " + str(newvalue) + "\n")
         return None
+
 
 # ================================ #
 
@@ -216,7 +219,7 @@ class BranchTub(AutomationExtender):
 
     def __init__(self, parent: AutomationInterface, prefix: str):
         super().__init__(parent, prefix)
-        self.Chart = BranchTubChart(self,"Chart:")
+        self.Chart = BranchTubChart(self, "Chart:")
 
     def __del__(self):
         super().__del__()
@@ -226,7 +229,7 @@ class BranchTub(AutomationExtender):
         """Get Confidence BER """
         return self.QueryResponse_float("ConfBER?\n")
 
-    def setConfBER(self, newvalue:float) :
+    def setConfBER(self, newvalue: float):
         """Set Confidence BER """
         self.SendCommand("ConfBER " + str(newvalue) + "\n")
         return None
@@ -239,7 +242,7 @@ class BranchTub(AutomationExtender):
         """Get Confidence Level """
         return self.QueryResponse_float("ConfLevel?\n")
 
-    def setConfLevel(self, newvalue:float) :
+    def setConfLevel(self, newvalue: float):
         """Set Confidence Level """
         self.SendCommand("ConfLevel " + str(newvalue) + "\n")
         return None
@@ -252,7 +255,7 @@ class BranchTub(AutomationExtender):
         """Get Extrapolation depth BER level """
         return self.QueryResponse_float("ExtrapBER?\n")
 
-    def setExtrapBER(self, newvalue:float) :
+    def setExtrapBER(self, newvalue: float):
         """Set Extrapolation depth BER level """
         self.SendCommand("ExtrapBER " + str(newvalue) + "\n")
         return None
@@ -261,7 +264,7 @@ class BranchTub(AutomationExtender):
         """Get High BER level for extrapolation basis """
         return self.QueryResponse_float("FitHighBER?\n")
 
-    def setFitHighBER(self, newvalue:float) :
+    def setFitHighBER(self, newvalue: float):
         """Set High BER level for extrapolation basis """
         self.SendCommand("FitHighBER " + str(newvalue) + "\n")
         return None
@@ -270,18 +273,18 @@ class BranchTub(AutomationExtender):
         """Get Measurement BER level """
         return self.QueryResponse_float("MeasureBER?\n")
 
-    def setMeasureBER(self, newvalue:float) :
+    def setMeasureBER(self, newvalue: float):
         """Set Measurement BER level """
         self.SendCommand("MeasureBER " + str(newvalue) + "\n")
         return None
 
     def getMeta(self) -> bytes:
         """Get binary Packed chart meta information binary data """
-        return self.QueryBinaryResponse( "Meta?\n")
+        return self.QueryBinaryResponse("Meta?\n")
 
-    def setMeta(self, newvalue: bytes) :
+    def setMeta(self, newvalue: bytes):
         """Set binary Packed chart meta information binary data """
-        self.SendBinaryCommand("Meta\n",newvalue )
+        self.SendBinaryCommand("Meta\n", newvalue)
         return None
 
     def getMetaSEQ(self) -> int:
@@ -300,7 +303,7 @@ class BranchTub(AutomationExtender):
         """Get Resolution of time increments """
         return self.QueryResponse_float("Resolution?\n")
 
-    def setResolutionPS(self, newvalue:float) :
+    def setResolutionPS(self, newvalue: float):
         """Set Resolution of time increments """
         self.SendCommand("Resolution " + str(newvalue) + "\n")
         return None
@@ -322,7 +325,7 @@ class BranchTub(AutomationExtender):
         """Get Show gui results panel """
         return self.QueryResponse_bool("ShowResults?\n")
 
-    def setShowResults(self, newvalue:bool) :
+    def setShowResults(self, newvalue: bool):
         """Set Show gui results panel """
         self.SendCommand("ShowResults " + ("T" if newvalue else "F") + "\n")
         return None
@@ -331,7 +334,7 @@ class BranchTub(AutomationExtender):
         """Get Show gui settings panel """
         return self.QueryResponse_bool("ShowSettings?\n")
 
-    def setShowSettings(self, newvalue:bool) :
+    def setShowSettings(self, newvalue: bool):
         """Set Show gui settings panel """
         self.SendCommand("ShowSettings " + ("T" if newvalue else "F") + "\n")
         return None
@@ -352,7 +355,7 @@ class BranchTub(AutomationExtender):
         """Get enum Sweep type (Tub or Peak) """
         return self.TubType(self.QueryResponse_enum(self.TubType, "TubType?\n"))
 
-    def setTubType(self, newvalue: TubType) :
+    def setTubType(self, newvalue: TubType):
         """Set enum Sweep type (Tub or Peak) """
         self.SendCommand("TubType " + newvalue.value + "\n")
         return None
@@ -363,7 +366,7 @@ class BranchTub(AutomationExtender):
 
     def Csv(self, optFilename: str = "") -> str:
         """Response method for PegaTub Csv. """
-        return self.QueryResponse("Csv\n" if optFilename == "" else 'Csv "'+optFilename+'"\n')
+        return self.QueryResponse("Csv\n" if optFilename == "" else 'Csv "' + optFilename + '"\n')
 
     def FetchPoints(self, startingIndex: int = 0) -> str:
         """Binary string response method for Fetch points. """
@@ -387,6 +390,7 @@ class BranchTub(AutomationExtender):
         self.SendCommand("Reset\n")
         return None
 
+
 # ================================ #
 
 class BranchPGAmp(AutomationExtender):
@@ -401,11 +405,11 @@ class BranchPGAmp(AutomationExtender):
 
     def getAmplMV(self, index: int) -> float:
         """Get Amp amplitude setting[] """
-        return self.QueryResponse_float("Ampl["+str(index)+"]?\n")
+        return self.QueryResponse_float("Ampl[" + str(index) + "]?\n")
 
-    def setAmplMV(self, index: int, newvalue:float) :
+    def setAmplMV(self, index: int, newvalue: float):
         """Set Amp amplitude setting[] """
-        self.SendCommand("Ampl["+str(index)+"] " + str(newvalue) + "\n")
+        self.SendCommand("Ampl[" + str(index) + "] " + str(newvalue) + "\n")
         return None
 
     class Coupling(Enum):
@@ -414,66 +418,67 @@ class BranchPGAmp(AutomationExtender):
 
     def getCoupling(self, index: int) -> Coupling:
         """Get enum Coupling Type[] """
-        return self.Coupling(self.QueryResponse_enum(self.Coupling, "Coupling["+str(index)+"]?\n"))
+        return self.Coupling(self.QueryResponse_enum(self.Coupling, "Coupling[" + str(index) + "]?\n"))
 
-    def setCoupling(self, index: int, newvalue: Coupling) :
+    def setCoupling(self, index: int, newvalue: Coupling):
         """Set enum Coupling Type[] """
-        self.SendCommand("Coupling["+str(index)+"] " + newvalue.value + "\n")
+        self.SendCommand("Coupling[" + str(index) + "] " + newvalue.value + "\n")
         return None
 
     def getCrossPcnt(self, index: int) -> float:
         """Get Amp crossing point setting (10-90)[] """
-        return self.QueryResponse_float("Cross["+str(index)+"]?\n")
+        return self.QueryResponse_float("Cross[" + str(index) + "]?\n")
 
-    def setCrossPcnt(self, index: int, newvalue:float) :
+    def setCrossPcnt(self, index: int, newvalue: float):
         """Set Amp crossing point setting (10-90)[] """
-        self.SendCommand("Cross["+str(index)+"] " + str(newvalue) + "\n")
+        self.SendCommand("Cross[" + str(index) + "] " + str(newvalue) + "\n")
         return None
 
     def getEnabled(self, index: int) -> bool:
         """Get Amp enabled, not automatically restored[] """
-        return self.QueryResponse_bool("Enabled["+str(index)+"]?\n")
+        return self.QueryResponse_bool("Enabled[" + str(index) + "]?\n")
 
-    def setEnabled(self, index: int, newvalue:bool) :
+    def setEnabled(self, index: int, newvalue: bool):
         """Set Amp enabled, not automatically restored[] """
-        self.SendCommand("Enabled["+str(index)+"] " + ("T" if newvalue else "F") + "\n")
+        self.SendCommand("Enabled[" + str(index) + "] " + ("T" if newvalue else "F") + "\n")
         return None
 
     def getF2PS(self, index: int) -> float:
         """Get F2 setting[] """
-        return self.QueryResponse_float("F2["+str(index)+"]?\n")
+        return self.QueryResponse_float("F2[" + str(index) + "]?\n")
 
-    def setF2PS(self, index: int, newvalue:float) :
+    def setF2PS(self, index: int, newvalue: float):
         """Set F2 setting[] """
-        self.SendCommand("F2["+str(index)+"] " + str(newvalue) + "\n")
+        self.SendCommand("F2[" + str(index) + "] " + str(newvalue) + "\n")
         return None
 
     def getF2MaxPS(self, index: int) -> float:
         """Get F2 maximum limit at this frequency[] """
-        return self.QueryResponse_float("F2Max["+str(index)+"]?\n")
+        return self.QueryResponse_float("F2Max[" + str(index) + "]?\n")
 
-    def setF2MaxPS(self, index: int, newvalue:float) :
+    def setF2MaxPS(self, index: int, newvalue: float):
         """Set F2 maximum limit at this frequency[] """
-        self.SendCommand("F2Max["+str(index)+"] " + str(newvalue) + "\n")
+        self.SendCommand("F2Max[" + str(index) + "] " + str(newvalue) + "\n")
         return None
 
     def getF2MinPS(self, index: int) -> float:
         """Get F2 minimum limit at this frequency[] """
-        return self.QueryResponse_float("F2Min["+str(index)+"]?\n")
+        return self.QueryResponse_float("F2Min[" + str(index) + "]?\n")
 
-    def setF2MinPS(self, index: int, newvalue:float) :
+    def setF2MinPS(self, index: int, newvalue: float):
         """Set F2 minimum limit at this frequency[] """
-        self.SendCommand("F2Min["+str(index)+"] " + str(newvalue) + "\n")
+        self.SendCommand("F2Min[" + str(index) + "] " + str(newvalue) + "\n")
         return None
 
     def getOffsMV(self, index: int) -> float:
         """Get Amp VOffset[] """
-        return self.QueryResponse_float("Offs["+str(index)+"]?\n")
+        return self.QueryResponse_float("Offs[" + str(index) + "]?\n")
 
-    def setOffsMV(self, index: int, newvalue:float) :
+    def setOffsMV(self, index: int, newvalue: float):
         """Set Amp VOffset[] """
-        self.SendCommand("Offs["+str(index)+"] " + str(newvalue) + "\n")
+        self.SendCommand("Offs[" + str(index) + "] " + str(newvalue) + "\n")
         return None
+
 
 # ================================ #
 
@@ -489,25 +494,26 @@ class BranchPGCh0(AutomationExtender):
 
     def getFinalTaps(self, index: int) -> float:
         """Get Final tap values for Ch-0 (1 Pre, 1 Cursor, 2 Post)[] """
-        return self.QueryResponse_float("FinalTaps["+str(index)+"]?\n")
+        return self.QueryResponse_float("FinalTaps[" + str(index) + "]?\n")
 
     def getIntrinsicTaps(self, index: int) -> float:
         """Get Intrinsic tap values for Ch-0 (1 Pre, 1 Cursor, 2 Post)[] """
-        return self.QueryResponse_float("IntrinsicTaps["+str(index)+"]?\n")
+        return self.QueryResponse_float("IntrinsicTaps[" + str(index) + "]?\n")
 
-    def setIntrinsicTaps(self, index: int, newvalue:float) :
+    def setIntrinsicTaps(self, index: int, newvalue: float):
         """Set Intrinsic tap values for Ch-0 (1 Pre, 1 Cursor, 2 Post)[] """
-        self.SendCommand("IntrinsicTaps["+str(index)+"] " + str(newvalue) + "\n")
+        self.SendCommand("IntrinsicTaps[" + str(index) + "] " + str(newvalue) + "\n")
         return None
 
     def getTaps(self, index: int) -> float:
         """Get Tap values for Ch-0 (1 Pre, 1 Cursor, 2 Post)[] """
-        return self.QueryResponse_float("Taps["+str(index)+"]?\n")
+        return self.QueryResponse_float("Taps[" + str(index) + "]?\n")
 
-    def setTaps(self, index: int, newvalue:float) :
+    def setTaps(self, index: int, newvalue: float):
         """Set Tap values for Ch-0 (1 Pre, 1 Cursor, 2 Post)[] """
-        self.SendCommand("Taps["+str(index)+"] " + str(newvalue) + "\n")
+        self.SendCommand("Taps[" + str(index) + "] " + str(newvalue) + "\n")
         return None
+
 
 # ================================ #
 
@@ -523,25 +529,26 @@ class BranchPGCh1(AutomationExtender):
 
     def getFinalTaps(self, index: int) -> float:
         """Get Final tap values for Ch-1 (1 Pre, 1 Cursor, 2 Post)[] """
-        return self.QueryResponse_float("FinalTaps["+str(index)+"]?\n")
+        return self.QueryResponse_float("FinalTaps[" + str(index) + "]?\n")
 
     def getIntrinsicTaps(self, index: int) -> float:
         """Get Intrinsic tap values for Ch-1 (1 Pre, 1 Cursor, 2 Post)[] """
-        return self.QueryResponse_float("IntrinsicTaps["+str(index)+"]?\n")
+        return self.QueryResponse_float("IntrinsicTaps[" + str(index) + "]?\n")
 
-    def setIntrinsicTaps(self, index: int, newvalue:float) :
+    def setIntrinsicTaps(self, index: int, newvalue: float):
         """Set Intrinsic tap values for Ch-1 (1 Pre, 1 Cursor, 2 Post)[] """
-        self.SendCommand("IntrinsicTaps["+str(index)+"] " + str(newvalue) + "\n")
+        self.SendCommand("IntrinsicTaps[" + str(index) + "] " + str(newvalue) + "\n")
         return None
 
     def getTaps(self, index: int) -> float:
         """Get Tap values for Ch-1 (1 Pre, 1 Cursor, 2 Post)[] """
-        return self.QueryResponse_float("Taps["+str(index)+"]?\n")
+        return self.QueryResponse_float("Taps[" + str(index) + "]?\n")
 
-    def setTaps(self, index: int, newvalue:float) :
+    def setTaps(self, index: int, newvalue: float):
         """Set Tap values for Ch-1 (1 Pre, 1 Cursor, 2 Post)[] """
-        self.SendCommand("Taps["+str(index)+"] " + str(newvalue) + "\n")
+        self.SendCommand("Taps[" + str(index) + "] " + str(newvalue) + "\n")
         return None
+
 
 # ================================ #
 
@@ -557,23 +564,23 @@ class BranchPGDiag(AutomationExtender):
 
     def getActualAmplMV(self, index: int) -> float:
         """Get Actual amplitude[] """
-        return self.QueryResponse_float("ActualAmpl["+str(index)+"]?\n")
+        return self.QueryResponse_float("ActualAmpl[" + str(index) + "]?\n")
 
     def getBangStatus(self, index: int) -> int:
         """Get Bang-bang status [0]=Adsantec, [1]=Euvis[] """
-        return self.QueryResponse_int("BangStatus["+str(index)+"]?\n")
+        return self.QueryResponse_int("BangStatus[" + str(index) + "]?\n")
 
     def getMarkDensity(self, index: int) -> float:
         """Get Mark Density[] """
-        return self.QueryResponse_float("MarkDensity["+str(index)+"]?\n")
+        return self.QueryResponse_float("MarkDensity[" + str(index) + "]?\n")
 
     def getOpRateGHz(self, index: int) -> float:
         """Get Operating clock rate, -1 means not set[] """
-        return self.QueryResponse_float("OpRate["+str(index)+"]?\n")
+        return self.QueryResponse_float("OpRate[" + str(index) + "]?\n")
 
-    def setOpRateGHz(self, index: int, newvalue:float) :
+    def setOpRateGHz(self, index: int, newvalue: float):
         """Set Operating clock rate, -1 means not set[] """
-        self.SendCommand("OpRate["+str(index)+"] " + str(newvalue) + "\n")
+        self.SendCommand("OpRate[" + str(index) + "] " + str(newvalue) + "\n")
         return None
 
 
@@ -592,11 +599,11 @@ class BranchPGErr(AutomationExtender):
 
     def getInterval128(self, index: int) -> int:
         """Get Error inject interval[] """
-        return self.QueryResponse_int("Interval["+str(index)+"]?\n")
+        return self.QueryResponse_int("Interval[" + str(index) + "]?\n")
 
-    def setInterval128(self, index: int, newvalue:int) :
+    def setInterval128(self, index: int, newvalue: int):
         """Set Error inject interval[] """
-        self.SendCommand("Interval["+str(index)+"] " + str(newvalue) + "\n")
+        self.SendCommand("Interval[" + str(index) + "] " + str(newvalue) + "\n")
         return None
 
     class Mode(Enum):
@@ -605,16 +612,16 @@ class BranchPGErr(AutomationExtender):
 
     def getMode(self, index: int) -> Mode:
         """Get enum Error inject mode[] """
-        return self.Mode(self.QueryResponse_enum(self.Mode, "Mode["+str(index)+"]?\n"))
+        return self.Mode(self.QueryResponse_enum(self.Mode, "Mode[" + str(index) + "]?\n"))
 
-    def setMode(self, index: int, newvalue: Mode) :
+    def setMode(self, index: int, newvalue: Mode):
         """Set enum Error inject mode[] """
-        self.SendCommand("Mode["+str(index)+"] " + newvalue.value + "\n")
+        self.SendCommand("Mode[" + str(index) + "] " + newvalue.value + "\n")
         return None
 
     def getRepeatBER(self, index: int) -> float:
         """Get Error inject repeat BER[] """
-        return self.QueryResponse_float("RepeatBER["+str(index)+"]?\n")
+        return self.QueryResponse_float("RepeatBER[" + str(index) + "]?\n")
 
     class Type(Enum):
         _None = "None"
@@ -632,11 +639,11 @@ class BranchPGErr(AutomationExtender):
 
     def getType(self, index: int) -> Type:
         """Get enum Error inject type[] """
-        return self.Type(self.QueryResponse_enum(self.Type, "Type["+str(index)+"]?\n"))
+        return self.Type(self.QueryResponse_enum(self.Type, "Type[" + str(index) + "]?\n"))
 
-    def setType(self, index: int, newvalue: Type) :
+    def setType(self, index: int, newvalue: Type):
         """Set enum Error inject type[] """
-        self.SendCommand("Type["+str(index)+"] " + newvalue.value + "\n")
+        self.SendCommand("Type[" + str(index) + "] " + newvalue.value + "\n")
         return None
 
     def Single(self):
@@ -661,7 +668,7 @@ class BranchPGPam(AutomationExtender):
         """Get Pam4 Combiner amplitude """
         return self.QueryResponse_float("Ampl?\n")
 
-    def setAmplMV(self, newvalue:float) :
+    def setAmplMV(self, newvalue: float):
         """Set Pam4 Combiner amplitude """
         self.SendCommand("Ampl " + str(newvalue) + "\n")
         return None
@@ -670,7 +677,7 @@ class BranchPGPam(AutomationExtender):
         """Get Pam4 common delay """
         return self.QueryResponse_float("Delay?\n")
 
-    def setDelayPS(self, newvalue:float) :
+    def setDelayPS(self, newvalue: float):
         """Set Pam4 common delay """
         self.SendCommand("Delay " + str(newvalue) + "\n")
         return None
@@ -679,18 +686,18 @@ class BranchPGPam(AutomationExtender):
         """Get Pam4 Combiner delay alignment """
         return self.QueryResponse_float("DelayAlign?\n")
 
-    def setDelayAlignPS(self, newvalue:float) :
+    def setDelayAlignPS(self, newvalue: float):
         """Set Pam4 Combiner delay alignment """
         self.SendCommand("DelayAlign " + str(newvalue) + "\n")
         return None
 
     def getOffsMV(self, index: int) -> float:
         """Get Pam4 Combiner offset[] """
-        return self.QueryResponse_float("Offs["+str(index)+"]?\n")
+        return self.QueryResponse_float("Offs[" + str(index) + "]?\n")
 
-    def setOffsMV(self, index: int, newvalue:float) :
+    def setOffsMV(self, index: int, newvalue: float):
         """Set Pam4 Combiner offset[] """
-        self.SendCommand("Offs["+str(index)+"] " + str(newvalue) + "\n")
+        self.SendCommand("Offs[" + str(index) + "] " + str(newvalue) + "\n")
         return None
 
 
@@ -708,29 +715,29 @@ class BranchPGTerm(AutomationExtender):
 
     def getDCLevelMV(self, index: int) -> float:
         """Get Termination DC Level[] """
-        return self.QueryResponse_float("DCLevel["+str(index)+"]?\n")
+        return self.QueryResponse_float("DCLevel[" + str(index) + "]?\n")
 
-    def setDCLevelMV(self, index: int, newvalue:float) :
+    def setDCLevelMV(self, index: int, newvalue: float):
         """Set Termination DC Level[] """
-        self.SendCommand("DCLevel["+str(index)+"] " + str(newvalue) + "\n")
+        self.SendCommand("DCLevel[" + str(index) + "] " + str(newvalue) + "\n")
         return None
 
     def getImpedanceOhms(self, index: int) -> float:
         """Get Termination Impedance[] """
-        return self.QueryResponse_float("Impedance["+str(index)+"]?\n")
+        return self.QueryResponse_float("Impedance[" + str(index) + "]?\n")
 
-    def setImpedanceOhms(self, index: int, newvalue:float) :
+    def setImpedanceOhms(self, index: int, newvalue: float):
         """Set Termination Impedance[] """
-        self.SendCommand("Impedance["+str(index)+"] " + str(newvalue) + "\n")
+        self.SendCommand("Impedance[" + str(index) + "] " + str(newvalue) + "\n")
         return None
 
     def getLinkPosNeg(self, index: int) -> bool:
         """Get Link positive and negative legs for offset and term[] """
-        return self.QueryResponse_bool("LinkPosNeg["+str(index)+"]?\n")
+        return self.QueryResponse_bool("LinkPosNeg[" + str(index) + "]?\n")
 
-    def setLinkPosNeg(self, index: int, newvalue:bool) :
+    def setLinkPosNeg(self, index: int, newvalue: bool):
         """Set Link positive and negative legs for offset and term[] """
-        self.SendCommand("LinkPosNeg["+str(index)+"] " + ("T" if newvalue else "F") + "\n")
+        self.SendCommand("LinkPosNeg[" + str(index) + "] " + ("T" if newvalue else "F") + "\n")
         return None
 
     class Type(Enum):
@@ -739,11 +746,11 @@ class BranchPGTerm(AutomationExtender):
 
     def getType(self, index: int) -> Type:
         """Get enum Termination Type[] """
-        return self.Type(self.QueryResponse_enum(self.Type, "Type["+str(index)+"]?\n"))
+        return self.Type(self.QueryResponse_enum(self.Type, "Type[" + str(index) + "]?\n"))
 
-    def setType(self, index: int, newvalue: Type) :
+    def setType(self, index: int, newvalue: Type):
         """Set enum Termination Type[] """
-        self.SendCommand("Type["+str(index)+"] " + newvalue.value + "\n")
+        self.SendCommand("Type[" + str(index) + "] " + newvalue.value + "\n")
         return None
 
 
@@ -761,11 +768,11 @@ class BranchPGTrig(AutomationExtender):
 
     def getIndexBits(self, index: int) -> int:
         """Get Trigger index[] """
-        return self.QueryResponse_int("Index["+str(index)+"]?\n")
+        return self.QueryResponse_int("Index[" + str(index) + "]?\n")
 
-    def setIndexBits(self, index: int, newvalue:int) :
+    def setIndexBits(self, index: int, newvalue: int):
         """Set Trigger index[] """
-        self.SendCommand("Index["+str(index)+"] " + str(newvalue) + "\n")
+        self.SendCommand("Index[" + str(index) + "] " + str(newvalue) + "\n")
         return None
 
     class Type(Enum):
@@ -774,12 +781,13 @@ class BranchPGTrig(AutomationExtender):
 
     def getType(self, index: int) -> Type:
         """Get enum Trigger type[] """
-        return self.Type(self.QueryResponse_enum(self.Type, "Type["+str(index)+"]?\n"))
+        return self.Type(self.QueryResponse_enum(self.Type, "Type[" + str(index) + "]?\n"))
 
-    def setType(self, index: int, newvalue: Type) :
+    def setType(self, index: int, newvalue: Type):
         """Set enum Trigger type[] """
-        self.SendCommand("Type["+str(index)+"] " + newvalue.value + "\n")
+        self.SendCommand("Type[" + str(index) + "] " + newvalue.value + "\n")
         return None
+
 
 # ================================ #
 
@@ -805,7 +813,7 @@ class BranchPG(AutomationExtender):
         """Get Enable clock and both channels of data """
         return self.QueryResponse_bool("AllOn?\n")
 
-    def setAllOn(self, newvalue:bool) :
+    def setAllOn(self, newvalue: bool):
         """Set Enable clock and both channels of data """
         self.SendCommand("AllOn " + ("T" if newvalue else "F") + "\n")
         return None
@@ -818,20 +826,20 @@ class BranchPG(AutomationExtender):
 
     def getConnectors(self, index: int) -> Connectors:
         """Get enum Output connectors[] """
-        return self.Connectors(self.QueryResponse_enum(self.Connectors, "Connectors["+str(index)+"]?\n"))
+        return self.Connectors(self.QueryResponse_enum(self.Connectors, "Connectors[" + str(index) + "]?\n"))
 
-    def setConnectors(self, index: int, newvalue: Connectors) :
+    def setConnectors(self, index: int, newvalue: Connectors):
         """Set enum Output connectors[] """
-        self.SendCommand("Connectors["+str(index)+"] " + newvalue.value + "\n")
+        self.SendCommand("Connectors[" + str(index) + "] " + newvalue.value + "\n")
         return None
 
     def getDelayPS(self, index: int) -> float:
         """Get Delay[] """
-        return self.QueryResponse_float("Delay["+str(index)+"]?\n")
+        return self.QueryResponse_float("Delay[" + str(index) + "]?\n")
 
-    def setDelayPS(self, index: int, newvalue:float) :
+    def setDelayPS(self, index: int, newvalue: float):
         """Set Delay[] """
-        self.SendCommand("Delay["+str(index)+"] " + str(newvalue) + "\n")
+        self.SendCommand("Delay[" + str(index) + "] " + str(newvalue) + "\n")
         return None
 
     def getHwVersion(self) -> int:
@@ -849,9 +857,9 @@ class BranchPG(AutomationExtender):
         """Get enum Link mode """
         return self.LinkMode(self.QueryResponse_enum(self.LinkMode, "LinkMode?\n"))
 
-    def setLinkMode(self, newvalue: LinkMode) :
+    def setLinkMode(self, newvalue: LinkMode):
         """Set enum Link mode """
-        print("===================== SET LINK MODE TO: "+str(newvalue)+"=======================")
+        print("===================== SET LINK MODE TO: " + str(newvalue) + "=======================")
         self.SendCommand("LinkMode " + newvalue.value + "\n")
         return None
 
@@ -859,7 +867,7 @@ class BranchPG(AutomationExtender):
         """Get Link Tap changes across channels """
         return self.QueryResponse_bool("LinkTapChanges?\n")
 
-    def setLinkTapChanges(self, newvalue:bool) :
+    def setLinkTapChanges(self, newvalue: bool):
         """Set Link Tap changes across channels """
         self.SendCommand("LinkTapChanges " + ("T" if newvalue else "F") + "\n")
         return None
@@ -868,7 +876,7 @@ class BranchPG(AutomationExtender):
         """Get Frequency and Amp Current monitoring enable """
         return self.QueryResponse_bool("Monitor?\n")
 
-    def setMonitor(self, newvalue:bool) :
+    def setMonitor(self, newvalue: bool):
         """Set Frequency and Amp Current monitoring enable """
         self.SendCommand("Monitor " + ("T" if newvalue else "F") + "\n")
         return None
@@ -877,7 +885,7 @@ class BranchPG(AutomationExtender):
         """Get Operating clock rate, -1 means not set """
         return self.QueryResponse_float("OperatingRate?\n")
 
-    def setOperatingRateGHz(self, newvalue:float) :
+    def setOperatingRateGHz(self, newvalue: float):
         """Set Operating clock rate, -1 means not set """
         self.SendCommand("OperatingRate " + str(newvalue) + "\n")
         return None
@@ -904,20 +912,20 @@ class BranchPG(AutomationExtender):
 
     def getPattern(self, index: int) -> Pattern:
         """Get enum Pega Pattern[] """
-        return self.Pattern(self.QueryResponse_enum(self.Pattern, "Pattern["+str(index)+"]?\n"))
+        return self.Pattern(self.QueryResponse_enum(self.Pattern, "Pattern[" + str(index) + "]?\n"))
 
-    def setPattern(self, index: int, newvalue: Pattern) :
+    def setPattern(self, index: int, newvalue: Pattern):
         """Set enum Pega Pattern[] """
-        self.SendCommand("Pattern["+str(index)+"] " + newvalue.value + "\n")
+        self.SendCommand("Pattern[" + str(index) + "] " + newvalue.value + "\n")
         return None
 
     def getPrbsBitOffset(self, index: int) -> int:
         """Get Pattern bit offset[] """
-        return self.QueryResponse_int("PrbsBitOffset["+str(index)+"]?\n")
+        return self.QueryResponse_int("PrbsBitOffset[" + str(index) + "]?\n")
 
-    def setPrbsBitOffset(self, index: int, newvalue:int) :
+    def setPrbsBitOffset(self, index: int, newvalue: int):
         """Set Pattern bit offset[] """
-        self.SendCommand("PrbsBitOffset["+str(index)+"] " + str(newvalue) + "\n")
+        self.SendCommand("PrbsBitOffset[" + str(index) + "] " + str(newvalue) + "\n")
         return None
 
     def getReadRateGHz(self) -> float:
@@ -925,6 +933,7 @@ class BranchPG(AutomationExtender):
         return self.QueryResponse_float("ReadRate?\n")
 
         # Notice clock rate is 1/2 data rate
+
     def WaitForClockToSettle(self, targetClockGHz: float, timeoutSec: float = 30.0, toleranceGHz: float = 0.002):
         now = SocketDevice.timestamp()
         timeout = now + timeoutSec
@@ -933,13 +942,13 @@ class BranchPG(AutomationExtender):
 
         while now < timeout:
             if self.getDebugging():
-                print("Settle " + str(readGHz) + " - " + str(opGHz) )
+                print("Settle RD=" + str(readGHz) + " - OP=" + str(opGHz))
 
-            if abs(readGHz - targetClockGHz) <= toleranceGHz and  abs(opGHz - targetClockGHz) <= toleranceGHz:
+            if abs(readGHz - targetClockGHz) <= toleranceGHz and abs(opGHz - targetClockGHz) <= toleranceGHz:
                 break
             time.sleep(0.5)
             now = SocketDevice.timestamp()
-            readGHz = self.getReadRateGHz()
+            readGHz = self.getReadRateGHz()  # THIS IS WHERE SERVER IS HANGING
             opGHz = self.getOperatingRateGHz()
 
         if now >= timeout:
@@ -951,14 +960,14 @@ class BranchPG(AutomationExtender):
         """Get Use PAM4 Combiner level settings """
         return self.QueryResponse_bool("UseCombiner?\n")
 
-    def setUseCombiner(self, newvalue:bool) :
+    def setUseCombiner(self, newvalue: bool):
         """Set Use PAM4 Combiner level settings """
         self.SendCommand("UseCombiner " + ("T" if newvalue else "F") + "\n")
         return None
 
     def getUserAvailableBitmask(self, index: int) -> int:
         """Get User Pattern pages available bit mask[] """
-        return self.QueryResponse_int("UserAvailable["+str(index)+"]?\n")
+        return self.QueryResponse_int("UserAvailable[" + str(index) + "]?\n")
 
     class UserPage(Enum):
         PageA = "PageA"
@@ -966,11 +975,11 @@ class BranchPG(AutomationExtender):
 
     def getUserPage(self, index: int) -> UserPage:
         """Get enum User Pattern Page[] """
-        return self.UserPage(self.QueryResponse_enum(self.UserPage, "UserPage["+str(index)+"]?\n"))
+        return self.UserPage(self.QueryResponse_enum(self.UserPage, "UserPage[" + str(index) + "]?\n"))
 
-    def setUserPage(self, index: int, newvalue: UserPage) :
+    def setUserPage(self, index: int, newvalue: UserPage):
         """Set enum User Pattern Page[] """
-        self.SendCommand("UserPage["+str(index)+"] " + newvalue.value + "\n")
+        self.SendCommand("UserPage[" + str(index) + "] " + newvalue.value + "\n")
         return None
 
     def SetDefaults(self):
@@ -1001,42 +1010,42 @@ class BranchEyeChart(AutomationExtender):
         """Get Chart Bottom """
         return self.QueryResponse_float("Bottom?\n")
 
-    def setBottomMV(self, newvalue:float) :
+    def setBottomMV(self, newvalue: float):
         """Set Chart Bottom """
         self.SendCommand("Bottom " + str(newvalue) + "\n")
         return None
 
     def getCursAvail(self, index: int) -> bool:
         """Get Chart Cursor Available[] """
-        return self.QueryResponse_bool("CursAvail["+str(index)+"]?\n")
+        return self.QueryResponse_bool("CursAvail[" + str(index) + "]?\n")
 
     def getCursEnabled(self, index: int) -> bool:
         """Get Chart Cursor Enabled[] """
-        return self.QueryResponse_bool("CursEnabled["+str(index)+"]?\n")
+        return self.QueryResponse_bool("CursEnabled[" + str(index) + "]?\n")
 
-    def setCursEnabled(self, index: int, newvalue:bool) :
+    def setCursEnabled(self, index: int, newvalue: bool):
         """Set Chart Cursor Enabled[] """
-        self.SendCommand("CursEnabled["+str(index)+"] " + ("T" if newvalue else "F") + "\n")
+        self.SendCommand("CursEnabled[" + str(index) + "] " + ("T" if newvalue else "F") + "\n")
         return None
 
     def getCursLabel(self, index: int) -> str:
         """Get Chart Cursor Label[] """
-        return self.QueryResponse("CursLabel["+str(index)+"]?\n")
+        return self.QueryResponse("CursLabel[" + str(index) + "]?\n")
 
     def getCursValue(self, index: int) -> float:
         """Get Chart Cursor Value[] """
-        return self.QueryResponse_float("CursValue["+str(index)+"]?\n")
+        return self.QueryResponse_float("CursValue[" + str(index) + "]?\n")
 
-    def setCursValue(self, index: int, newvalue:float) :
+    def setCursValue(self, index: int, newvalue: float):
         """Set Chart Cursor Value[] """
-        self.SendCommand("CursValue["+str(index)+"] " + str(newvalue) + "\n")
+        self.SendCommand("CursValue[" + str(index) + "] " + str(newvalue) + "\n")
         return None
 
     def getHeightMV(self) -> float:
         """Get Chart Height """
         return self.QueryResponse_float("Height?\n")
 
-    def setHeightMV(self, newvalue:float) :
+    def setHeightMV(self, newvalue: float):
         """Set Chart Height """
         self.SendCommand("Height " + str(newvalue) + "\n")
         return None
@@ -1045,20 +1054,20 @@ class BranchEyeChart(AutomationExtender):
         """Get Chart Left """
         return self.QueryResponse_float("Left?\n")
 
-    def setLeftPS(self, newvalue:float) :
+    def setLeftPS(self, newvalue: float):
         """Set Chart Left """
         self.SendCommand("Left " + str(newvalue) + "\n")
         return None
 
     def getLimits(self, index: int) -> float:
         """Get Chart Limits (LRBT)[] """
-        return self.QueryResponse_float("Limits["+str(index)+"]?\n")
+        return self.QueryResponse_float("Limits[" + str(index) + "]?\n")
 
     def getLocked(self) -> bool:
         """Get Chart Locked """
         return self.QueryResponse_bool("Locked?\n")
 
-    def setLocked(self, newvalue:bool) :
+    def setLocked(self, newvalue: bool):
         """Set Chart Locked """
         self.SendCommand("Locked " + ("T" if newvalue else "F") + "\n")
         return None
@@ -1067,7 +1076,7 @@ class BranchEyeChart(AutomationExtender):
         """Get Chart LogScale """
         return self.QueryResponse_bool("Logscale?\n")
 
-    def setLogscale(self, newvalue:bool) :
+    def setLogscale(self, newvalue: bool):
         """Set Chart LogScale """
         self.SendCommand("Logscale " + ("T" if newvalue else "F") + "\n")
         return None
@@ -1098,7 +1107,7 @@ class BranchEyeChart(AutomationExtender):
         """Get enum Chart Scroll Mode """
         return self.Scroll(self.QueryResponse_enum(self.Scroll, "Scroll?\n"))
 
-    def setScroll(self, newvalue: Scroll) :
+    def setScroll(self, newvalue: Scroll):
         """Set enum Chart Scroll Mode """
         self.SendCommand("Scroll " + newvalue.value + "\n")
         return None
@@ -1107,7 +1116,7 @@ class BranchEyeChart(AutomationExtender):
         """Get Show memories """
         return self.QueryResponse_bool("ShowMemory?\n")
 
-    def setShowMemory(self, newvalue:bool) :
+    def setShowMemory(self, newvalue: bool):
         """Set Show memories """
         self.SendCommand("ShowMemory " + ("T" if newvalue else "F") + "\n")
         return None
@@ -1116,7 +1125,7 @@ class BranchEyeChart(AutomationExtender):
         """Get Show overlays """
         return self.QueryResponse_bool("ShowOverlays?\n")
 
-    def setShowOverlays(self, newvalue:bool) :
+    def setShowOverlays(self, newvalue: bool):
         """Set Show overlays """
         self.SendCommand("ShowOverlays " + ("T" if newvalue else "F") + "\n")
         return None
@@ -1129,10 +1138,11 @@ class BranchEyeChart(AutomationExtender):
         """Get Chart Width """
         return self.QueryResponse_float("Width?\n")
 
-    def setWidthPS(self, newvalue:float) :
+    def setWidthPS(self, newvalue: float):
         """Set Chart Width """
         self.SendCommand("Width " + str(newvalue) + "\n")
         return None
+
 
 # ================================ #
 
@@ -1154,7 +1164,7 @@ class BranchEyeCfg(AutomationExtender):
         """Get Image Brightness """
         return self.QueryResponse_float("Bright?\n")
 
-    def setBright(self, newvalue:float) :
+    def setBright(self, newvalue: float):
         """Set Image Brightness """
         self.SendCommand("Bright " + str(newvalue) + "\n")
         return None
@@ -1163,7 +1173,7 @@ class BranchEyeCfg(AutomationExtender):
         """Get Columns in Image """
         return self.QueryResponse_int("Columns?\n")
 
-    def setColumns(self, newvalue:int) :
+    def setColumns(self, newvalue: int):
         """Set Columns in Image """
         self.SendCommand("Columns " + str(newvalue) + "\n")
         return None
@@ -1172,7 +1182,7 @@ class BranchEyeCfg(AutomationExtender):
         """Get Delay Settle Time """
         return self.QueryResponse_int("DelaySettle?\n")
 
-    def setDelaySettleUSec(self, newvalue:int) :
+    def setDelaySettleUSec(self, newvalue: int):
         """Set Delay Settle Time """
         self.SendCommand("DelaySettle " + str(newvalue) + "\n")
         return None
@@ -1181,18 +1191,18 @@ class BranchEyeCfg(AutomationExtender):
         """Get E2 Depth """
         return self.QueryResponse_float("Depth?\n")
 
-    def setDepthBits(self, newvalue:float) :
+    def setDepthBits(self, newvalue: float):
         """Set E2 Depth """
         self.SendCommand("Depth " + str(newvalue) + "\n")
         return None
 
     def getDivisions(self, index: int) -> int:
         """Get Number of divisions H,V[] """
-        return self.QueryResponse_int("Divisions["+str(index)+"]?\n")
+        return self.QueryResponse_int("Divisions[" + str(index) + "]?\n")
 
-    def setDivisions(self, index: int, newvalue:int) :
+    def setDivisions(self, index: int, newvalue: int):
         """Set Number of divisions H,V[] """
-        self.SendCommand("Divisions["+str(index)+"] " + str(newvalue) + "\n")
+        self.SendCommand("Divisions[" + str(index) + "] " + str(newvalue) + "\n")
         return None
 
     def getEyeSync(self) -> bool:
@@ -1203,7 +1213,7 @@ class BranchEyeCfg(AutomationExtender):
         """Get Floor threshold for No-Sync mode (500K) """
         return self.QueryResponse_float("FloorNoSync?\n")
 
-    def setFloorNoSync(self, newvalue:float) :
+    def setFloorNoSync(self, newvalue: float):
         """Set Floor threshold for No-Sync mode (500K) """
         self.SendCommand("FloorNoSync " + str(newvalue) + "\n")
         return None
@@ -1212,7 +1222,7 @@ class BranchEyeCfg(AutomationExtender):
         """Get Floor threshold for Sync mode (500K) """
         return self.QueryResponse_float("FloorSync?\n")
 
-    def setFloorSync(self, newvalue:float) :
+    def setFloorSync(self, newvalue: float):
         """Set Floor threshold for Sync mode (500K) """
         self.SendCommand("FloorSync " + str(newvalue) + "\n")
         return None
@@ -1227,18 +1237,18 @@ class BranchEyeCfg(AutomationExtender):
 
     def getPerDiv(self, index: int) -> float:
         """Get Span per division[] """
-        return self.QueryResponse_float("PerDiv["+str(index)+"]?\n")
+        return self.QueryResponse_float("PerDiv[" + str(index) + "]?\n")
 
-    def setPerDiv(self, index: int, newvalue:float) :
+    def setPerDiv(self, index: int, newvalue: float):
         """Set Span per division[] """
-        self.SendCommand("PerDiv["+str(index)+"] " + str(newvalue) + "\n")
+        self.SendCommand("PerDiv[" + str(index) + "] " + str(newvalue) + "\n")
         return None
 
     def getPersist(self) -> int:
         """Get Persistence """
         return self.QueryResponse_int("Persist?\n")
 
-    def setPersist(self, newvalue:int) :
+    def setPersist(self, newvalue: int):
         """Set Persistence """
         self.SendCommand("Persist " + str(newvalue) + "\n")
         return None
@@ -1247,7 +1257,7 @@ class BranchEyeCfg(AutomationExtender):
         """Get Rows in Image """
         return self.QueryResponse_int("Rows?\n")
 
-    def setRows(self, newvalue:int) :
+    def setRows(self, newvalue: int):
         """Set Rows in Image """
         self.SendCommand("Rows " + str(newvalue) + "\n")
         return None
@@ -1256,7 +1266,7 @@ class BranchEyeCfg(AutomationExtender):
         """Get Scale ratio percentage """
         return self.QueryResponse_float("Scale?\n")
 
-    def setScalePcnt(self, newvalue:float) :
+    def setScalePcnt(self, newvalue: float):
         """Set Scale ratio percentage """
         self.SendCommand("Scale " + str(newvalue) + "\n")
         return None
@@ -1265,7 +1275,7 @@ class BranchEyeCfg(AutomationExtender):
         """Get Show Raw Data """
         return self.QueryResponse_bool("ShowRaw?\n")
 
-    def setShowRaw(self, newvalue:bool) :
+    def setShowRaw(self, newvalue: bool):
         """Set Show Raw Data """
         self.SendCommand("ShowRaw " + ("T" if newvalue else "F") + "\n")
         return None
@@ -1278,7 +1288,7 @@ class BranchEyeCfg(AutomationExtender):
         """Get Threshold Settle Time """
         return self.QueryResponse_int("ThreshSettle?\n")
 
-    def setThreshSettleUSec(self, newvalue:int) :
+    def setThreshSettleUSec(self, newvalue: int):
         """Set Threshold Settle Time """
         self.SendCommand("ThreshSettle " + str(newvalue) + "\n")
         return None
@@ -1287,10 +1297,11 @@ class BranchEyeCfg(AutomationExtender):
         """Get Use Clipping for Floor level """
         return self.QueryResponse_bool("UseClip?\n")
 
-    def setUseClip(self, newvalue:bool) :
+    def setUseClip(self, newvalue: bool):
         """Set Use Clipping for Floor level """
         self.SendCommand("UseClip " + ("T" if newvalue else "F") + "\n")
         return None
+
 
 # ================================ #
 
@@ -1299,8 +1310,8 @@ class BranchEye(AutomationExtender):
 
     def __init__(self, parent: AutomationInterface, prefix: str):
         super().__init__(parent, prefix)
-        self.Cfg = BranchEyeCfg(self,"Cfg:")
-        self.Chart = BranchEyeChart(self,"Chart:")
+        self.Cfg = BranchEyeCfg(self, "Cfg:")
+        self.Chart = BranchEyeChart(self, "Chart:")
 
     def __del__(self):
         super().__del__()
@@ -1308,7 +1319,7 @@ class BranchEye(AutomationExtender):
 
     def getBinary(self) -> list:
         """Get binary Binary Data """
-        return self.QueryBinaryResponse( "Binary?\n")
+        return self.QueryBinaryResponse("Binary?\n")
 
     def getElapsedSeconds(self) -> float:
         """Get Elapsed Time Seconds """
@@ -1331,7 +1342,7 @@ class BranchEye(AutomationExtender):
         """Get Show gui settings panel """
         return self.QueryResponse_bool("ShowSettings?\n")
 
-    def setShowSettings(self, newvalue:bool) :
+    def setShowSettings(self, newvalue: bool):
         """Set Show gui settings panel """
         self.SendCommand("ShowSettings " + ("T" if newvalue else "F") + "\n")
         return None
@@ -1349,6 +1360,7 @@ class BranchEye(AutomationExtender):
         """Method for Reset position."""
         self.SendCommand("Reset\n")
         return None
+
 
 # ================================ #
 
@@ -1371,7 +1383,7 @@ class BranchErrCfg(AutomationExtender):
         """Get enum ED Bits Format """
         return self.BitsFmt(self.QueryResponse_enum(self.BitsFmt, "BitsFmt?\n"))
 
-    def setBitsFmt(self, newvalue: BitsFmt) :
+    def setBitsFmt(self, newvalue: BitsFmt):
         """Set enum ED Bits Format """
         self.SendCommand("BitsFmt " + newvalue.value + "\n")
         return None
@@ -1380,7 +1392,7 @@ class BranchErrCfg(AutomationExtender):
         """Get Update interval """
         return self.QueryResponse_float("Interval?\n")
 
-    def setIntervalSeconds(self, newvalue:float) :
+    def setIntervalSeconds(self, newvalue: float):
         """Set Update interval """
         self.SendCommand("Interval " + str(newvalue) + "\n")
         return None
@@ -1389,7 +1401,7 @@ class BranchErrCfg(AutomationExtender):
         """Get Record Length """
         return self.QueryResponse_int("Reclen?\n")
 
-    def setReclen(self, newvalue:int) :
+    def setReclen(self, newvalue: int):
         """Set Record Length """
         self.SendCommand("Reclen " + str(newvalue) + "\n")
         return None
@@ -1398,7 +1410,7 @@ class BranchErrCfg(AutomationExtender):
         """Get Show Settings """
         return self.QueryResponse_bool("ShowSettings?\n")
 
-    def setShowSettings(self, newvalue:bool) :
+    def setShowSettings(self, newvalue: bool):
         """Set Show Settings """
         self.SendCommand("ShowSettings " + ("T" if newvalue else "F") + "\n")
         return None
@@ -1407,10 +1419,11 @@ class BranchErrCfg(AutomationExtender):
         """Get Show Strip Chart Settings """
         return self.QueryResponse_bool("ShowStripSettings?\n")
 
-    def setShowStripSettings(self, newvalue:bool) :
+    def setShowStripSettings(self, newvalue: bool):
         """Set Show Strip Chart Settings """
         self.SendCommand("ShowStripSettings " + ("T" if newvalue else "F") + "\n")
         return None
+
 
 # ================================ #
 
@@ -1429,42 +1442,42 @@ class BranchErrChart(AutomationExtender):
         """Get Chart Bottom """
         return self.QueryResponse_float("Bottom?\n")
 
-    def setBottomLogBER(self, newvalue:float) :
+    def setBottomLogBER(self, newvalue: float):
         """Set Chart Bottom """
         self.SendCommand("Bottom " + str(newvalue) + "\n")
         return None
 
     def getCursAvail(self, index: int) -> bool:
         """Get Chart Cursor Available[] """
-        return self.QueryResponse_bool("CursAvail["+str(index)+"]?\n")
+        return self.QueryResponse_bool("CursAvail[" + str(index) + "]?\n")
 
     def getCursEnabled(self, index: int) -> bool:
         """Get Chart Cursor Enabled[] """
-        return self.QueryResponse_bool("CursEnabled["+str(index)+"]?\n")
+        return self.QueryResponse_bool("CursEnabled[" + str(index) + "]?\n")
 
-    def setCursEnabled(self, index: int, newvalue:bool) :
+    def setCursEnabled(self, index: int, newvalue: bool):
         """Set Chart Cursor Enabled[] """
-        self.SendCommand("CursEnabled["+str(index)+"] " + ("T" if newvalue else "F") + "\n")
+        self.SendCommand("CursEnabled[" + str(index) + "] " + ("T" if newvalue else "F") + "\n")
         return None
 
     def getCursLabel(self, index: int) -> str:
         """Get Chart Cursor Label[] """
-        return self.QueryResponse("CursLabel["+str(index)+"]?\n")
+        return self.QueryResponse("CursLabel[" + str(index) + "]?\n")
 
     def getCursValue(self, index: int) -> float:
         """Get Chart Cursor Value[] """
-        return self.QueryResponse_float("CursValue["+str(index)+"]?\n")
+        return self.QueryResponse_float("CursValue[" + str(index) + "]?\n")
 
-    def setCursValue(self, index: int, newvalue:float) :
+    def setCursValue(self, index: int, newvalue: float):
         """Set Chart Cursor Value[] """
-        self.SendCommand("CursValue["+str(index)+"] " + str(newvalue) + "\n")
+        self.SendCommand("CursValue[" + str(index) + "] " + str(newvalue) + "\n")
         return None
 
     def getHeightLogBER(self) -> float:
         """Get Chart Height """
         return self.QueryResponse_float("Height?\n")
 
-    def setHeightLogBER(self, newvalue:float) :
+    def setHeightLogBER(self, newvalue: float):
         """Set Chart Height """
         self.SendCommand("Height " + str(newvalue) + "\n")
         return None
@@ -1473,20 +1486,20 @@ class BranchErrChart(AutomationExtender):
         """Get Chart Left """
         return self.QueryResponse_float("Left?\n")
 
-    def setLeftSeconds(self, newvalue:float) :
+    def setLeftSeconds(self, newvalue: float):
         """Set Chart Left """
         self.SendCommand("Left " + str(newvalue) + "\n")
         return None
 
     def getLimits(self, index: int) -> float:
         """Get Chart Limits (LRBT)[] """
-        return self.QueryResponse_float("Limits["+str(index)+"]?\n")
+        return self.QueryResponse_float("Limits[" + str(index) + "]?\n")
 
     def getLocked(self) -> bool:
         """Get Chart Locked """
         return self.QueryResponse_bool("Locked?\n")
 
-    def setLocked(self, newvalue:bool) :
+    def setLocked(self, newvalue: bool):
         """Set Chart Locked """
         self.SendCommand("Locked " + ("T" if newvalue else "F") + "\n")
         return None
@@ -1495,7 +1508,7 @@ class BranchErrChart(AutomationExtender):
         """Get Chart LogScale """
         return self.QueryResponse_bool("Logscale?\n")
 
-    def setLogscale(self, newvalue:bool) :
+    def setLogscale(self, newvalue: bool):
         """Set Chart LogScale """
         self.SendCommand("Logscale " + ("T" if newvalue else "F") + "\n")
         return None
@@ -1526,7 +1539,7 @@ class BranchErrChart(AutomationExtender):
         """Get enum Chart Scroll Mode """
         return self.Scroll(self.QueryResponse_enum(self.Scroll, "Scroll?\n"))
 
-    def setScroll(self, newvalue: Scroll) :
+    def setScroll(self, newvalue: Scroll):
         """Set enum Chart Scroll Mode """
         self.SendCommand("Scroll " + newvalue.value + "\n")
         return None
@@ -1535,7 +1548,7 @@ class BranchErrChart(AutomationExtender):
         """Get Show memories """
         return self.QueryResponse_bool("ShowMemory?\n")
 
-    def setShowMemory(self, newvalue:bool) :
+    def setShowMemory(self, newvalue: bool):
         """Set Show memories """
         self.SendCommand("ShowMemory " + ("T" if newvalue else "F") + "\n")
         return None
@@ -1544,7 +1557,7 @@ class BranchErrChart(AutomationExtender):
         """Get Show overlays """
         return self.QueryResponse_bool("ShowOverlays?\n")
 
-    def setShowOverlays(self, newvalue:bool) :
+    def setShowOverlays(self, newvalue: bool):
         """Set Show overlays """
         self.SendCommand("ShowOverlays " + ("T" if newvalue else "F") + "\n")
         return None
@@ -1557,10 +1570,11 @@ class BranchErrChart(AutomationExtender):
         """Get Chart Width """
         return self.QueryResponse_float("Width?\n")
 
-    def setWidthSeconds(self, newvalue:float) :
+    def setWidthSeconds(self, newvalue: float):
         """Set Chart Width """
         self.SendCommand("Width " + str(newvalue) + "\n")
         return None
+
 
 # ================================ #
 
@@ -1570,8 +1584,8 @@ class BranchErr(AutomationExtender):
 
     def __init__(self, parent: AutomationInterface, prefix: str):
         super().__init__(parent, prefix)
-        self.Cfg = BranchErrCfg(self,"Cfg:")
-        self.Chart = BranchErrChart(self,"Chart:")
+        self.Cfg = BranchErrCfg(self, "Cfg:")
+        self.Chart = BranchErrChart(self, "Chart:")
 
     def __del__(self):
         super().__del__()
@@ -1587,7 +1601,7 @@ class BranchErr(AutomationExtender):
 
     def getBinary(self) -> list:
         """Get binary Binary Data """
-        return self.QueryBinaryResponse_float( "Binary?\n")
+        return self.QueryBinaryResponse_float("Binary?\n")
 
     def getBits(self) -> int:
         """Get Bit Count Result """
@@ -1628,11 +1642,11 @@ class BranchErr(AutomationExtender):
 
     def Csv(self, optFilename: str = "") -> str:
         """Response method for PegaED Csv. """
-        return self.QueryResponse("Csv\n" if optFilename == "" else 'Csv "'+optFilename+'"\n')
+        return self.QueryResponse("Csv\n" if optFilename == "" else 'Csv "' + optFilename + '"\n')
 
     def Csv2(self, optFilename: str = "") -> str:
         """Response method for PegaErr Csv."""
-        return self.QueryResponse("Csv2\n" if optFilename == "" else 'Csv "'+optFilename+'"\n')
+        return self.QueryResponse("Csv2\n" if optFilename == "" else 'Csv "' + optFilename + '"\n')
 
     def Fit(self):
         """Method for PegaED Chart Fit."""
@@ -1643,6 +1657,7 @@ class BranchErr(AutomationExtender):
         """Method for Reset position."""
         self.SendCommand("Reset\n")
         return None
+
 
 # ================================ #
 
@@ -1665,7 +1680,7 @@ class BranchEDSampler(AutomationExtender):
         """Get enum Deferred sampler data source selection """
         return self.DataSource(self.QueryResponse_enum(self.DataSource, "DataSource?\n"))
 
-    def setDataSource(self, newvalue: DataSource) :
+    def setDataSource(self, newvalue: DataSource):
         """Set enum Deferred sampler data source selection """
         self.SendCommand("DataSource " + newvalue.value + "\n")
         return None
@@ -1676,11 +1691,11 @@ class BranchEDSampler(AutomationExtender):
 
     def getDelaysPS(self, index: int) -> float:
         """Get Sampler delay values by index (0=Cal 1=Deferred)[] """
-        return self.QueryResponse_float("Delays["+str(index)+"]?\n")
+        return self.QueryResponse_float("Delays[" + str(index) + "]?\n")
 
-    def setDelaysPS(self, index: int, newvalue:float) :
+    def setDelaysPS(self, index: int, newvalue: float):
         """Set Sampler delay values by index (0=Cal 1=Deferred)[] """
-        self.SendCommand("Delays["+str(index)+"] " + str(newvalue) + "\n")
+        self.SendCommand("Delays[" + str(index) + "] " + str(newvalue) + "\n")
         return None
 
     class HControl(Enum):
@@ -1692,7 +1707,7 @@ class BranchEDSampler(AutomationExtender):
         """Get enum Deferred sampler time control selection """
         return self.HControl(self.QueryResponse_enum(self.HControl, "HControl?\n"))
 
-    def setHControl(self, newvalue: HControl) :
+    def setHControl(self, newvalue: HControl):
         """Set enum Deferred sampler time control selection """
         self.SendCommand("HControl " + newvalue.value + "\n")
         return None
@@ -1705,7 +1720,7 @@ class BranchEDSampler(AutomationExtender):
         """Get enum Sample mode selection """
         return self.Mode(self.QueryResponse_enum(self.Mode, "Mode?\n"))
 
-    def setMode(self, newvalue: Mode) :
+    def setMode(self, newvalue: Mode):
         """Set enum Sample mode selection """
         self.SendCommand("Mode " + newvalue.value + "\n")
         return None
@@ -1714,7 +1729,7 @@ class BranchEDSampler(AutomationExtender):
         """Get Sample time """
         return self.QueryResponse_float("Time?\n")
 
-    def setTimePS(self, newvalue:float) :
+    def setTimePS(self, newvalue: float):
         """Set Sample time """
         self.SendCommand("Time " + str(newvalue) + "\n")
         return None
@@ -1729,7 +1744,7 @@ class BranchEDSampler(AutomationExtender):
         """Get enum Deferred sampler voltage control selection """
         return self.VControl(self.QueryResponse_enum(self.VControl, "VControl?\n"))
 
-    def setVControl(self, newvalue: VControl) :
+    def setVControl(self, newvalue: VControl):
         """Set enum Deferred sampler voltage control selection """
         self.SendCommand("VControl " + newvalue.value + "\n")
         return None
@@ -1738,7 +1753,7 @@ class BranchEDSampler(AutomationExtender):
         """Get Sampler voltage """
         return self.QueryResponse_float("Volts?\n")
 
-    def setVoltsMV(self, newvalue:float) :
+    def setVoltsMV(self, newvalue: float):
         """Set Sampler voltage """
         self.SendCommand("Volts " + str(newvalue) + "\n")
         return None
@@ -1751,6 +1766,7 @@ class BranchEDSampler(AutomationExtender):
         """Get Sample voltage minimum """
         return self.QueryResponse_float("VoltsMin?\n")
 
+
 # ================================ #
 
 
@@ -1759,7 +1775,7 @@ class BranchED(AutomationExtender):
 
     def __init__(self, parent: AutomationInterface, prefix: str):
         super().__init__(parent, prefix)
-        self.Sampler = BranchEDSampler(self,"Sampler:")
+        self.Sampler = BranchEDSampler(self, "Sampler:")
 
     def __del__(self):
         super().__del__()
@@ -1781,7 +1797,7 @@ class BranchED(AutomationExtender):
         """Get Auto Resync Enable """
         return self.QueryResponse_bool("AutoResync?\n")
 
-    def setAutoResync(self, newvalue:bool) :
+    def setAutoResync(self, newvalue: bool):
         """Set Auto Resync Enable """
         self.SendCommand("AutoResync " + ("T" if newvalue else "F") + "\n")
         return None
@@ -1798,27 +1814,26 @@ class BranchED(AutomationExtender):
         """Get Calibration input rate limit """
         return self.QueryResponse_float("CalibLimit?\n")
 
-    def findBestCalibDivider(self,dataRateGbps: float) -> BranchSyn.DivCalib :
-        CALNUM = [2,4,8,16,0]
-        CALDIV = [BranchSyn.DivCalib.Div2, BranchSyn.DivCalib.Div4,BranchSyn.DivCalib.Div8,BranchSyn.DivCalib.Div16]
-        index=0
+    def findBestCalibDivider(self, dataRateGbps: float) -> BranchSyn.DivCalib:
+        CALNUM = [2, 4, 8, 16, 0]
+        CALDIV = [BranchSyn.DivCalib.Div2, BranchSyn.DivCalib.Div4, BranchSyn.DivCalib.Div8, BranchSyn.DivCalib.Div16]
+        index = 0
         calibLimitGbps = self.getCalibLimitGbps()
-        while CALNUM[index]!=0:
-            if dataRateGbps/CALNUM[index] <= calibLimitGbps:
+        while CALNUM[index] != 0:
+            if dataRateGbps / CALNUM[index] <= calibLimitGbps:
                 break
-            index=index+1
+            index = index + 1
 
-        if CALNUM[index]==0:
+        if CALNUM[index] == 0:
             raise Exception("[Unable_To_Find_Matching_Calib_Divider]")
 
         return CALDIV[index]
-
 
     def getDelayPS(self) -> float:
         """Get Delay """
         return self.QueryResponse_float("Delay?\n")
 
-    def setDelayPS(self, newvalue:float) :
+    def setDelayPS(self, newvalue: float):
         """Set Delay """
         self.SendCommand("Delay " + str(newvalue) + "\n")
         return None
@@ -1853,7 +1868,7 @@ class BranchED(AutomationExtender):
         """Get Calibration channel enabled """
         return self.QueryResponse_bool("Enabled?\n")
 
-    def setEnabled(self, newvalue:bool) :
+    def setEnabled(self, newvalue: bool):
         """Set Calibration channel enabled """
         self.SendCommand("Enabled " + ("T" if newvalue else "F") + "\n")
         return None
@@ -1872,7 +1887,7 @@ class BranchED(AutomationExtender):
         """Get enum Eye subrate applied to delays """
         return self.EyeSubrate(self.QueryResponse_enum(self.EyeSubrate, "EyeSubrate?\n"))
 
-    def setEyeSubrate(self, newvalue: EyeSubrate) :
+    def setEyeSubrate(self, newvalue: EyeSubrate):
         """Set enum Eye subrate applied to delays """
         self.SendCommand("EyeSubrate " + newvalue.value + "\n")
         return None
@@ -1889,7 +1904,7 @@ class BranchED(AutomationExtender):
         """Get enum Grab length """
         return self.GrabLen(self.QueryResponse_enum(self.GrabLen, "GrabLen?\n"))
 
-    def setGrabLen(self, newvalue: GrabLen) :
+    def setGrabLen(self, newvalue: GrabLen):
         """Set enum Grab length """
         self.SendCommand("GrabLen " + newvalue.value + "\n")
         return None
@@ -1910,7 +1925,7 @@ class BranchED(AutomationExtender):
         """Get Pattern change and data rate monitoring enable """
         return self.QueryResponse_bool("Monitor?\n")
 
-    def setMonitor(self, newvalue:bool) :
+    def setMonitor(self, newvalue: bool):
         """Set Pattern change and data rate monitoring enable """
         self.SendCommand("Monitor " + ("T" if newvalue else "F") + "\n")
         return None
@@ -1940,7 +1955,7 @@ class BranchED(AutomationExtender):
         """Get enum Detector Pattern """
         return self.Patt(self.QueryResponse_enum(self.Patt, "Patt?\n"))
 
-    def setPatt(self, newvalue: Patt) :
+    def setPatt(self, newvalue: Patt):
         """Set enum Detector Pattern """
         self.SendCommand("Patt " + newvalue.value + "\n")
         return None
@@ -1949,7 +1964,7 @@ class BranchED(AutomationExtender):
         """Get Resync Threshold """
         return self.QueryResponse_int("ResyncThresh?\n")
 
-    def setResyncThresh(self, newvalue:int) :
+    def setResyncThresh(self, newvalue: int):
         """Set Resync Threshold """
         self.SendCommand("ResyncThresh " + str(newvalue) + "\n")
         return None
@@ -1958,7 +1973,7 @@ class BranchED(AutomationExtender):
         """Get Termination DC Level """
         return self.QueryResponse_float("TermDCLevel?\n")
 
-    def setTermDCLevelMV(self, newvalue:float) :
+    def setTermDCLevelMV(self, newvalue: float):
         """Set Termination DC Level """
         self.SendCommand("TermDCLevel " + str(newvalue) + "\n")
         return None
@@ -1971,7 +1986,7 @@ class BranchED(AutomationExtender):
         """Get enum Termination Type """
         return self.TermType(self.QueryResponse_enum(self.TermType, "TermType?\n"))
 
-    def setTermType(self, newvalue: TermType) :
+    def setTermType(self, newvalue: TermType):
         """Set enum Termination Type """
         self.SendCommand("TermType " + newvalue.value + "\n")
         return None
@@ -1980,7 +1995,7 @@ class BranchED(AutomationExtender):
         """Get Threshold """
         return self.QueryResponse_float("Thresh?\n")
 
-    def setThreshMV(self, newvalue:float) :
+    def setThreshMV(self, newvalue: float):
         """Set Threshold """
         self.SendCommand("Thresh " + str(newvalue) + "\n")
         return None
@@ -1996,14 +2011,14 @@ class BranchED(AutomationExtender):
         PrbsVolts = "PrbsVolts"
         PrbsAll = "PrbsAll"
 
-    def AlignData(self, alignType: AlignBy = AlignBy.All, waitToComplete: bool = True ) -> bool:
+    def AlignData(self, alignType: AlignBy = AlignBy.All, waitToComplete: bool = True) -> bool:
         """Perform data alignment and optionally wait until completed. """
 
         self.SendCommand("AlignData " + alignType.value + "\n")
 
-        retn=False
+        retn = False
         if waitToComplete:
-            retn=self.WaitForAlignmentToComplete()
+            retn = self.WaitForAlignmentToComplete()
 
         return retn
 
@@ -2034,7 +2049,7 @@ class BranchED(AutomationExtender):
             time.sleep(0.5)
             now = SocketDevice.timestamp()
             if self.getDebugging():
-                print("Aligning "+ "{:.1f}".format(now - begin_time))
+                print("Aligning " + "{:.1f}".format(now - begin_time))
 
             # if not self.QueryResponse_bool("InProgress?\n"):
             #     break
@@ -2078,7 +2093,6 @@ class BranchED(AutomationExtender):
             raise Exception("[Timeout_During_Data_Type_Settle]")
 
         return readPattern
-
 
     def Resync(self):
         """Method for Manual Resync."""

@@ -37,7 +37,6 @@ from enum import Enum
 
 # ================================ #
 
-
 class BranchConst(AutomationExtender):
     """BranchConst class.  Constants"""
 
@@ -639,6 +638,28 @@ class BranchAnnounce(AutomationExtender):
         """Method for Clear message. Todo: add arguments if needed"""
         print("BranchAnnounce:Clear(), Todo: add arguments if needed")
         self.SendCommand("Clear\n")
+        return None
+
+
+# ================================ #
+
+class BranchHw(AutomationExtender):
+    """BranchHw class.  Hardware"""
+
+    def __init__(selfself, parent: AutomationInterface, prefix: str):
+        super().__init__(parent, prefix)
+
+    def __del__(self):
+        super().__del__()
+        return None
+
+    def getReadback(self) -> int:
+        """Get readback register """
+        return self.QueryResponse_int("Readback?\n")
+
+    def setReadback(self, newvalue: int):
+        """Set readback register """
+        self.SendCommand("Readback 0x" + hex(newvalue) + "\n")
         return None
 
 # EOF

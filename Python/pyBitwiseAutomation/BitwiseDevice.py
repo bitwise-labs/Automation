@@ -46,6 +46,7 @@ class BitwiseDevice(SocketDevice):
         self.Sys = BranchSys(self, "Sys:")
         self.Const = BranchConst(self, "Const:")
         self.Announce = BranchAnnounce(self, "Announce:")
+        self.Hw = BranchHw(self,"Hw:")
 
     def __del__(self):
         super().__del__()

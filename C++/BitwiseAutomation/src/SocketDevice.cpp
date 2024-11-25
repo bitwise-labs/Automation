@@ -35,7 +35,7 @@
 #include <stdlib.h> /* malloc */
 #include <sys/time.h> /* gettimeofday */
 #include <netdb.h> /* gethostbyname() */
-#include <unistd.h> /* close */
+#include <unistd.h> /* close, sleep */
 
 /* future: for multi-threading, need mutex around socket access.  Also set FD_CLOEXEC */
 /* to prevent fork() from duplicating open sockets. Could implement asynchronous access */
@@ -227,6 +227,10 @@ void SocketDevice::Disconnect()
 
 		m_Sock = -1;
 		m_IsConnected = false;
+
+		//pause to ensure server completely closes connection
+
+		sleep(2);
 	}
 }
 

@@ -1,7 +1,5 @@
 # TestPegaDeploy.py
 
-# -loop 100 -drate 1.0 -drate 2.0 -drate 3.0 -drate 4.0 -drate 5.0 -drate 6.0 -drate 8.0 -drate 10.0 -ch 0 -ch 1 192.168.1.176
-
 # ================================================================================
 # BOOST SOFTWARE LICENSE
 #
@@ -41,13 +39,14 @@ def test_PegaDeploy(
         ip_address: str,
         loop_count: int = 1,
         verbose_flag: bool = False,
+        prbs_flag: bool = False,
         data_rate_ghz: float = 5.5,
         channel: BranchPatt.PatternChannel = BranchPatt.PatternChannel.Ch0
 ) -> int:
     # returns number of errors encountered
 
     print("ip_addr=" + ip_address + ", loop=" + str(loop_count) +
-          ", drate=" + str(data_rate_ghz) + ", ch=" + str(channel))
+          ", drate=" + str(data_rate_ghz) + ", ch=" + str(channel) +", prbs="+str(prbs_flag))
 
     errors = 0
     Pega = PegaDevice()
@@ -55,7 +54,7 @@ def test_PegaDeploy(
     counter = 0
 
     try:
-        # Pega.setDebugging(verbose_flag)
+        ## Pega.setDebugging(verbose_flag)
         Pega.Connect(ip_address)
 
         if verbose_flag:
@@ -63,14 +62,14 @@ def test_PegaDeploy(
             print("IP Address........" + ip_address)
             print("Serial number....." + Pega.Const.getSN())
             print("Build............." + Pega.Sys.getBuild())
-            print("Architecture......" + Pega.Sys.getArchitecture())
+            # print("Architecture......" + Pega.Sys.getArchitecture())
             print("Loop.............." + str(loop_count))
             print("Verbose..........." + str(verbose_flag))
             print("Data rate GHz....." + str(data_rate_ghz))
             print("Channel..........." + str(channel))
 
         # Pega.RestoreConfiguration("[factory]")
-        # Pega.PG.setAllOn(1)
+        Pega.PG.setAllOn(1)
         Pega.Syn.setDataRateGbps(data_rate_ghz)
         Pega.PG.WaitForClockToSettle(data_rate_ghz / 2.0)
 
@@ -81,10 +80,12 @@ def test_PegaDeploy(
         print("Temperature: {:.2f}".format(temp_c))
 
         fnames = []
-        fnames.append("1100.patt")
-        # fnames.append("Prbs/prbs13.patt")
-        fnames.append("10.patt")
-        # fnames.append("Prbs/prbs15.patt")
+        if prbs_flag:
+            fnames.append("Prbs/prbs13.patt")
+            fnames.append("Prbs/prbs15.patt")
+        else:
+            fnames.append("1100.patt")
+            fnames.append("10.patt")
 
         Pega.PG.setPattern(channel_num, Pega.PG.Pattern.User)
 
@@ -92,6 +93,7 @@ def test_PegaDeploy(
             time_start = time.time()
             error_msg = "Okay"
             try:
+                time.sleep(0.5)
                 Pega.Patt.Deploy(channel, fnames[counter % len(fnames)], 0)
 
             except Exception as e:
@@ -124,18 +126,33 @@ if __name__ == '__main__':
     verbose = False
     data_rate = []
     channel = []
+    step = 1.0
+    to = -1.0
+    fm = -1.0
+    prbs = False
 
     i = 1
     while i < len(sys.argv):
-        # print("argv[" + str(i) + "] = " + sys.argv[i])
+        ## print("argv[" + str(i) + "] = " + sys.argv[i])
 
         if sys.argv[i] == "-loop":
             loop = int(sys.argv[i + 1])
             i += 1
         elif sys.argv[i] == "-verbose":
             verbose = True
+        elif sys.argv[i] == "-prbs":
+            prbs = True
         elif sys.argv[i] == "-drate":
             data_rate.append(float(sys.argv[i + 1]))
+            i += 1
+        elif sys.argv[i] == "-fm":
+            fm = float(sys.argv[i + 1])
+            i += 1
+        elif sys.argv[i] == "-to":
+            to = float(sys.argv[i + 1])
+            i += 1
+        elif sys.argv[i] == "-step":
+            step = float(sys.argv[i + 1])
             i += 1
         elif sys.argv[i] == "-ch":
             if int(sys.argv[i + 1]) == 0:
@@ -154,18 +171,28 @@ if __name__ == '__main__':
 
     if ip == "" or loop < 1:
         print("Usage:  TestPegaDeploy [options] <ip-address>")
-        print("Options:  -loop N ... set looping count (dflt 1)")
+        print("Options:  -loop N .... set looping count (dflt 1)")
+        print("          -prbs ...... use longer prbs files")
         print("          -drate F ... set data rate in GHz (multiple allowed)")
-        print("          -ch N ....... set channel 0 or 1 to test (multiple allowed)")
+        print("          -fm F ...... data rate range beginning")
+        print("          -to F ...... data rate range ending")
+        print("          -step F .... data rate range step factor (Dflt 1)")
+        print("          -ch N ...... set channel 0 or 1 to test (multiple allowed)")
         print("          -verbose ... set verbose mode for debugging")
-
         exit()
 
     if len(channel) == 0:
         channel.append(BranchPatt.PatternChannel.Ch0)
 
+    if 0.0 < fm < to and step > 0.0:
+        f = fm
+        while f <= to:
+            data_rate.append(f)
+            f = f + step
+
     if len(data_rate) == 0:
-        data_rate.append(5.5)
+        print("No data rates specified")
+        exit()
 
     summary = []
     total_errors = 0
@@ -173,7 +200,7 @@ if __name__ == '__main__':
     try:
         for ch in channel:
             for dr in data_rate:
-                errors_encountered = test_PegaDeploy(ip, loop, verbose, dr, ch)
+                errors_encountered = test_PegaDeploy(ip, loop, verbose, prbs, dr, ch)
                 total_errors = total_errors + errors_encountered
                 summary.append(errors_encountered)
 
