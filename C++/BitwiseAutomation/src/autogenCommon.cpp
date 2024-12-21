@@ -653,7 +653,6 @@ int BranchAnnounce::getSequence() /* Message sequence number */
 
 void BranchAnnounce::Clear() /* Clear message, Todo:add arguments */
 {
-    fprintf(TRACE_STDOUT,"BranchAnnounce::Clear(), Todo: add arguments if needed\n");
     SendCommand("Clear\n");
 }
 

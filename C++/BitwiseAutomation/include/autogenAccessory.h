@@ -815,10 +815,30 @@ class BranchAccDDR: /* DDR5 accessory */
     void PowerOn( PowerOp arg = PowerOp::pwrReset ); /* Power-on MIC. */
     void ProgramPhase(); /* Program Phase DRAM+RCD */
 };
+/* ================================= */
+
+
+class BranchAccPGSA: /* PGSA accessory */
+	public AutomationExtender
+{
+	public:
+
+	BranchConst Const;
+	BranchAccDDRRef  Ref;
+	BranchAccDDRStress Stress;
+
+	BranchAccPGSA(AutomationInterface *baseDevice,const char *prefix) :
+		AutomationExtender(baseDevice,prefix),
+		Const(this,"Const:"),
+		Ref(this,"Ref:"),
+		Stress(this,"Stress:") {}
+	virtual ~BranchAccPGSA() {}
+};
+
 
 /* ================================ */
 
- class BranchAccPUL: /* Pulser accessory */
+class BranchAccPUL: /* Pulser accessory */
      public AutomationExtender
  {
      public:
@@ -861,11 +881,13 @@ class BranchAccDDR: /* DDR5 accessory */
      public:
  	BranchAccDDR DDR;
  	BranchAccPUL PUL;
+ 	BranchAccPGSA PGSA;
 
      BranchAcc(AutomationInterface *baseDevice,const char *prefix) :
          AutomationExtender(baseDevice,prefix),
 			DDR(this,"DDR:"),
-			PUL(this,"PUL:") {}
+			PUL(this,"PUL:"),
+			PGSA(this,"PGSA:") {}
      virtual ~BranchAcc() {}
 
      bool getIsAttached(); /* Probe is attached */
@@ -874,7 +896,8 @@ class BranchAccDDR: /* DDR5 accessory */
      {
          None,
          DDR5,
-         Pulser
+         Pulser,
+		 PGSA
      };
      static const char *Type_Strings[];
 

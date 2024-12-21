@@ -94,7 +94,8 @@ class BranchFile: /* File System Access */
     char* Checksum(char *buffer,int buflen,char *filepath); /* Checksum File */
     void Copy(char *frompath, char *topath); /* Copy File */
     void Del(char *filepath); /* Delete File */
-    bool Exists(char *buffer,int buflen,char *filepath); /* File Exists */
+    //bool Exists(char *buffer,int buflen,char *filepath); /* File Exists */
+    bool Exists(char *buffer); /* File Exists */
     char *Fetch(char *filepath,int *pcount=0); /* Fetch File - Must free() return value */
     int Length(char *filepath); /* File Length */
     char *List(char *dirpath, char *otheroptions = (char*)""); /* List Directory - Must free() return value */

@@ -33,6 +33,7 @@ import numpy
 from pyBitwiseAutomation.autogenCommon import *
 from enum import Enum
 
+
 # ================================ #
 
 
@@ -107,6 +108,7 @@ class BranchAccPUL(AutomationExtender):
         """Set enum Pulse width selection """
         self.SendCommand("Width " + newvalue.value + "\n")
         return None
+
 
 # ================================ #
 
@@ -202,6 +204,7 @@ class BranchAccDDRStress(AutomationExtender):
         self.SendCommand("SJLevel " + str(newvalue) + "\n")
         return None
 
+
 # ================================ #
 
 class BranchAccDDRCTC(AutomationExtender):
@@ -214,62 +217,68 @@ class BranchAccDDRCTC(AutomationExtender):
         super().__del__()
         return None
 
-    def DramMPC(self, devaddr: int, channel: int, rank: int, data: int ):
+    def DramMPC(self, devaddr: int, channel: int, rank: int, data: int):
         """Method for DramMPC devaddr(0-3F), channel(0-1), rank(0-1), data(0-FF)."""
-        self.SendCommand("DramMPC "+str(devaddr)+" " + str(channel)+" " + str(rank) + " " + hex(data) + "\n")
+        self.SendCommand("DramMPC " + str(devaddr) + " " + str(channel) + " " + str(rank) + " " + hex(data) + "\n")
         return None
 
-    def DramMRR(self, devaddr: int, channel: int, rank: int, address: int ):
+    def DramMRR(self, devaddr: int, channel: int, rank: int, address: int):
         """Method for DramMRR devaddr(0-3F), channel(0-1), rank(0-1), address(0-FF). """
-        self.SendCommand("DramMRR "+str(devaddr)+" " + str(channel)+" " + str(rank) + " " + str(address) + "\n")
+        self.SendCommand("DramMRR " + str(devaddr) + " " + str(channel) + " " + str(rank) + " " + str(address) + "\n")
         return None
 
-    def DramMRW(self, devaddr: int, channel: int, rank: int, address: int, data: int ):
+    def DramMRW(self, devaddr: int, channel: int, rank: int, address: int, data: int):
         """Method for DramMRW devaddr(0-3F), channel(0-1), rank(0-1), address(0-FF), data(0-FF)."""
-        self.SendCommand("DramMRW "+str(devaddr)+" " + str(channel)+" " + str(rank) + " " + str(address) + " " + hex(data) + "\n")
+        self.SendCommand(
+            "DramMRW " + str(devaddr) + " " + str(channel) + " " + str(rank) + " " + str(address) + " " + hex(
+                data) + "\n")
         return None
 
-    def DramNOP(self, devaddr: int, channel: int, rank: int ):
+    def DramNOP(self, devaddr: int, channel: int, rank: int):
         """Method for DramNOP devaddr(0-3F), channel(0-1), rank(0-1)."""
-        self.SendCommand("DramNOP "+str(devaddr)+" " + str(channel)+" " + str(rank) + "\n")
+        self.SendCommand("DramNOP " + str(devaddr) + " " + str(channel) + " " + str(rank) + "\n")
         return None
 
-    def I2cWriteByte(self, devaddr: int, address: int, value: int ):
+    def I2cWriteByte(self, devaddr: int, address: int, value: int):
         """Method for I2cWriteByte devaddr(0-3F), address(0-FF), value(0-FF)."""
-        self.SendCommand("I2cWriteByte "+str(devaddr)+" " + str(address) + " " + hex(value) + "\n")
+        self.SendCommand("I2cWriteByte " + str(devaddr) + " " + str(address) + " " + hex(value) + "\n")
         return None
 
-    def I2cReadByte(self, devaddr: int, address: int, value: int ) -> int :
+    def I2cReadByte(self, devaddr: int, address: int, value: int) -> int:
         """Method for devaddr(0-3F), address(0-FF), value(0-FF)."""
-        return self.QueryResponse_int("I2cReadByte "+str(devaddr)+" " + str(address) + "\n")
+        return self.QueryResponse_int("I2cReadByte " + str(devaddr) + " " + str(address) + "\n")
 
     def ReadByte(self, devaddr: int, address: int):
         """Method for ReadByte devaddr(0-3F), channel(0-1), address(0-FFFF, 256-byte pages)."""
-        return self.QueryResponse_int("ReadByte "+str(devaddr)+" " + str(address) + "\n")
+        return self.QueryResponse_int("ReadByte " + str(devaddr) + " " + str(address) + "\n")
 
-    def ReadDword(self, devaddr: int, channel: int, address: int) -> int :
+    def ReadDword(self, devaddr: int, channel: int, address: int) -> int:
         """Method for ReadDword devaddr(0-3F), channel(0-1), address(0-FFFF, 256-byte pages)."""
-        return self.QueryResponse_int("ReadDword "+str(devaddr)+" " + str(channel) + " " + str(address) + "\n")
+        return self.QueryResponse_int("ReadDword " + str(devaddr) + " " + str(channel) + " " + str(address) + "\n")
 
     def SetGpio(self, pin: int, value: bool):
         """Method for SetGpio pin 0-15, value T/F."""
         self.SendCommand("SetGpio " + str(pin) + ("T" if value else "F") + "\n")
         return None
 
-    def WriteByte(self, devaddr: int, channel: int, address: int, value: int ):
+    def WriteByte(self, devaddr: int, channel: int, address: int, value: int):
         """Method for WriteByte devaddr(0-3F), channel(0-1), address(0-FFFF, 256-byte pages), value (0-FF)."""
-        self.SendCommand("WriteByte "+str(devaddr)+" " + str(channel)+" " + str(address) + " " + hex(value) + "\n")
+        self.SendCommand(
+            "WriteByte " + str(devaddr) + " " + str(channel) + " " + str(address) + " " + hex(value) + "\n")
         return None
 
-    def WriteDword(self, devaddr: int, channel: int, address: int, value: int ):
+    def WriteDword(self, devaddr: int, channel: int, address: int, value: int):
         """Method for WriteDword devaddr(0-3F), channel(0-1), address(0-FFFF, 256-byte pages), value (0-FFFFFFFF)."""
-        self.SendCommand("WriteDword "+str(devaddr)+" " + str(channel)+" " + str(address) + " " + hex(value) + "\n")
+        self.SendCommand(
+            "WriteDword " + str(devaddr) + " " + str(channel) + " " + str(address) + " " + hex(value) + "\n")
         return None
 
-    def WriteWord(self, devaddr: int, channel: int, address: int, value: int ):
+    def WriteWord(self, devaddr: int, channel: int, address: int, value: int):
         """Method for WriteWord devaddr(0-3F), channel(0-1), address(0-FFFF, 256-byte pages), value (0-FFFF)."""
-        self.SendCommand("WriteWord "+str(devaddr)+" " + str(channel)+" " + str(address) + " " + hex(value) + "\n")
+        self.SendCommand(
+            "WriteWord " + str(devaddr) + " " + str(channel) + " " + str(address) + " " + hex(value) + "\n")
         return None
+
 
 # ================================ #
 
@@ -323,6 +332,7 @@ class BranchAccDDRDFE(AutomationExtender):
         """Method for Program DFE with current settings."""
         self.SendCommand("Program\n")
         return None
+
 
 # ================================ #
 
@@ -520,6 +530,7 @@ class BranchAccDDRRef(AutomationExtender):
         self.SendCommand("TermType " + newvalue.value + "\n")
         return None
 
+
 # ================================ #
 
 class BranchAccDDRTerm(AutomationExtender):
@@ -609,6 +620,7 @@ class BranchAccDDRTerm(AutomationExtender):
         self.SendCommand("Program\n")
         return None
 
+
 # ================================ #
 
 class BranchAccDDRCommand(AutomationExtender):
@@ -659,6 +671,7 @@ class BranchAccDDRLB(AutomationExtender):
         self.SendCommand("Cancel\n")
         return None
 
+
 # ================================ #
 
 
@@ -683,7 +696,7 @@ class BranchAccDDRTools(AutomationExtender):
         Time = "Time"
         Volts = "Volts"
 
-    def AutoCenter(self, argument: AlignBy ):
+    def AutoCenter(self, argument: AlignBy):
         """Method for Auto centering (asynchronous)."""
         print("BranchAccDDRTools:AutoCenter()")
         self.SendCommand("AutoCenter " + argument.value + "\n")
@@ -768,7 +781,7 @@ class BranchAccDDR(AutomationExtender):
         """Get enum Loopback card type selection """
         return self.CardType(self.QueryResponse_enum(self.CardType, "CardType?\n"))
 
-    def setCardType(self, newvalue: CardType) :
+    def setCardType(self, newvalue: CardType):
         """Set enum Loopback card type selection """
         self.SendCommand("CardType " + newvalue.value + "\n")
         return None
@@ -781,7 +794,7 @@ class BranchAccDDR(AutomationExtender):
         """Get enum Loopback Channel under test """
         return self.Channel(self.QueryResponse_enum(self.Channel, "Channel?\n"))
 
-    def setChannel(self, newvalue: Channel) :
+    def setChannel(self, newvalue: Channel):
         """Set enum Loopback Channel under test """
         self.SendCommand("Channel " + newvalue.value + "\n")
         return None
@@ -1011,7 +1024,7 @@ class BranchAccDDR(AutomationExtender):
         """Get enum Loopback Device under test """
         return self.Device(self.QueryResponse_enum(self.Device, "Device?\n"))
 
-    def setDevice(self, newvalue: Device) :
+    def setDevice(self, newvalue: Device):
         """Set enum Loopback Device under test """
         self.SendCommand("Device " + newvalue.value + "\n")
         return None
@@ -1026,7 +1039,7 @@ class BranchAccDDR(AutomationExtender):
         """Get enum Loopback DIMM Type selection """
         return self.DramType(self.QueryResponse_enum(self.DramType, "DramType?\n"))
 
-    def setDramType(self, newvalue: DramType) :
+    def setDramType(self, newvalue: DramType):
         """Set enum Loopback DIMM Type selection """
         self.SendCommand("DramType " + newvalue.value + "\n")
         return None
@@ -1045,7 +1058,7 @@ class BranchAccDDR(AutomationExtender):
         """Get enum SM Bus device host ID """
         return self.Host(self.QueryResponse_enum(self.Host, "Host?\n"))
 
-    def setHost(self, newvalue: Host) :
+    def setHost(self, newvalue: Host):
         """Set enum SM Bus device host ID """
         self.SendCommand("Host " + newvalue.value + "\n")
         return None
@@ -1054,7 +1067,7 @@ class BranchAccDDR(AutomationExtender):
         """get DDR-5 RCD host ID selection in case RCD on separate PCB.  Otherwise set to same as Host ID. """
         return self.Host(self.QueryResponse_enum(self.Host, "RCDHost?\n"))
 
-    def setRCDHost(self, newvalue: Host) :
+    def setRCDHost(self, newvalue: Host):
         """set DDR-5 RCD host ID selection in case RCD on separate PCB.  Otherwise set to same as Host ID. """
         self.SendCommand("RCDHost " + newvalue.value + "\n")
         return None
@@ -1063,7 +1076,7 @@ class BranchAccDDR(AutomationExtender):
         """Get DDR-5 GPIO host ID selection.  Used if GPIO Chip provides signals from separate PCB.  Otherwise set to None. """
         return self.Host(self.QueryResponse_enum(self.Host, "GpioHost?\n"))
 
-    def setGpioHost(self, newvalue: Host) :
+    def setGpioHost(self, newvalue: Host):
         """Set DDR-5 GPIO host ID selection.  Used if GPIO Chip provides signals from separate PCB.  Otherwise set to None. """
         self.SendCommand("GpioHost " + newvalue.value + "\n")
         return None
@@ -1152,7 +1165,7 @@ class BranchAccDDR(AutomationExtender):
         """Get enum Loopback lane selection """
         return self.Lane(self.QueryResponse_enum(self.Lane, "Lane?\n"))
 
-    def setLane(self, newvalue: Lane) :
+    def setLane(self, newvalue: Lane):
         """Set enum Loopback lane selection """
         self.SendCommand("Lane " + newvalue.value + "\n")
         return None
@@ -1161,7 +1174,7 @@ class BranchAccDDR(AutomationExtender):
         """Get PDA Enumerate before clocking (reqd for Micron loopback) """
         return self.QueryResponse_bool("PdaEarlyClocking?\n")
 
-    def setPdaEarlyClocking(self, newvalue:bool) :
+    def setPdaEarlyClocking(self, newvalue: bool):
         """Set PDA Enumerate before clocking (reqd for Micron loopback) """
         self.SendCommand("PdaEarlyClocking " + ("T" if newvalue else "F") + "\n")
         return None
@@ -1176,7 +1189,7 @@ class BranchAccDDR(AutomationExtender):
         """Get enum Loopback phase selection """
         return self.Phase(self.QueryResponse_enum(self.Phase, "Phase?\n"))
 
-    def setPhase(self, newvalue: Phase) :
+    def setPhase(self, newvalue: Phase):
         """Set enum Loopback phase selection """
         self.SendCommand("Phase " + newvalue.value + "\n")
         return None
@@ -1189,7 +1202,7 @@ class BranchAccDDR(AutomationExtender):
         """Get enum SM Bus rank selection """
         return self.Rank(self.QueryResponse_enum(self.Rank, "Rank?\n"))
 
-    def setRank(self, newvalue: Rank) :
+    def setRank(self, newvalue: Rank):
         """Set enum SM Bus rank selection """
         self.SendCommand("Rank " + newvalue.value + "\n")
         return None
@@ -1209,7 +1222,7 @@ class BranchAccDDR(AutomationExtender):
         """Get enum Loopback DDR module type and speed selection """
         return self.Speed(self.QueryResponse_enum(self.Speed, "Speed?\n"))
 
-    def setSpeed(self, newvalue: Speed) :
+    def setSpeed(self, newvalue: Speed):
         """Set enum Loopback DDR module type and speed selection """
         self.SendCommand("Speed " + newvalue.value + "\n")
         return None
@@ -1241,8 +1254,24 @@ class BranchAccDDR(AutomationExtender):
         self.SendCommand("ProgramPhase\n")
         return None
 
+
 # ================================ #
 
+class BranchAccPGSA(AutomationExtender):
+    """BranchAccPGSA class.  DDR5 accessory"""
+
+    def __init__(self, parent: AutomationInterface, prefix: str):
+        super().__init__(parent, prefix)
+        self.Const = BranchConst(self, "Const:")
+        self.Ref = BranchAccDDRRef(self, "Ref:")
+        self.Stress = BranchAccDDRStress(self, "Stress:")
+
+    def __del__(self):
+        super().__del__()
+        return None
+
+
+# ================================ #
 
 class BranchAcc(AutomationExtender):
     """BranchAcc class.  Accessory connector"""
@@ -1251,6 +1280,7 @@ class BranchAcc(AutomationExtender):
         super().__init__(parent, prefix)
         self.DDR = BranchAccDDR(self, "DDR:")
         self.PUL = BranchAccPUL(self, "PUL:")
+        self.PGSA = BranchAccPGSA(self, "PGSA:")
 
     def __del__(self):
         super().__del__()
@@ -1264,15 +1294,15 @@ class BranchAcc(AutomationExtender):
         _None = "None"
         DDR5 = "DDR5"
         Pulser = "Pulser"
+        PGSA = "PGSA"
 
     def getType(self) -> Type:
         """Get enum Accessory type """
         return self.Type(self.QueryResponse_enum(self.Type, "Type?\n"))
 
-    def setType(self, newvalue: Type) :
+    def setType(self, newvalue: Type):
         """Set enum Accessory type """
         self.SendCommand("Type " + newvalue.value + "\n")
         return None
 
 # EOF
-

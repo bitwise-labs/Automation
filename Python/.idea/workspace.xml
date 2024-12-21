@@ -30,19 +30,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a8c4ec53-24da-45fa-99bc-831ed779b362" name="Default Changelist" comment="make simple change in python code">
-      <change afterPath="$PROJECT_DIR$/TestPelaDeploy.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../C++/.vs/C++/FileContentIndex/701b6a5a-d85a-4f12-a826-7d17aa2af091.vsidx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../C++/.vs/C++/v17/.wsuo" beforeDir="false" afterPath="$PROJECT_DIR$/../C++/.vs/C++/v17/.wsuo" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../C++/.vs/C++/FileContentIndex/8c5544d6-1bc7-433c-99bc-927009d1681d.vsidx" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../C++/.vs/C++/v17/Browse.VC.db" beforeDir="false" afterPath="$PROJECT_DIR$/../C++/.vs/C++/v17/Browse.VC.db" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../C++/.vs/VSWorkspaceState.json" beforeDir="false" afterPath="$PROJECT_DIR$/../C++/.vs/VSWorkspaceState.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../C++/.vs/slnx.sqlite" beforeDir="false" afterPath="$PROJECT_DIR$/../C++/.vs/slnx.sqlite" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../C++/BitwiseAutomation/src/SocketDevice.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../C++/BitwiseAutomation/src/SocketDevice.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../C++/BitwiseAutomation/.settings/language.settings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../C++/BitwiseAutomation/.settings/language.settings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../C++/BitwiseAutomation/include/autogenCommon.h" beforeDir="false" afterPath="$PROJECT_DIR$/../C++/BitwiseAutomation/include/autogenCommon.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../C++/BitwiseAutomation/src/autogenCommon.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../C++/BitwiseAutomation/src/autogenCommon.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../C++/TestPega/.settings/language.settings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../C++/TestPega/.settings/language.settings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../C++/TestPela/.settings/language.settings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../C++/TestPela/.settings/language.settings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../C++/TestStepscope/.settings/language.settings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../C++/TestStepscope/.settings/language.settings.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TestPegaDeploy.py" beforeDir="false" afterPath="$PROJECT_DIR$/TestPegaDeploy.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pyBitwiseAutomation/BitwiseDevice.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyBitwiseAutomation/BitwiseDevice.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pyBitwiseAutomation/SocketDevice.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyBitwiseAutomation/SocketDevice.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pyBitwiseAutomation/autogenCommon.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyBitwiseAutomation/autogenCommon.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pyBitwiseAutomation/autogenPega.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyBitwiseAutomation/autogenPega.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyBitwiseAutomation/autogenAccessory.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyBitwiseAutomation/autogenAccessory.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -72,22 +70,22 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Python.GuiStepscope.executor": "Run",
-    "Python.TestPega.executor": "Run",
-    "Python.TestPegaDeploy.executor": "Run",
-    "Python.TestPelaDeploy.executor": "Run",
-    "Python.TestReadback.executor": "Run",
-    "Python.TestSSCommands.executor": "Run",
-    "Python.TestStepscope.executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "master",
-    "last_opened_file_path": "C:/Projects/Automation/Python",
-    "settings.editor.selected.configurable": "preferences.lookFeel"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Python.GuiStepscope.executor&quot;: &quot;Run&quot;,
+    &quot;Python.TestPega.executor&quot;: &quot;Run&quot;,
+    &quot;Python.TestPegaDeploy.executor&quot;: &quot;Run&quot;,
+    &quot;Python.TestPelaDeploy.executor&quot;: &quot;Run&quot;,
+    &quot;Python.TestReadback.executor&quot;: &quot;Run&quot;,
+    &quot;Python.TestSSCommands.executor&quot;: &quot;Run&quot;,
+    &quot;Python.TestStepscope.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Projects/Automation/Python&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Projects\Automation\Python" />
@@ -218,6 +216,9 @@
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
       <option name="SDK_HOME" value="C:\Projects\Automation\Python\venv\Scripts\python.exe" />
       <option name="SDK_NAME" value="Python 3.12 (Python)" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />

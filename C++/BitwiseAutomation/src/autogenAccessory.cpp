@@ -45,6 +45,7 @@ const char *BranchAcc::Type_Strings[] =
     "None",
     "DDR5",
     "Pulser",
+	"PGSA",
     0
 };
 
