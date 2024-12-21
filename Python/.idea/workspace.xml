@@ -29,19 +29,7 @@
     </select>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a8c4ec53-24da-45fa-99bc-831ed779b362" name="Default Changelist" comment="make simple change in python code">
-      <change beforePath="$PROJECT_DIR$/../C++/.vs/C++/FileContentIndex/8c5544d6-1bc7-433c-99bc-927009d1681d.vsidx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../C++/.vs/C++/v17/Browse.VC.db" beforeDir="false" afterPath="$PROJECT_DIR$/../C++/.vs/C++/v17/Browse.VC.db" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../C++/.vs/slnx.sqlite" beforeDir="false" afterPath="$PROJECT_DIR$/../C++/.vs/slnx.sqlite" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../C++/BitwiseAutomation/.settings/language.settings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../C++/BitwiseAutomation/.settings/language.settings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../C++/BitwiseAutomation/include/autogenCommon.h" beforeDir="false" afterPath="$PROJECT_DIR$/../C++/BitwiseAutomation/include/autogenCommon.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../C++/BitwiseAutomation/src/autogenCommon.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../C++/BitwiseAutomation/src/autogenCommon.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../C++/TestPega/.settings/language.settings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../C++/TestPega/.settings/language.settings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../C++/TestPela/.settings/language.settings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../C++/TestPela/.settings/language.settings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../C++/TestStepscope/.settings/language.settings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../C++/TestStepscope/.settings/language.settings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pyBitwiseAutomation/autogenAccessory.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyBitwiseAutomation/autogenAccessory.py" afterDir="false" />
-    </list>
+    <list default="true" id="a8c4ec53-24da-45fa-99bc-831ed779b362" name="Default Changelist" comment="make simple change in python code" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
