@@ -29,7 +29,11 @@
     </select>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a8c4ec53-24da-45fa-99bc-831ed779b362" name="Default Changelist" comment="make simple change in python code" />
+    <list default="true" id="a8c4ec53-24da-45fa-99bc-831ed779b362" name="Default Changelist" comment="make simple change in python code">
+      <change beforePath="$PROJECT_DIR$/../C++/.vs/C++/v17/.wsuo" beforeDir="false" afterPath="$PROJECT_DIR$/../C++/.vs/C++/v17/.wsuo" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../C++/.vs/C++/v17/Browse.VC.db" beforeDir="false" afterPath="$PROJECT_DIR$/../C++/.vs/C++/v17/Browse.VC.db" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../C++/.vs/VSWorkspaceState.json" beforeDir="false" afterPath="$PROJECT_DIR$/../C++/.vs/VSWorkspaceState.json" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -293,13 +297,13 @@
     </configuration>
     <list>
       <item itemvalue="Python.GuiStepscope" />
-      <item itemvalue="Python.TestSSCommands" />
       <item itemvalue="Python.TestPegaDeploy" />
-      <item itemvalue="Python.TestPelaDeploy" />
-      <item itemvalue="Python.TestReadback" />
       <item itemvalue="Python.TestPegaRateChange" />
       <item itemvalue="Python.TestPega" />
+      <item itemvalue="Python.TestPelaDeploy" />
       <item itemvalue="Python.TestPela" />
+      <item itemvalue="Python.TestReadback" />
+      <item itemvalue="Python.TestSSCommands" />
       <item itemvalue="Python.TestStepscope" />
     </list>
   </component>
