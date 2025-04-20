@@ -270,7 +270,8 @@ class BranchS11: /* S11 Application */
     BranchS11(AutomationInterface *baseDevice,const char *prefix) :
         AutomationExtender(baseDevice,prefix),
 	    Chart(this,"Chart:"),
-	    Cfg(this,"Cfg:")
+	    Cfg(this,"Cfg:"),
+		Mem(this,"Mem:")
 		{}
     virtual ~BranchS11() {}
 
@@ -299,6 +300,7 @@ class BranchS11: /* S11 Application */
     public:
     BranchS11Chart Chart;
     BranchS11Cfg Cfg;
+	BranchMem Mem; /* 04-20-2025 */
 };
 
 /* ================================ */
@@ -455,7 +457,8 @@ class BranchS21: /* S21 Application */
 	BranchS21(AutomationInterface *baseDevice,const char *prefix) :
 		AutomationExtender(baseDevice,prefix),
 		Chart(this,"Chart:"),
-		Cfg(this,"Cfg:")
+		Cfg(this,"Cfg:"),
+		Mem(this,"Mem:")
 		{}
 	virtual ~BranchS21() {}
 
@@ -484,6 +487,7 @@ class BranchS21: /* S21 Application */
 	public:
 	BranchS21Chart Chart;
 	BranchS21Cfg Cfg;
+	BranchMem Mem; /* 04-20-2025 */
 };
 
 /* ================================ */
@@ -640,7 +644,8 @@ class BranchStep: /* Step Response Application */
 	BranchStep(AutomationInterface *baseDevice,const char *prefix) :
 		AutomationExtender(baseDevice,prefix),
 		Chart(this,"Chart:"),
-		Cfg(this,"Cfg:")
+		Cfg(this,"Cfg:"),
+		Mem(this,"Mem:")
 		{}
 	virtual ~BranchStep() {}
 
@@ -694,6 +699,7 @@ class BranchStep: /* Step Response Application */
 	public:
 	BranchStepChart Chart;
 	BranchStepCfg Cfg;
+	BranchMem Mem; /* 04-20-2025 */
 };
 
 /* ================================ */
@@ -867,7 +873,6 @@ class BranchTdrWindow: /* Region of interest window */ /* 03-15-2024 */
     void Fit(); /* Fit region of interest window range to current acquisition, Todo:add arguments */
 };
 
-
 /* ================================ */
 
 class BranchTdrMeas : /* Measurements */ /* 04-20-2025 */
@@ -899,7 +904,8 @@ class BranchTdr: /* TDR Application */
 		Chart(this,"Chart:"),
 		Cfg(this,"Cfg:"),
 		Window(this,"Window:"), /* 03-15-2024 */
-		Meas(this,"Meas:") /* 04-20-2025 */
+		Meas(this,"Meas:"),/* 04-20-2025 */
+		Mem(this,"Mem:") /* 04-20-2025 */
 		{}
 	virtual ~BranchTdr() {}
 
@@ -962,6 +968,7 @@ class BranchTdr: /* TDR Application */
 	BranchTdrCfg Cfg;
 	BranchTdrWindow Window; /* 03-15-2024 */
 	BranchTdrMeas Meas; /* 04-20-2025 */
+	BranchMem Mem; /* 04-20-2025 */
 };
 
 /* ================================ */
@@ -1127,7 +1134,8 @@ class BranchTdt: /* TDR Application */
 	BranchTdt(AutomationInterface *baseDevice,const char *prefix) :
 		AutomationExtender(baseDevice,prefix),
 		Chart(this,"Chart:"),
-		Cfg(this,"Cfg:")
+		Cfg(this,"Cfg:"),
+		Mem(this,"Mem:") /* 04-20-2025 */
 		{}
 	virtual ~BranchTdt() {}
 
@@ -1190,6 +1198,7 @@ class BranchTdt: /* TDR Application */
 	public:
 	BranchTdtChart Chart;
 	BranchTdtCfg Cfg;
+	BranchMem Mem; /* 04-20-2025 */
 };
 
 #endif // AUTOGEN_STEPSCOPE_H

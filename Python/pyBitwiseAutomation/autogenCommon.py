@@ -661,5 +661,39 @@ class BranchHw(AutomationExtender):
         """Set readback register """
         self.SendCommand("Readback 0x" + hex(newvalue) + "\n")
         return None
+    # ================================ #
+
+class BranchMem(AutomationExtender):
+    """BranchMem class.  Trace memory management"""
+
+    def __init__(self, parent: AutomationInterface, prefix: str):
+        super().__init__(parent, prefix)
+
+    def __del__(self):
+        super().__del__()
+        return None
+
+    def getSeq(self) -> int:
+        """Get Serial number of blob contents """
+        return self.QueryResponse_int("Seq?\n")
+
+    def getVisible(self) -> bool:
+        """Get Visibility of memory trace """
+        return self.QueryResponse_bool("Visible?\n")
+
+    def setVisible(self, newvalue:bool) :
+        """Set Visibility of memory trace """
+        self.SendCommand("Visible " + ("T" if newvalue else "F") + "\n")
+        return None
+
+    def Capture(self):
+        """Method for Capture memory from chart trace. Todo: add arguments if needed"""
+        self.SendCommand("Capture\n")
+        return None
+
+    def Clear(self):
+        """Method for Clear memory. Todo: add arguments if needed"""
+        self.SendCommand("Clear\n")
+        return None
 
 # EOF

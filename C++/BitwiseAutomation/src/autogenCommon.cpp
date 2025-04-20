@@ -658,3 +658,30 @@ void BranchAnnounce::Clear() /* Clear message, Todo:add arguments */
 
 /* ================================================================ */
 
+int BranchMem::getSeq() /* Serial number of blob contents */
+{
+    return QueryResponse_int("Seq?\n");
+}
+
+bool BranchMem::getVisible() /* Visibility of memory trace */
+{
+    return QueryResponse_bool("Visible?\n");
+}
+
+void BranchMem::setVisible(bool newValue) /* Visibility of memory trace */
+{
+    SendCommand("Visible %c\n",newValue?'T':'F');
+}
+
+void BranchMem::Capture() /* Capture memory from chart trace, Todo:add arguments */
+{
+    SendCommand("Capture\n");
+}
+
+void BranchMem::Clear() /* Clear memory, Todo:add arguments */
+{
+    SendCommand("Clear\n");
+}
+
+/* ================================================================ */
+

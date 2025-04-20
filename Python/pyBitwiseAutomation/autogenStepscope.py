@@ -500,6 +500,7 @@ class BranchS11(AutomationExtender):
         super().__init__(parent, prefix)
         self.Cfg = BranchS11Cfg(self, "Cfg:")
         self.Chart = BranchS11Chart(self, "Chart:")
+        self.Mem = BranchMem(self,"Mem:") # 04-20-2025
 
     def __del__(self):
         super().__del__()
@@ -877,6 +878,7 @@ class BranchS21(AutomationExtender):
         super().__init__(parent, prefix)
         self.Cfg = BranchS21Cfg(self, "Cfg:")
         self.Chart = BranchS21Chart(self, "Chart:")
+        self.Mem = BranchMem(self,"Mem:") # 04-20-2025
 
     def __del__(self):
         super().__del__()
@@ -1244,6 +1246,7 @@ class BranchStep(AutomationExtender):
         super().__init__(parent, prefix)
         self.Cfg = BranchStepCfg(self, "Cfg:")
         self.Chart = BranchStepChart(self, "Chart:")
+        self.Mem = BranchMem(self,"Mem:") # 04-20-2025
 
     def __del__(self):
         super().__del__()
@@ -1820,6 +1823,7 @@ class BranchTdr(AutomationExtender):
         self.Chart = BranchTdrChart(self, "Chart:")
         self.Window = BranchTdrWindow(self, "Window:")  # 3-15-2024
         self.Meas = BranchTdrMeas(self,"Meas:") # 04-20-2025
+        self.Mem = BranchMem(self,"Mem:") # 04-20-2025
 
     def __del__(self):
         super().__del__()
@@ -2293,6 +2297,7 @@ class BranchTdt(AutomationExtender):
         super().__init__(parent, prefix)
         self.Cfg = BranchTdtCfg(self, "Cfg:")
         self.Chart = BranchTdtChart(self, "Chart:")
+        self.Mem = BranchMem(self,"Mem:")  # 04-20-2025
 
     def __del__(self):
         super().__del__()

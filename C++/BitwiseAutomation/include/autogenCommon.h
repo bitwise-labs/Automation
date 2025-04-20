@@ -318,6 +318,23 @@ class BranchAnnounce: /* Announcer features */
 
 /* ================================================================ */
 
+class BranchMem: /* Trace memory management */
+    public AutomationExtender
+{
+    public:
+    BranchMem(AutomationInterface *baseDevice,const char *prefix) :
+        AutomationExtender(baseDevice,prefix) {}
+    virtual ~BranchMem() {}
+
+    int getSeq(); /* Serial number of blob contents */
+    bool getVisible(); /* Visibility of memory trace */
+    void setVisible( bool newValue);
+    void Capture(); /* Capture memory from chart trace, Todo:add arguments */
+    void Clear(); /* Clear memory, Todo:add arguments */
+};
+
+/* ================================================================ */
+
 #endif // AUTOGEN_COMMON_H
 
 
