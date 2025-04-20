@@ -1765,6 +1765,51 @@ class BranchTdrWindow(AutomationExtender):  # 3-15-2024
 
 
 # ================================ #
+class BranchTdrMeas(AutomationExtender):     # 04-20-2025
+    """BranchTdrMeas class.  Measurements"""
+
+    def __init__(self, parent: AutomationInterface, prefix: str):
+        super().__init__(parent, prefix)
+
+    def __del__(self):
+        super().__del__()
+        return None
+
+    def getLCMatchNH_or_pF(self) -> float:
+        """Get Matching LC required to offset measured LC, >0 is Inductance (nH), <0 |X| is Capacitance (pF) """
+        return self.QueryResponse_float("LCMatch?\n")
+
+    def getLCMeasurementNH_or_pF(self) -> float:
+        """Get Measured LC, >0 is Inductance (nH), <0 |X| is Capacitance (pF) """
+        return self.QueryResponse_float("LCMeasurement?\n")
+
+    def getRegion(self, index: int) -> float:
+        """Get Measurement region of interest[] """
+        return self.QueryResponse_float("Region["+str(index)+"]?\n")
+
+    def setRegion(self, index: int, newvalue:float) :
+        """Set Measurement region of interest[] """
+        self.SendCommand("Region["+str(index)+"] " + str(newvalue) + "\n")
+        return None
+
+    def getSequence(self) -> int:
+        """Get Measurement Sequence number """
+        return self.QueryResponse_int("Sequence?\n")
+
+    def getUseRegion(self) -> bool:
+        """Get Enable using measurement Region """
+        return self.QueryResponse_bool("UseRegion?\n")
+
+    def setUseRegion(self, newvalue:bool) :
+        """Set Enable using measurement Region """
+        self.SendCommand("UseRegion " + ("T" if newvalue else "F") + "\n")
+        return None
+
+    def getZ0Ohms(self) -> float:
+        """Get Z0 Impedance """
+        return self.QueryResponse_float("Z0?\n")
+
+# ================================ #
 
 class BranchTdr(AutomationExtender):
     """BranchTdr class.  TDR Application"""
@@ -1774,6 +1819,7 @@ class BranchTdr(AutomationExtender):
         self.Cfg = BranchTdrCfg(self, "Cfg:")
         self.Chart = BranchTdrChart(self, "Chart:")
         self.Window = BranchTdrWindow(self, "Window:")  # 3-15-2024
+        self.Meas = BranchTdrMeas(self,"Meas:") # 04-20-2025
 
     def __del__(self):
         super().__del__()

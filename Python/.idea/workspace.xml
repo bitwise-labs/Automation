@@ -33,6 +33,11 @@
       <change beforePath="$PROJECT_DIR$/../C++/.vs/C++/v17/.wsuo" beforeDir="false" afterPath="$PROJECT_DIR$/../C++/.vs/C++/v17/.wsuo" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../C++/.vs/C++/v17/Browse.VC.db" beforeDir="false" afterPath="$PROJECT_DIR$/../C++/.vs/C++/v17/Browse.VC.db" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../C++/.vs/VSWorkspaceState.json" beforeDir="false" afterPath="$PROJECT_DIR$/../C++/.vs/VSWorkspaceState.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../C++/.vs/slnx.sqlite" beforeDir="false" afterPath="$PROJECT_DIR$/../C++/.vs/slnx.sqlite" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../C++/BitwiseAutomation/include/autogenStepscope.h" beforeDir="false" afterPath="$PROJECT_DIR$/../C++/BitwiseAutomation/include/autogenStepscope.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../C++/BitwiseAutomation/src/autogenStepscope.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../C++/BitwiseAutomation/src/autogenStepscope.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyBitwiseAutomation/autogenStepscope.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyBitwiseAutomation/autogenStepscope.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -90,7 +95,7 @@
       <recent name="C:\Projects\Automation\Python\GuiStepscope" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.TestPelaDeploy">
+  <component name="RunManager" selected="Python.GuiStepscope">
     <configuration name="GuiStepscope" type="PythonConfigurationType" factoryName="Python">
       <module name="Python" />
       <option name="ENV_FILES" value="" />
@@ -264,7 +269,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/TestSSCommands.py" />
-      <option name="PARAMETERS" value="-verbose 192.168.1.79" />
+      <option name="PARAMETERS" value="-verbose 192.168.1.104" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />

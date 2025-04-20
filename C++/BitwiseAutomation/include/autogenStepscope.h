@@ -867,6 +867,27 @@ class BranchTdrWindow: /* Region of interest window */ /* 03-15-2024 */
     void Fit(); /* Fit region of interest window range to current acquisition, Todo:add arguments */
 };
 
+
+/* ================================ */
+
+class BranchTdrMeas : /* Measurements */ /* 04-20-2025 */
+	public AutomationExtender
+{
+public:
+	BranchTdrMeas(AutomationInterface* baseDevice, const char* prefix) :
+		AutomationExtender(baseDevice, prefix) {}
+	virtual ~BranchTdrMeas() {}
+
+	double getLCMatchNH_or_pF(); /* Matching LC required to offset measured LC, >0 is Inductance (nH), <0 |X| is Capacitance (pF) */
+	double getLCMeasurementNH_or_pF(); /* Measured LC, >0 is Inductance (nH), <0 |X| is Capacitance (pF) */
+	double getRegion(int index); /* Measurement region of interest */
+	void setRegion(int index, double newValue);
+	int getSequence(); /* Measurement Sequence number */
+	bool getUseRegion(); /* Enable using measurement Region */
+	void setUseRegion(bool newValue);
+	double getZ0Ohms(); /* Z0 Impedance */
+};
+
 /* ================================ */
 
 class BranchTdr: /* TDR Application */
@@ -877,7 +898,8 @@ class BranchTdr: /* TDR Application */
 		AutomationExtender(baseDevice,prefix),
 		Chart(this,"Chart:"),
 		Cfg(this,"Cfg:"),
-		Window(this,"Window:")  /* 03-15-2024 */
+		Window(this,"Window:"), /* 03-15-2024 */
+		Meas(this,"Meas:") /* 04-20-2025 */
 		{}
 	virtual ~BranchTdr() {}
 
@@ -939,6 +961,7 @@ class BranchTdr: /* TDR Application */
 	BranchTdrChart Chart;
 	BranchTdrCfg Cfg;
 	BranchTdrWindow Window; /* 03-15-2024 */
+	BranchTdrMeas Meas; /* 04-20-2025 */
 };
 
 /* ================================ */

@@ -1,12 +1,11 @@
 {
   "ExpandedNodes": [
     "",
-    "\\BitwiseAutomation",
+    "\\BitwiseAutomation\\include",
     "\\BitwiseAutomation\\src",
     "\\TestPega",
     "\\TestPela",
     "\\TestStepscope"
   ],
-  "SelectedNode": "\\BitwiseAutomation",
   "PreviewInSolutionExplorer": false
 }

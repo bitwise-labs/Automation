@@ -2054,6 +2054,50 @@ void BranchTdrWindow::Fit() /* Fit region of interest window range to current ac
 
 /* ================================================================ */
 
+double BranchTdrMeas::getLCMatchNH_or_pF() /* Matching LC required to offset measured LC, >0 is Inductance (nH), <0 |X| is Capacitance (pF) */
+{
+    return QueryResponse_double("LCMatch?\n");
+}
+
+double BranchTdrMeas::getLCMeasurementNH_or_pF() /* Measured LC, >0 is Inductance (nH), <0 |X| is Capacitance (pF) */
+{
+    return QueryResponse_double("LCMeasurement?\n");
+}
+
+double BranchTdrMeas::getRegion(int index) /* Measurement region of interest */
+{
+    if (index < 0 || index >= 2) throw "[Index_Out_Of_Range]";
+    return QueryResponse_double("Region[%d]?\n", index);
+}
+
+void BranchTdrMeas::setRegion(int index, double newValue) /* Measurement region of interest */
+{
+    if (index < 0 || index >= 2) throw "[Index_Out_Of_Range]";
+    SendCommand("Region[%d] %lf\n", index, newValue);
+}
+
+int BranchTdrMeas::getSequence() /* Measurement Sequence number */
+{
+    return QueryResponse_int("Sequence?\n");
+}
+
+bool BranchTdrMeas::getUseRegion() /* Enable using measurement Region */
+{
+    return QueryResponse_bool("UseRegion?\n");
+}
+
+void BranchTdrMeas::setUseRegion(bool newValue) /* Enable using measurement Region */
+{
+    SendCommand("UseRegion %c\n", newValue ? 'T' : 'F');
+}
+
+double BranchTdrMeas::getZ0Ohms() /* Z0 Impedance */
+{
+    return QueryResponse_double("Z0?\n");
+}
+
+/* ================================================================ */
+
 double BranchTdt::getAlignPS() /* Alignment between DUT and REF */
 {
     return QueryResponse_double("Align?\n");
