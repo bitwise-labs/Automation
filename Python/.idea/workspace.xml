@@ -30,12 +30,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a8c4ec53-24da-45fa-99bc-831ed779b362" name="Default Changelist" comment="make simple change in python code">
-      <change beforePath="$PROJECT_DIR$/../C++/BitwiseAutomation/include/autogenCommon.h" beforeDir="false" afterPath="$PROJECT_DIR$/../C++/BitwiseAutomation/include/autogenCommon.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../C++/BitwiseAutomation/include/autogenStepscope.h" beforeDir="false" afterPath="$PROJECT_DIR$/../C++/BitwiseAutomation/include/autogenStepscope.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../C++/BitwiseAutomation/src/autogenCommon.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../C++/BitwiseAutomation/src/autogenCommon.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TestStepscopeResets.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pyBitwiseAutomation/autogenCommon.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyBitwiseAutomation/autogenCommon.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pyBitwiseAutomation/autogenStepscope.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyBitwiseAutomation/autogenStepscope.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -65,22 +61,23 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Python.GuiStepscope.executor&quot;: &quot;Run&quot;,
-    &quot;Python.TestPega.executor&quot;: &quot;Run&quot;,
-    &quot;Python.TestPegaDeploy.executor&quot;: &quot;Run&quot;,
-    &quot;Python.TestPelaDeploy.executor&quot;: &quot;Run&quot;,
-    &quot;Python.TestReadback.executor&quot;: &quot;Run&quot;,
-    &quot;Python.TestSSCommands.executor&quot;: &quot;Run&quot;,
-    &quot;Python.TestStepscope.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Projects/Automation/Python&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Python.GuiStepscope.executor": "Run",
+    "Python.TestPega.executor": "Run",
+    "Python.TestPegaDeploy.executor": "Run",
+    "Python.TestPelaDeploy.executor": "Run",
+    "Python.TestReadback.executor": "Run",
+    "Python.TestSSCommands.executor": "Run",
+    "Python.TestStepscope.executor": "Run",
+    "Python.TestStepscopeResets.executor": "Run",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "master",
+    "last_opened_file_path": "C:/Projects/Automation/Python",
+    "settings.editor.selected.configurable": "preferences.lookFeel"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Projects\Automation\Python" />
@@ -93,7 +90,7 @@
       <recent name="C:\Projects\Automation\Python\GuiStepscope" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.GuiStepscope">
+  <component name="RunManager" selected="Python.TestStepscopeResets">
     <configuration name="GuiStepscope" type="PythonConfigurationType" factoryName="Python">
       <module name="Python" />
       <option name="ENV_FILES" value="" />
@@ -298,6 +295,29 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="TestStepscopeResets" type="PythonConfigurationType" factoryName="Python">
+      <module name="Python" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="C:\Projects\Automation\Python\venv\Scripts\python.exe" />
+      <option name="SDK_NAME" value="Python 3.12 (Python)" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/TestStepscopeResets.py" />
+      <option name="PARAMETERS" value="-ip 192.168.1.104 -verbose -repeat 100" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="true" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <list>
       <item itemvalue="Python.GuiStepscope" />
       <item itemvalue="Python.TestPegaDeploy" />
@@ -308,6 +328,7 @@
       <item itemvalue="Python.TestReadback" />
       <item itemvalue="Python.TestSSCommands" />
       <item itemvalue="Python.TestStepscope" />
+      <item itemvalue="Python.TestStepscopeResets" />
     </list>
   </component>
   <component name="SharedIndexes">
