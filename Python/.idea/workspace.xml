@@ -30,8 +30,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a8c4ec53-24da-45fa-99bc-831ed779b362" name="Default Changelist" comment="make simple change in python code">
-      <change afterPath="$PROJECT_DIR$/TestStepscopeResets.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GuiStepscope/guiStepscope.py" beforeDir="false" afterPath="$PROJECT_DIR$/GuiStepscope/guiStepscope.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -61,23 +61,23 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Python.GuiStepscope.executor": "Run",
-    "Python.TestPega.executor": "Run",
-    "Python.TestPegaDeploy.executor": "Run",
-    "Python.TestPelaDeploy.executor": "Run",
-    "Python.TestReadback.executor": "Run",
-    "Python.TestSSCommands.executor": "Run",
-    "Python.TestStepscope.executor": "Run",
-    "Python.TestStepscopeResets.executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "master",
-    "last_opened_file_path": "C:/Projects/Automation/Python",
-    "settings.editor.selected.configurable": "preferences.lookFeel"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Python.GuiStepscope.executor&quot;: &quot;Run&quot;,
+    &quot;Python.TestPega.executor&quot;: &quot;Run&quot;,
+    &quot;Python.TestPegaDeploy.executor&quot;: &quot;Run&quot;,
+    &quot;Python.TestPelaDeploy.executor&quot;: &quot;Run&quot;,
+    &quot;Python.TestReadback.executor&quot;: &quot;Run&quot;,
+    &quot;Python.TestSSCommands.executor&quot;: &quot;Run&quot;,
+    &quot;Python.TestStepscope.executor&quot;: &quot;Run&quot;,
+    &quot;Python.TestStepscopeResets.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Projects/Automation/Python&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Projects\Automation\Python" />
@@ -90,7 +90,7 @@
       <recent name="C:\Projects\Automation\Python\GuiStepscope" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.TestStepscopeResets">
+  <component name="RunManager" selected="Python.GuiStepscope">
     <configuration name="GuiStepscope" type="PythonConfigurationType" factoryName="Python">
       <module name="Python" />
       <option name="ENV_FILES" value="" />
@@ -287,7 +287,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/TestStepscope.py" />
-      <option name="PARAMETERS" value="192.168.1.25 -verbose" />
+      <option name="PARAMETERS" value="192.168.1.104" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="true" />
       <option name="MODULE_MODE" value="false" />

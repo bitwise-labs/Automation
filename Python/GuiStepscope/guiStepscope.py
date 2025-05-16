@@ -41,6 +41,7 @@ class TheApplication(S11):
         super().__init__(mainWindow)
         # print("TheApplication::__init__()")
 
+
 appEnvironment = QtWidgets.QApplication(sys.argv)
 mainWindow = QtWidgets.QMainWindow()
 main = TheApplication(mainWindow)
