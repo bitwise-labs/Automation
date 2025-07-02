@@ -34,8 +34,21 @@ from pyBitwiseAutomation.AutomationInterface import AutomationInterface
 from pyBitwiseAutomation.AutomationExtender import AutomationExtender
 from enum import Enum
 
-
 # ================================ #
+
+# used for chart cursor indexes..
+ChartCursorX1 = 0
+ChartCursorX2 = 1
+ChartCursorX3 = 2
+ChartCursorX4 = 3
+ChartCursorY1 = 4
+ChartCursorY2 = 5
+ChartCursorY3 = 6
+ChartCursorY4 = 7
+ChartCursorP1 = 8
+ChartCursorP2 = 9
+ChartCursorP3 = 10
+
 
 class BranchConst(AutomationExtender):
     """BranchConst class.  Constants"""
@@ -591,9 +604,7 @@ class BranchFile(AutomationExtender):
 
     def Fetch(self, filepath: str) -> bytes:
         """Binary response method for Fetch File."""
-        return self.QueryBinaryResponse("Fetch " +
-
-                                        "\"" + filepath + "\"" + "\n")
+        return self.QueryBinaryResponse("Fetch " + "\"" + filepath + "\"" + "\n")
 
     def Length(self, filepath: str) -> int:
         """Method for File Length. """
@@ -663,6 +674,7 @@ class BranchHw(AutomationExtender):
         return None
     # ================================ #
 
+
 class BranchMem(AutomationExtender):
     """BranchMem class.  Trace memory management"""
 
@@ -681,7 +693,7 @@ class BranchMem(AutomationExtender):
         """Get Visibility of memory trace """
         return self.QueryResponse_bool("Visible?\n")
 
-    def setVisible(self, newvalue:bool) :
+    def setVisible(self, newvalue: bool):
         """Set Visibility of memory trace """
         self.SendCommand("Visible " + ("T" if newvalue else "F") + "\n")
         return None

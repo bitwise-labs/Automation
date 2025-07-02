@@ -35,6 +35,19 @@
 #include "AutomationExtender.h"
 #include "AutomationInterface.h"
 
+// used for Cursor Chart indexes..
+const int ChartCursorX1 = 0;
+const int ChartCursorX2 = 1;
+const int ChartCursorX3 = 2;
+const int ChartCursorX4 = 3;
+const int ChartCursorY1 = 4;
+const int ChartCursorY2 = 5;
+const int ChartCursorY3 = 6;
+const int ChartCursorY4 = 7;
+const int ChartCursorP1 = 8;
+const int ChartCursorP2 = 9;
+const int ChartCursorP3 = 10;
+
 /* ================================ */
 
 class BranchConst: /* Constants */

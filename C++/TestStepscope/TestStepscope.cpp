@@ -120,6 +120,7 @@ void test_stepscope(char *ip_address, bool stopOnError, int run )
     printf("TDR Window range is set to: %lf - %lf\n", value_from, value_to );
     Stepscope.Tdr.Window.Clear();   // 03-15-2024 (end)
 
+	Stepscope.Tdr.Chart.setCursEnabled(ChartCursorX1, true); // 6-29-25, test syntax
 
 
 	Stepscope.App.setTab("STEP");

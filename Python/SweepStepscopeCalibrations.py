@@ -1,8 +1,8 @@
-# TestStepscope.py
+# SweepStepscopeCalibrations.py
 # ================================================================================
 # BOOST SOFTWARE LICENSE
 #
-# Copyright 2020 BitWise Laboratories Inc.
+# Copyright 2025 BitWise Laboratories Inc.
 # Original Author.......Jim Waschura
 # Contact...............info@bitwiselabs.com
 #
@@ -31,110 +31,307 @@
 
 from pyBitwiseAutomation import *
 import sys
+import csv
 import math
+from datetime import datetime, timedelta
+from io import StringIO
+from enum import Enum
+
+INTERVAL = 1
+TIMEOUT_RUN = 10
+TIMEOUT_COMPLETE = 300
+
+IPAddress = ""
+DelayFlag = False
+NoiseFlag = False
+Interval = 0
+Cycles = 1
+VerboseFlag = False
+FilePrefix = "Cal_"
+Stepscope = StepscopeDevice()
 
 
-def test_Stepscope(ip_address: str, stopOnError: bool, run: int):
-    Stepscope = StepscopeDevice()
-    try:
-        Stepscope.Connect(ip_address)
+class CalibrationType(Enum):
+    Delay = 1
+    Noise = 2
+    S11 = 3
+    Step = 4
+    S21 = 5
+    Tdr = 6
+    Tdt = 7
 
-        serialNumber = Stepscope.Const.getSN()
 
-        print("Stepscope TEST")
-        print("IP Address........" + ip_address)
-        print("Serial number....." + serialNumber)
-        print("Build............." + Stepscope.Sys.getBuild())
-        print("Architecture......" + Stepscope.Sys.getArchitecture())
-        print("StopOnError......." + str(stopOnError))
+def wait_until_calibration_launched(operation: CalibrationType):
+    Stepscope.App.Stop()
+    if Stepscope.Calib.getStatus() == Stepscope.Calib.Status.Running:
+        Stepscope.Calib.Cancel()
+    if operation == CalibrationType.Delay:
+        Stepscope.Calib.RunDelay()
+    elif operation == CalibrationType.Noise:
+        Stepscope.Calib.RunNoise()
 
-        Stepscope.Stop()
-        Stepscope.RestoreConfiguration("[factory]")
+    timeout_time = datetime.now() + timedelta(seconds=TIMEOUT_RUN)
 
-        Stepscope.Pulse.setAmplMV(300.0)
-        Stepscope.Pulse.setMode(BranchPulse.Mode.Local)
-        Stepscope.Pulse.setLength(8)
+    while datetime.now() < timeout_time and Stepscope.Calib.getStatus() != Stepscope.Calib.Status.Running:
+        time.sleep(INTERVAL)
 
-        Stepscope.Tdr.Window.Enabled = False    # 03-15-2024 (begin)
-        Stepscope.Tdr.Window.setRange(0.0, 1e6)
-        value_from = Stepscope.Tdr.Window.getRange(0)
-        value_to = Stepscope.Tdr.Window.getRange(1)
-        print("TDR Window range is set to: " + str(value_from) + " - " + str(value_to))
-        Stepscope.Tdr.Window.Clear()   # 03-15-2024 (end)
+    if Stepscope.Calib.getStatus() != Stepscope.Calib.Status.Running:
+        if VerboseFlag:
+            print("Error: Unable to start " + operation.name)
+            raise Exception("[Unable_To_Start_Calibration]")
 
-        Stepscope.App.setTab("STEP")
+    if VerboseFlag:
+        print(operation.name + " started")
 
-        Stepscope.Step.Cfg.setReclen(1024)
 
-        Stepscope.Step.Align(BranchStep.AlignMode.align0101)
+def wait_until_calibration_completed():
+    begin_time = datetime.now()
+    timeout_time = begin_time + timedelta(seconds=TIMEOUT_COMPLETE)
 
-        Stepscope.WaitForRunToComplete(90)
-        Stepscope.App.Stop()
-        Stepscope.Step.Fit()
+    while datetime.now() < timeout_time and Stepscope.Calib.getStatus() == Stepscope.Calib.Status.Running:
+        if VerboseFlag:
+            print("Calibrating " + str(int((datetime.now() - begin_time).total_seconds())), end="  \r")
+        time.sleep(INTERVAL)
 
-        data = Stepscope.Step.getBinary()
+    if VerboseFlag:
+        print("Calibration completed: " + str(Stepscope.Calib.getStatus()))
 
-        if len(data) > 0:
-            minimum = data[0]
-            maximum = data[0]
 
-            for n in range(1, len(data)):
-                if data[n] < minimum:
-                    minimum = data[n]
-                if data[n] > maximum:
-                    maximum = data[n]
+def wait_until_app_launched(operation: CalibrationType):
+    Stepscope.App.Stop()
 
-            print("Minimum....." + "{:.2f}".format(minimum))
-            print("Maximum....." + "{:.2f}".format(maximum))
-            print("Amplitude..." + "{:.2f}".format(maximum - minimum))
-        else:
-            print("No step response data returned")
-            pass
-    finally:
-        Stepscope.Disconnect()
-        Stepscope = None
-    return None
+    Stepscope.App.setTab(operation.name.upper())
+
+    skip_run = False;
+    if operation == CalibrationType.S11:
+        Stepscope.S11.Reset()
+    elif operation == CalibrationType.Step:
+        Stepscope.Step.Align(Stepscope.Step.AlignMode.align0101)
+        skip_run=True
+    elif operation == CalibrationType.S21:
+        Stepscope.S21.Reset()
+    elif operation == CalibrationType.Tdr:
+        Stepscope.Tdr.Reset()
+    elif operation == CalibrationType.Tdt:
+        Stepscope.Tdt.Reset()
+
+    if not skip_run:
+        Stepscope.App.Clear()
+        Stepscope.App.Run(True)
+
+        names = Stepscope.App.getRunList().strip("{}").split(",")
+        states = Stepscope.App.getRunState().strip("{}").split(",")
+        run_state_map = dict(zip(names, states))
+        running_flag = run_state_map.get(operation.name, "Stop") != "Stop"
+
+        timeout_time = datetime.now() + timedelta(seconds=TIMEOUT_RUN)
+
+        while datetime.now() < timeout_time and not running_flag:
+            time.sleep(INTERVAL)
+
+            states = Stepscope.App.getRunState().strip("{}").split(",")
+            run_state_map = dict(zip(names, states))
+            running_flag = run_state_map.get(operation.name, "Stop") != "Stop"
+
+        if not running_flag:
+            if VerboseFlag:
+                print("Error: Unable to start " + operation.name)
+                raise Exception("[Unable_To_Start_Application]")
+
+    if VerboseFlag:
+        print("Application launched")
+
+
+def wait_until_app_completed(operation: CalibrationType):
+    names = Stepscope.App.getRunList().strip("{}").split(",")
+    states = Stepscope.App.getRunState().strip("{}").split(",")
+    run_state_map = dict(zip(names, states))
+    running_flag = run_state_map.get(operation.name, "Stop") != "Stop"
+
+    timeout_time = datetime.now() + timedelta(seconds=TIMEOUT_COMPLETE)
+
+    while datetime.now() < timeout_time and running_flag:
+        time.sleep(INTERVAL)
+
+        states = Stepscope.App.getRunState().strip("{}").split(",")
+        run_state_map = dict(zip(names, states))
+        running_flag = run_state_map.get(operation.name, "Stop") != "Stop"
+
+    if running_flag:
+        if VerboseFlag:
+            print("Error: Unable to stop " + operation.name)
+            raise Exception("[Unable_To_Stop_Application]")
+
+    if VerboseFlag:
+        print("Application " + operation.name + " completed")
+
+
+def download_operation_file(operation: CalibrationType, destination_file: str):
+    download_file = "[none]"
+    if operation == CalibrationType.Delay:
+        download_file = Stepscope.Calib.getDelayFile()
+    elif operation == CalibrationType.Noise:
+        download_file = Stepscope.Calib.getNoiseFile()
+    elif operation == CalibrationType.S11:
+        download_file = Stepscope.S11.FileSave()
+    elif operation == CalibrationType.Step:
+        download_file = Stepscope.Step.Csv()
+
+    print("Download: " + download_file + " into: " + destination_file)
+
+    binary_data = Stepscope.File.Fetch(download_file)
+
+    if VerboseFlag:
+        print("Download completed")
+
+    fd = open(destination_file, "w", encoding="utf-8")
+    text_data = binary_data.decode("utf-8")
+    fd.write(text_data)
+    fd.close()
 
 
 if __name__ == '__main__':
-    print("TestStepscope, Version 1.2\n")
+    print("SweepStepscopeCalibrations, Version 1.0")
 
-    # Version 1.1 ...            ... original
-    # Version 1.2 ... 03-15-2024 ... add "Window" features
+    # Version 1.0 ... 05-15-2025 ... original
 
-    stopOnError = False
-    ipCount = 0
-    repeat = 1
-    ip = [32]
+    IPAddress = ""
+    Operations = []
+    Interval = 0
+    Cycles = 1
+    VerboseFlag = False
+    DebugFlag = False
+    Prefix = "Cal"
+    FactoryFlag = False
+    Timestamp = datetime.now().strftime("%Yy%mm%dd_%Hh%Mm%Ss")
 
     i = 1
     while i < len(sys.argv):
-        if sys.argv[i] == "-stop":
-            stopOnError = True
-        elif sys.argv[i] == "-repeat":
-            repeat = int(sys.argv[i + 1])
-            i = i + 1
-        elif ipCount < 32:
-            ip[ipCount] = sys.argv[i]
-            ipCount = ipCount + 1
+        if sys.argv[i].lower() == "delay":
+            Operations.append(CalibrationType.Delay)
+        elif sys.argv[i].lower() == "noise":
+            Operations.append(CalibrationType.Noise)
+        elif sys.argv[i].lower() == "s11":
+            Operations.append(CalibrationType.S11)
+        elif sys.argv[i].lower() == "step":
+            Operations.append(CalibrationType.Step)
+        elif sys.argv[i].lower() == "s21":
+            Operations.append(CalibrationType.S21)
+        elif sys.argv[i].lower() == "tdr":
+            Operations.append(CalibrationType.Tdr)
+        elif sys.argv[i].lower() == "tdt":
+            Operations.append(CalibrationType.Tdt)
+        elif sys.argv[i].lower() == "-verbose":
+            VerboseFlag = True
+        elif sys.argv[i].lower() == "-debug":
+            DebugFlag = True
+        elif sys.argv[i].lower() == "-factory":
+            FactoryFlag = True
+        elif sys.argv[i].lower() == "-interval":
+            if i + 1 < len(sys.argv):
+                Interval = int(sys.argv[i + 1])
+                i = i + 1
+        elif sys.argv[i].lower() == "-cycles":
+            if i + 1 < len(sys.argv):
+                Cycles = int(sys.argv[i + 1])
+                i = i + 1
+        elif sys.argv[i].lower() == "-prefix":
+            if i + 1 < len(sys.argv):
+                Prefix = int(sys.argv[i + 1])
+                i = i + 1
+        elif sys.argv[i].lower() == "-ip":
+            if i + 1 < len(sys.argv):
+                IPAddress = sys.argv[i + 1]
+                i = i + 1
         else:
-            print("Too many IP addresses, maximum is 32")
-            exit()
+            print("Unrecognized parameter: " + sys.argv[i])
 
         i = i + 1
 
-    if ipCount == 0 or repeat < 1:
-        print("Usage:  TestStepscope [options] IP0 IP1 ... IPn")
-        print("Options:  -stop ..... stop on first error")
-        print("          -repeat N.. number of tests for each IP")
+    if IPAddress == "" or len(Operations) == 0 or Cycles < 1:
+        print("Usage: SweepStepscopeCalibrations [options] <list of operations]")
+        print("Operations: Delay Noise S11 S21 Step Tdr Tdt")
+        print("Options:   -ip <ip address> ............... select IP address")
+        print("           -interval <seconds> ............ number of seconds between each calibration")
+        print("           -cycles <number-of-cycles> ..... number of calibrations to perform")
+        print("           -verbose ....................... show verbose messages")
+        print("           -debug ......................... show automation command messages")
+        print("           -factory ....................... start with factory restore");
+        print("           -prefix <output-file-prefix> ... specify prefix for output files")
         exit()
 
     try:
-        for ip_address in ip:
-            for k in range(1, repeat + 1):
-                test_Stepscope(ip_address, stopOnError, k)
+        Stepscope.setDebugging(DebugFlag)
+
+        if VerboseFlag:
+            print("Connect to ip: " + IPAddress)
+
+        Stepscope.Connect(IPAddress)
+
+        serial_number = Stepscope.Const.getSN()
+
+        print("Sweep Stepscope Calibrations")
+        print("IP Address........" + IPAddress)
+        print("Serial number....." + serial_number)
+        print("Build............." + Stepscope.Sys.getBuild())
+        print("Architecture......" + Stepscope.Sys.getArchitecture())
+
+        Stepscope.Stop()
+        if FactoryFlag:
+            Stepscope.RestoreConfiguration("[factory]")
+            time.sleep(3)
+
+        for k in range(0, Cycles):
+            print("Cycle " + str(k + 1) + ", Start Operation")
+            start_time = datetime.now()
+            for op in Operations:
+                time.sleep(1)  # ensure calib thread is quiet
+
+                dest_filename = (Prefix + "_" + serial_number + "_" + op.name + "_" +
+                                 Timestamp + "_" + str(k + 1).zfill(2) + ".csv")
+
+                if op == CalibrationType.Delay or op == CalibrationType.Noise:
+                    wait_until_calibration_launched(op)
+                    wait_until_calibration_completed()
+                    download_operation_file(op, dest_filename)
+
+                elif (op == CalibrationType.S11 or op == CalibrationType.Step or op == CalibrationType.S21 or
+                      op == CalibrationType.Tdr or op == CalibrationType.Tdt):
+                    wait_until_app_launched(op)
+                    wait_until_app_completed(op)
+                    download_operation_file(op, dest_filename)
+
+            if datetime.now() < start_time + timedelta(seconds=Interval) and k < Cycles - 1:
+                sleep_remaining_seconds = (start_time + timedelta(seconds=Interval) - datetime.now()).total_seconds()
+
+                if VerboseFlag:
+                    print("Pause until next cycle:")
+
+                Stepscope.Disconnect()
+
+                while sleep_remaining_seconds > 0:
+                    if VerboseFlag:
+                        print(str(int(sleep_remaining_seconds)), end="  \r")
+
+                    time.sleep(1)
+                    sleep_remaining_seconds = sleep_remaining_seconds - 1
+
+                Stepscope.Connect(IPAddress)
+
+        Stepscope.Disconnect()
 
     except KeyboardInterrupt:
         print("\nCtrl-C encountered")
 
+    except Exception as e:
+        print("Error: " + str(e))
+
+    finally:
+        if Stepscope.IsConnected and Stepscope.Calib.getStatus() == Stepscope.Calib.Status.Running:
+            Stepscope.Calib.Cancel()
+        if Stepscope.IsConnected:
+            Stepscope.Disconnect()
+
+    if VerboseFlag:
+        print("Terminating normally")
 # EOF

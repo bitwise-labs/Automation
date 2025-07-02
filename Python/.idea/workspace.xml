@@ -30,8 +30,21 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a8c4ec53-24da-45fa-99bc-831ed779b362" name="Default Changelist" comment="make simple change in python code">
+      <change afterPath="$PROJECT_DIR$/SweepStepscopeCalibrations.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TestExampleSS.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../C++/.vs/C++/v17/.wsuo" beforeDir="false" afterPath="$PROJECT_DIR$/../C++/.vs/C++/v17/.wsuo" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../C++/.vs/C++/v17/Browse.VC.db" beforeDir="false" afterPath="$PROJECT_DIR$/../C++/.vs/C++/v17/Browse.VC.db" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../C++/.vs/VSWorkspaceState.json" beforeDir="false" afterPath="$PROJECT_DIR$/../C++/.vs/VSWorkspaceState.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../C++/.vs/slnx.sqlite" beforeDir="false" afterPath="$PROJECT_DIR$/../C++/.vs/slnx.sqlite" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../C++/BitwiseAutomation/.settings/language.settings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../C++/BitwiseAutomation/.settings/language.settings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../C++/BitwiseAutomation/include/autogenCommon.h" beforeDir="false" afterPath="$PROJECT_DIR$/../C++/BitwiseAutomation/include/autogenCommon.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../C++/TestPega/.settings/language.settings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../C++/TestPega/.settings/language.settings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../C++/TestPela/.settings/language.settings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../C++/TestPela/.settings/language.settings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../C++/TestStepscope/.settings/language.settings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../C++/TestStepscope/.settings/language.settings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../C++/TestStepscope/TestStepscope.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../C++/TestStepscope/TestStepscope.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GuiStepscope/guiStepscope.py" beforeDir="false" afterPath="$PROJECT_DIR$/GuiStepscope/guiStepscope.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyBitwiseAutomation/autogenCommon.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyBitwiseAutomation/autogenCommon.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyBitwiseAutomation/autogenStepscope.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyBitwiseAutomation/autogenStepscope.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -64,6 +77,8 @@
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
     &quot;Python.GuiStepscope.executor&quot;: &quot;Run&quot;,
+    &quot;Python.Sweep Stepscope Calibrations.executor&quot;: &quot;Run&quot;,
+    &quot;Python.TestExampleSS.executor&quot;: &quot;Run&quot;,
     &quot;Python.TestPega.executor&quot;: &quot;Run&quot;,
     &quot;Python.TestPegaDeploy.executor&quot;: &quot;Run&quot;,
     &quot;Python.TestPelaDeploy.executor&quot;: &quot;Run&quot;,
@@ -90,7 +105,7 @@
       <recent name="C:\Projects\Automation\Python\GuiStepscope" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.GuiStepscope">
+  <component name="RunManager" selected="Python.TestExampleSS">
     <configuration name="GuiStepscope" type="PythonConfigurationType" factoryName="Python">
       <module name="Python" />
       <option name="ENV_FILES" value="" />
@@ -109,6 +124,52 @@
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="true" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Sweep Stepscope Calibrations" type="PythonConfigurationType" factoryName="Python">
+      <module name="Python" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="C:\Projects\Automation\Python\venv\Scripts\python.exe" />
+      <option name="SDK_NAME" value="Python 3.12 (Python)" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/SweepStepscopeCalibrations.py" />
+      <option name="PARAMETERS" value="-ip 192.168.2.45 -cycles 50 -interval 120 -verbose S11" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="true" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="TestExampleSS" type="PythonConfigurationType" factoryName="Python">
+      <module name="Python" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="SDK_NAME" value="Python 3.12 (Python)" />
+      <option name="WORKING_DIRECTORY" value="C:\Projects\Automation\Python" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/TestExampleSS.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
       <option name="REDIRECT_INPUT" value="false" />
       <option name="INPUT_FILE" value="" />
@@ -320,6 +381,7 @@
     </configuration>
     <list>
       <item itemvalue="Python.GuiStepscope" />
+      <item itemvalue="Python.Sweep Stepscope Calibrations" />
       <item itemvalue="Python.TestPegaDeploy" />
       <item itemvalue="Python.TestPegaRateChange" />
       <item itemvalue="Python.TestPega" />
@@ -327,8 +389,9 @@
       <item itemvalue="Python.TestPela" />
       <item itemvalue="Python.TestReadback" />
       <item itemvalue="Python.TestSSCommands" />
-      <item itemvalue="Python.TestStepscope" />
+      <item itemvalue="Python.TestExampleSS" />
       <item itemvalue="Python.TestStepscopeResets" />
+      <item itemvalue="Python.TestStepscope" />
     </list>
   </component>
   <component name="SharedIndexes">

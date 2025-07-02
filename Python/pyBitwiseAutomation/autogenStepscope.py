@@ -72,12 +72,12 @@ class BranchCalib(AutomationExtender):
 
     def RunDelay(self):
         """Method for Run Delay calibration."""
-        self.SendCommand("RunDelay")
+        self.SendCommand("RunDelay\n")
         return None
 
     def RunNoise(self):
         """Method for Run Delay calibration."""
-        self.SendCommand("RunNoise")
+        self.SendCommand("RunNoise\n")
         return None
 
 
@@ -500,7 +500,7 @@ class BranchS11(AutomationExtender):
         super().__init__(parent, prefix)
         self.Cfg = BranchS11Cfg(self, "Cfg:")
         self.Chart = BranchS11Chart(self, "Chart:")
-        self.Mem = BranchMem(self,"Mem:") # 04-20-2025
+        self.Mem = BranchMem(self, "Mem:")  # 04-20-2025
 
     def __del__(self):
         super().__del__()
@@ -878,7 +878,7 @@ class BranchS21(AutomationExtender):
         super().__init__(parent, prefix)
         self.Cfg = BranchS21Cfg(self, "Cfg:")
         self.Chart = BranchS21Chart(self, "Chart:")
-        self.Mem = BranchMem(self,"Mem:") # 04-20-2025
+        self.Mem = BranchMem(self, "Mem:")  # 04-20-2025
 
     def __del__(self):
         super().__del__()
@@ -1246,7 +1246,7 @@ class BranchStep(AutomationExtender):
         super().__init__(parent, prefix)
         self.Cfg = BranchStepCfg(self, "Cfg:")
         self.Chart = BranchStepChart(self, "Chart:")
-        self.Mem = BranchMem(self,"Mem:") # 04-20-2025
+        self.Mem = BranchMem(self, "Mem:")  # 04-20-2025
 
     def __del__(self):
         super().__del__()
@@ -1768,7 +1768,7 @@ class BranchTdrWindow(AutomationExtender):  # 3-15-2024
 
 
 # ================================ #
-class BranchTdrMeas(AutomationExtender):     # 04-20-2025
+class BranchTdrMeas(AutomationExtender):  # 04-20-2025
     """BranchTdrMeas class.  Measurements"""
 
     def __init__(self, parent: AutomationInterface, prefix: str):
@@ -1788,11 +1788,11 @@ class BranchTdrMeas(AutomationExtender):     # 04-20-2025
 
     def getRegion(self, index: int) -> float:
         """Get Measurement region of interest[] """
-        return self.QueryResponse_float("Region["+str(index)+"]?\n")
+        return self.QueryResponse_float("Region[" + str(index) + "]?\n")
 
-    def setRegion(self, index: int, newvalue:float) :
+    def setRegion(self, index: int, newvalue: float):
         """Set Measurement region of interest[] """
-        self.SendCommand("Region["+str(index)+"] " + str(newvalue) + "\n")
+        self.SendCommand("Region[" + str(index) + "] " + str(newvalue) + "\n")
         return None
 
     def getSequence(self) -> int:
@@ -1803,7 +1803,7 @@ class BranchTdrMeas(AutomationExtender):     # 04-20-2025
         """Get Enable using measurement Region """
         return self.QueryResponse_bool("UseRegion?\n")
 
-    def setUseRegion(self, newvalue:bool) :
+    def setUseRegion(self, newvalue: bool):
         """Set Enable using measurement Region """
         self.SendCommand("UseRegion " + ("T" if newvalue else "F") + "\n")
         return None
@@ -1811,6 +1811,7 @@ class BranchTdrMeas(AutomationExtender):     # 04-20-2025
     def getZ0Ohms(self) -> float:
         """Get Z0 Impedance """
         return self.QueryResponse_float("Z0?\n")
+
 
 # ================================ #
 
@@ -1822,8 +1823,8 @@ class BranchTdr(AutomationExtender):
         self.Cfg = BranchTdrCfg(self, "Cfg:")
         self.Chart = BranchTdrChart(self, "Chart:")
         self.Window = BranchTdrWindow(self, "Window:")  # 3-15-2024
-        self.Meas = BranchTdrMeas(self,"Meas:") # 04-20-2025
-        self.Mem = BranchMem(self,"Mem:") # 04-20-2025
+        self.Meas = BranchTdrMeas(self, "Meas:")  # 04-20-2025
+        self.Mem = BranchMem(self, "Mem:")  # 04-20-2025
 
     def __del__(self):
         super().__del__()
@@ -2297,7 +2298,7 @@ class BranchTdt(AutomationExtender):
         super().__init__(parent, prefix)
         self.Cfg = BranchTdtCfg(self, "Cfg:")
         self.Chart = BranchTdtChart(self, "Chart:")
-        self.Mem = BranchMem(self,"Mem:")  # 04-20-2025
+        self.Mem = BranchMem(self, "Mem:")  # 04-20-2025
 
     def __del__(self):
         super().__del__()
