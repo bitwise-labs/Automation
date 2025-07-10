@@ -30,21 +30,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a8c4ec53-24da-45fa-99bc-831ed779b362" name="Default Changelist" comment="make simple change in python code">
-      <change afterPath="$PROJECT_DIR$/SweepStepscopeCalibrations.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TestExampleSS.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../C++/.vs/C++/v17/.wsuo" beforeDir="false" afterPath="$PROJECT_DIR$/../C++/.vs/C++/v17/.wsuo" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../C++/.vs/C++/v17/Browse.VC.db" beforeDir="false" afterPath="$PROJECT_DIR$/../C++/.vs/C++/v17/Browse.VC.db" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../C++/.vs/VSWorkspaceState.json" beforeDir="false" afterPath="$PROJECT_DIR$/../C++/.vs/VSWorkspaceState.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../C++/.vs/slnx.sqlite" beforeDir="false" afterPath="$PROJECT_DIR$/../C++/.vs/slnx.sqlite" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../C++/BitwiseAutomation/.settings/language.settings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../C++/BitwiseAutomation/.settings/language.settings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../C++/BitwiseAutomation/include/autogenCommon.h" beforeDir="false" afterPath="$PROJECT_DIR$/../C++/BitwiseAutomation/include/autogenCommon.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../C++/TestPega/.settings/language.settings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../C++/TestPega/.settings/language.settings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../C++/TestPela/.settings/language.settings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../C++/TestPela/.settings/language.settings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../C++/TestStepscope/.settings/language.settings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../C++/TestStepscope/.settings/language.settings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../C++/TestStepscope/TestStepscope.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../C++/TestStepscope/TestStepscope.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pyBitwiseAutomation/autogenCommon.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyBitwiseAutomation/autogenCommon.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pyBitwiseAutomation/autogenStepscope.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyBitwiseAutomation/autogenStepscope.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -382,6 +368,7 @@
     <list>
       <item itemvalue="Python.GuiStepscope" />
       <item itemvalue="Python.Sweep Stepscope Calibrations" />
+      <item itemvalue="Python.TestExampleSS" />
       <item itemvalue="Python.TestPegaDeploy" />
       <item itemvalue="Python.TestPegaRateChange" />
       <item itemvalue="Python.TestPega" />
@@ -389,7 +376,6 @@
       <item itemvalue="Python.TestPela" />
       <item itemvalue="Python.TestReadback" />
       <item itemvalue="Python.TestSSCommands" />
-      <item itemvalue="Python.TestExampleSS" />
       <item itemvalue="Python.TestStepscopeResets" />
       <item itemvalue="Python.TestStepscope" />
     </list>
