@@ -40,7 +40,7 @@ class StepscopeDevice(BitwiseDevice):
     def __init__(self):
         super().__init__()
 
-        self.Tub = BranchAcc(self, "Acc:")
+        self.Acc = BranchAcc(self, "Acc:")
         self.Calib = BranchCalib(self, "Calib:")
         self.Pulse = BranchPulse(self, "Pulse:")
         self.S11 = BranchS11(self, "S11:")

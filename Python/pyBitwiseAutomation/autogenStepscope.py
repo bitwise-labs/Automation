@@ -80,6 +80,16 @@ class BranchCalib(AutomationExtender):
         self.SendCommand("RunNoise\n")
         return None
 
+    def getACEnabled(self) -> float:
+        """Get Calib ACEnabled """
+        return self.QueryResponse_bool("ACEnabled?\n")
+
+    def setACEnabled(self, newvalue: bool):
+        """Set Calib ACEnabled """
+        self.SendCommand("ACEnabled " + ("T" if newvalue else "F") + "\n")
+
+        return None
+
 
 class BranchPulse(AutomationExtender):
     """BranchPulse class.  Pulser Access"""
@@ -101,11 +111,11 @@ class BranchPulse(AutomationExtender):
         return None
 
     class AccWidth(Enum):
-        _1 = "1"
-        _2 = "2"
-        _4 = "4"
-        _8 = "8"
-        _16 = "16"
+        W1 = "1"
+        W2 = "2"
+        W4 = "4"
+        W8 = "8"
+        W16 = "16"
 
     def getAccWidth(self) -> AccWidth:
         """Get enum Accessory pulser width selection """
@@ -1046,8 +1056,8 @@ class BranchStepCfg(AutomationExtender):
         return None
 
     class BaseAxis(Enum):
-        Pico = "Pico"
-        Nano = "Nano"
+        Picoseconds = "Picoseconds"
+        Nanoseconds = "Nanoseconds"
 
     def getBaseAxis(self) -> BaseAxis:
         """Get enum Base axis """
@@ -1508,8 +1518,8 @@ class BranchTdrCfg(AutomationExtender):
         return None
 
     class BaseAxis(Enum):
-        Pico = "Pico"
-        Nano = "Nano"
+        Picoseconds = "Picoseconds"
+        Nanoseconds = "Nanoseconds"
         Inch = "Inch"
         Centimeter = "Centimeter"
 
@@ -2094,8 +2104,8 @@ class BranchTdtCfg(AutomationExtender):
         return None
 
     class BaseAxis(Enum):
-        Pico = "Pico"
-        Nano = "Nano"
+        Picoseconds = "Picoseconds"
+        Nanoseconds = "Nanoseconds"
 
     def getBaseAxis(self) -> BaseAxis:
         """Get enum Base axis """

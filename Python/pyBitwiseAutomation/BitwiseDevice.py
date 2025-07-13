@@ -194,7 +194,7 @@ class BitwiseDevice(SocketDevice):
 
         return None
 
-    def WaitForRunToComplete(self, timeoutSec: float):
+    def WaitForRunToComplete(self, timeoutSec: float = 90.0):
         """Wait for device to stop running."""
 
         now = SocketDevice.timestamp()
