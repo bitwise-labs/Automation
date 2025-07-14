@@ -95,7 +95,7 @@ class BranchBasic(AutomationExtender):
         InvRamGrab = "InvRamGrab"
         RamShift = "RamShift"
         InvRamShift = "InvRamShift"
-        _None = "None"
+        None_ = "None"
         Unknown = "Unknown"
 
     def getPattern(self, index: int) -> Pattern:
@@ -272,7 +272,7 @@ class BranchBlockChannel(AutomationExtender):
         return None
 
     class Scroll(Enum):
-        _None = "None"
+        None_ = "None"
         X1 = "X1"
         X2 = "X2"
         X3 = "X3"
@@ -524,7 +524,7 @@ class BranchBurstChannel(AutomationExtender):
         return None
 
     class Scroll(Enum):
-        _None = "None"
+        None_ = "None"
         X1 = "X1"
         X2 = "X2"
         X3 = "X3"
@@ -927,7 +927,7 @@ class BranchPelaED(AutomationExtender):
         InvRamGrab = "InvRamGrab"
         RamShift = "RamShift"
         InvRamShift = "InvRamShift"
-        _None = "None"
+        None_ = "None"
         Unknown = "Unknown"
 
     def getDetPatt(self, index: int) -> DetPatt:
@@ -1229,7 +1229,7 @@ class BranchEfiChannel(AutomationExtender):
         return None
 
     class Scroll(Enum):
-        _None = "None"
+        None_ = "None"
         X1 = "X1"
         X2 = "X2"
         X3 = "X3"
@@ -1642,7 +1642,7 @@ class BranchErrChart(AutomationExtender):
         return None
 
     class Scroll(Enum):
-        _None = "None"
+        None_ = "None"
         X1 = "X1"
         X2 = "X2"
         X3 = "X3"
@@ -2108,7 +2108,7 @@ class BranchPelaEyeChart(AutomationExtender):
         return None
 
     class Scroll(Enum):
-        _None = "None"
+        None_ = "None"
         X1 = "X1"
         X2 = "X2"
         X3 = "X3"
@@ -2342,7 +2342,7 @@ class BranchMaxTChannel(AutomationExtender):
         return self.QueryResponse("Report?\n")
 
     class Scroll(Enum):
-        _None = "None"
+        None_ = "None"
         X1 = "X1"
         X2 = "X2"
         X3 = "X3"
@@ -2620,7 +2620,7 @@ class BranchModChannel(AutomationExtender):
         return None
 
     class Scroll(Enum):
-        _None = "None"
+        None_ = "None"
         X1 = "X1"
         X2 = "X2"
         X3 = "X3"
@@ -2850,7 +2850,7 @@ class BranchRLenChannel(AutomationExtender):
         return None
 
     class Scroll(Enum):
-        _None = "None"
+        None_ = "None"
         X1 = "X1"
         X2 = "X2"
         X3 = "X3"
@@ -3136,7 +3136,7 @@ class BranchWanderChannel(AutomationExtender):
         return None
 
     class Scroll(Enum):
-        _None = "None"
+        None_ = "None"
         X1 = "X1"
         X2 = "X2"
         X3 = "X3"

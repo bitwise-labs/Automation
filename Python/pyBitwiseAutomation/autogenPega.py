@@ -150,7 +150,7 @@ class BranchTubChart(AutomationExtender):
         return None
 
     class Scroll(Enum):
-        _None = "None"
+        None_ = "None"
         X1 = "X1"
         X2 = "X2"
         X3 = "X3"
@@ -624,7 +624,7 @@ class BranchPGErr(AutomationExtender):
         return self.QueryResponse_float("RepeatBER[" + str(index) + "]?\n")
 
     class Type(Enum):
-        _None = "None"
+        None_ = "None"
         Err1Bit = "Err1Bit"
         Err2Bit = "Err2Bit"
         Err3Bit = "Err3Bit"
@@ -1082,7 +1082,7 @@ class BranchEyeChart(AutomationExtender):
         return None
 
     class Scroll(Enum):
-        _None = "None"
+        None_ = "None"
         X1 = "X1"
         X2 = "X2"
         X3 = "X3"
@@ -1514,7 +1514,7 @@ class BranchErrChart(AutomationExtender):
         return None
 
     class Scroll(Enum):
-        _None = "None"
+        None_ = "None"
         X1 = "X1"
         X2 = "X2"
         X3 = "X3"
@@ -1857,7 +1857,7 @@ class BranchED(AutomationExtender):
         InvPrbs31 = "InvPrbs31"
         Grab = "Grab"
         InvGrab = "InvGrab"
-        _None = "None"
+        None_ = "None"
         Unknown = "Unknown"
 
     def getDetPatt(self) -> DetPatt:
@@ -2077,7 +2077,7 @@ class BranchED(AutomationExtender):
             if self.getDebugging():
                 print("Settle " + str(readPattern))
 
-            # if readPattern != BranchED.DetPatt._None and readPattern != BranchED.DetPatt.Unknown
+            # if readPattern != BranchED.DetPatt.None_ and readPattern != BranchED.DetPatt.Unknown
             #                  and readPattern == lastReadPattern :
 
             if readPattern == lastReadPattern:

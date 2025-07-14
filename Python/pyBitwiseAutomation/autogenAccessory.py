@@ -1291,7 +1291,7 @@ class BranchAcc(AutomationExtender):
         return self.QueryResponse_bool("IsAttached?\n")
 
     class Type(Enum):
-        _None = "None"
+        None_ = "None"
         DDR5 = "DDR5"
         Pulser = "Pulser"
         PGSA = "PGSA"

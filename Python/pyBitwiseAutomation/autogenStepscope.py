@@ -439,7 +439,7 @@ class BranchS11Chart(AutomationExtender):
         return None
 
     class Scroll(Enum):
-        _None = "None"
+        None_ = "None"
         X1 = "X1"
         X2 = "X2"
         X3 = "X3"
@@ -817,7 +817,7 @@ class BranchS21Chart(AutomationExtender):
         return None
 
     class Scroll(Enum):
-        _None = "None"
+        None_ = "None"
         X1 = "X1"
         X2 = "X2"
         X3 = "X3"
@@ -1185,7 +1185,7 @@ class BranchStepChart(AutomationExtender):
         return None
 
     class Scroll(Enum):
-        _None = "None"
+        None_ = "None"
         X1 = "X1"
         X2 = "X2"
         X3 = "X3"
@@ -1669,7 +1669,7 @@ class BranchTdrChart(AutomationExtender):
         return None
 
     class Scroll(Enum):
-        _None = "None"
+        None_ = "None"
         X1 = "X1"
         X2 = "X2"
         X3 = "X3"
@@ -1845,7 +1845,7 @@ class BranchTdr(AutomationExtender):
         return self.QueryBinaryResponse_float("Binary?\n")
 
     class CalState(Enum):
-        _None = "None"
+        None_ = "None"
         Short = "Short"
         Term = "Term"
         Success = "Success"
@@ -2237,7 +2237,7 @@ class BranchTdtChart(AutomationExtender):
         return None
 
     class Scroll(Enum):
-        _None = "None"
+        None_ = "None"
         X1 = "X1"
         X2 = "X2"
         X3 = "X3"
@@ -2323,7 +2323,7 @@ class BranchTdt(AutomationExtender):
         return self.QueryBinaryResponse_float("Binary?\n")
 
     class CalState(Enum):
-        _None = "None"
+        None_ = "None"
         Through = "Through"
         Success = "Success"
         Fail = "Fail"
