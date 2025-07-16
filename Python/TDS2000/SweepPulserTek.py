@@ -9,14 +9,14 @@ import tkinter as tk
 from tkinter import filedialog
 
 from OscilloscopeDevice import OscilloscopeDevice
-from TDS2000.SSDevice import SSDevice
-from pyBitwiseAutomation import BranchPulse, BranchStepCfg
+from pyBitwiseAutomation import StepscopeDevice, BranchPulse
 import matplotlib.pyplot as plt
 
-stepscope = SSDevice()
+scope = OscilloscopeDevice()
+stepscope = StepscopeDevice()
 
 
-def map2accessoryLen(length: int) -> BranchPulse.AccWidth:
+def map2accessoryLen(length) -> BranchPulse.AccWidth:
     if length == 1:
         return BranchPulse.AccWidth.W1
     if length == 2:
@@ -31,33 +31,13 @@ def map2accessoryLen(length: int) -> BranchPulse.AccWidth:
     return BranchPulse.AccWidth.W8
 
 
-def map2DSPmode(value: str) -> BranchStepCfg.DSPMode:
-    if value.strip().upper() == "DIFFERENTIAL":
-        return BranchStepCfg.DSPMode.Differential
-    if value.strip().upper() == "SEPOSITIVE":
-        return BranchStepCfg.DSPMode.SEPositive
-    if value.strip().upper() == "SENEGATIVE":
-        return BranchStepCfg.DSPMode.SENegative
-
-    return BranchStepCfg.DSPMode.Off
-
-
-def map2PulserMode(value: str) -> BranchPulse.Mode:
-    if value.strip().upper() == "ACCESSORY":
-        return BranchPulse.Mode.Accessory
-    if value.strip().upper() == "REMOTE":
-        return BranchPulse.Mode.Remote
-    if value.strip().upper() == "TRIGGERED":
-        return BranchPulse.Mode.Triggered
-    return BranchPulse.Mode.Local
-
-
 try:
     # Create parser object
     parser = argparse.ArgumentParser(description="Command-line parser")
 
     # Add parameters
     parser.add_argument('--ip', "-i", type=str, help='STEPScope IP Address')
+    parser.add_argument('--usb', "-u", type=str, default="/dev/usbtmc0", help='USB TMC device path')
     parser.add_argument('--verbose', "-v", action='store_true', help='Enable progress display')
     parser.add_argument("--length", "-l", type=str, help='Pulse length W value or \"sweep\"')
     parser.add_argument("--amplitude", "-a", type=str, help='Pulser amplitude mV value or \"sweep\"')
@@ -65,16 +45,25 @@ try:
     parser.add_argument("--directory", "-d", type=str, help='Results directory path')
     parser.add_argument("--clear", "-c", action='store_true', help='Clear directory before beginning')
     parser.add_argument("--mode", "-m", type=str, help='Pulser mode (e.g. \"Local\" or \"Accessory\")')
-    parser.add_argument("--dsp", "-s", type=str, default="Differential",
-                        help='DSP Mode (e.g. \"Off\" or \"Differential\")')
-    parser.add_argument("--noaccomp", "-n", action='store_true', help='Disable AC compensation')
     parser.add_argument("--flat", "-f", type=int, default=20, help='Flat spot count of consecutive samples')
     args = parser.parse_args()
+
+    usb_connect = args.usb
+    if usb_connect is None:
+        usb_connect = input("Enter USB connection (e.g. \"/dev/usbtmc0\")? ")
+        print(f"entered:[{usb_connect}]")
 
     ip_address = args.ip
     if ip_address is None:
         ip_address = input("Enter STEPScope IP address? ")
         print(f"entered:[{ip_address}]")
+
+    if args.verbose:
+        scope.progress = True
+
+    scope.connect(usb_connect)
+    scope.setup_channel("CH1")
+    print("Scope ID:", scope.get_id())
 
     stepscope.Connect(ip_address)
     serial_number = stepscope.Const.getSN()
@@ -82,24 +71,15 @@ try:
     ip = stepscope.Sys.getIP()
     print("Stepscope: " + serial_number + ", " + arch + ", " + ip)
 
-    if args.verbose:
-        stepscope.progress = True
-        stepscope.timing = True
-
-    if args.noaccomp:
-        stepscope.Calib.setACEnabled(False)
-    else:
-        stepscope.Calib.setACEnabled(True)
-
-    ac_enabled = stepscope.Calib.getACEnabled()
-
-    if args.dsp:
-        stepscope.Step.Cfg.setDSPMode(map2DSPmode(args.dsp))
-
-    dsp_mode = stepscope.Step.Cfg.getDSPMode()
-
     if args.mode:
-        stepscope.Pulse.setMode(map2PulserMode(args.mode))
+        if args.mode.upper() == "ACCESSORY":
+            stepscope.Pulse.setMode(stepscope.Pulse.Mode.Accessory)
+        elif args.mode.upper() == "LOCAL":
+            stepscope.Pulse.setMode(stepscope.Pulse.Mode.Local)
+        elif args.mode.upper() == "REMOTE":
+            stepscope.Pulse.setMode(stepscope.Pulse.Mode.Remote)
+        elif args.mode.upper() == "TRIGGERED":
+            stepscope.Pulse.setMode(stepscope.Pulse.Mode.Triggered)
 
     pulser_mode = stepscope.Pulse.getMode()
     print("STEPScope pulser mode: " + str(pulser_mode))
@@ -110,37 +90,43 @@ try:
         sweep_pulse_lengths_w = [1, 2, 4, 8, 16]
         sweep_amplitudes_mv = [200, 250, 300, 350, 400, 450, 500, 550, 600, 650, 700]
     else:
+        sweep_pulse_lengths_w = [1, 2, 3, 4, 6, 8, 12, 16, 20, 24, 28, 32]
         sweep_amplitudes_mv = [200, 225, 250, 275, 300, 325, 350]
-        sweep_pulse_lengths_w = [1, 2, 3, 4, 6, 8, 10, 12, 14, 16, 18,
-                                 20, 22, 24, 26, 28, 30, 32]
 
     pulse_length_value = args.length
     if pulse_length_value is None:
-        pulse_length_value = input("Enter pulse length W value (e.g. \"1\" or \"sweep\")? ")
+        pulse_length_value = input('Enter pulse length W value(s) (e.g. "1", "8 16 32", or "sweep")? ')
     print(f"entered:[{pulse_length_value}]")
 
     if pulse_length_value.strip().upper() == "SWEEP":
         pulse_lengths_w = sweep_pulse_lengths_w
     else:
+        # Allow space-separated, comma-separated, or mixed list
         try:
-            number = int(abs(float(pulse_length_value.strip())))
-            pulse_lengths_w = [number]
+            # Replace commas with spaces, then split
+            tokens = pulse_length_value.replace(",", " ").split()
+            pulse_lengths_w = [int(abs(float(tok))) for tok in tokens]
+            if not pulse_lengths_w:
+                raise ValueError
         except ValueError:
-            sys.exit("Error: Missing numeric pulse length value")
+            sys.exit("Error: Invalid numeric pulse length value(s)")
 
     amplitude_value = args.amplitude
     if amplitude_value is None:
-        amplitude_value = input("Enter amplitude setting mV value (e.g. \"350\" or \"sweep\")? ")
+        amplitude_value = input('Enter amplitude setting mV value(s) (e.g. "350", "200 250 300", or "sweep")? ')
         print(f"entered:[{amplitude_value}]")
 
     if amplitude_value.strip().upper() == "SWEEP":
         amplitudes_mv = sweep_amplitudes_mv
     else:
         try:
-            number = int(abs(float(amplitude_value.strip())))
-            amplitudes_mv = [number]
+            # Normalize input by replacing commas with spaces and splitting
+            tokens = amplitude_value.replace(",", " ").split()
+            amplitudes_mv = [int(abs(float(tok))) for tok in tokens]
+            if not amplitudes_mv:
+                raise ValueError
         except ValueError:
-            sys.exit("Error: Missing numeric mV amplitude value")
+            sys.exit("Error: Invalid numeric amplitude value(s)")
 
     attenuator_value = args.attenuator
     if attenuator_value is None:
@@ -187,8 +173,6 @@ try:
     run_count = len(pulse_lengths_w) * len(amplitudes_mv)
     run_progress = 0
 
-    stepscope.setup_channel()
-
     for pulse_length in pulse_lengths_w:
         for amplitude in amplitudes_mv:
             # jpg_file_name = file_prefix + "_w" + str(pulse_length) + "_" + str(amplitude) + "mV.jpg"
@@ -205,8 +189,8 @@ try:
                 stepscope.Pulse.setAmplMV(amplitude)
                 stepscope.Pulse.setLength(pulse_length)
 
-            stepscope.align_and_center_single_pulse()
-            waveform = stepscope.get_waveform_data(name="Step Response Pulse")
+            scope.align_and_center_single_pulse("CH1")
+            waveform = scope.get_waveform_data("CH1", name="CH1 Pulse")
 
             print(f"Acquire waveform for W={pulse_length:.0f}, {amplitude} mV, {waveform.count} samples")
 
@@ -261,7 +245,7 @@ try:
             plt.ylabel("Voltage (" + waveform.y_units + ")")
 
             plt.suptitle(
-                f"{waveform.name}\n({serial_number}, Pulser {pulser_mode.name}, DSP {dsp_mode.name}, ACComp={str(ac_enabled)[0]}, W={pulse_length:.0f}, {amplitude:.0f} mV)")
+                f"{waveform.name}\n({serial_number}, Pulser {pulser_mode.name}, W={pulse_length:.0f}, {amplitude:.0f} mV)")
             plt.title(f"Amplitude {amplitude_measurement:.3f} " + waveform.y_units)
             plt.grid(True)
             # plt.legend()
@@ -281,13 +265,11 @@ try:
     file = open(csv_file_name, mode="w", newline='')
     try:
         writer = csv.writer(file)
-        writer.writerow(
-            ["SN", "DateTime", "Mode", "DSP", "ACComp", "LenW", "LenNS", "AmplSet", "Meas", "Atten", "MeasNoAtten"])
+        writer.writerow(["SN", "DateTime", "Mode", "LenW", "LenNS", "AmplSet", "Meas", "Atten", "MeasNoAtten", ])
 
         for i in range(len(results_ampl_measurement)):
             without_attenuator = results_ampl_setting[i] / pow(10.0, float(attenuator_value) / 20.0)
-            writer.writerow([serial_number, date_time, pulser_mode.name, dsp_mode.name,
-                             str(ac_enabled),
+            writer.writerow([serial_number, date_time, pulser_mode.name,
                              str(f"{results_length_setting[i]:.0f}"),
                              str(f"{(results_length_setting[i] * 12.8):.3f}"),
                              str(f"{results_ampl_setting[i]:.0f}"),
@@ -299,4 +281,5 @@ try:
         file.close()
 
 finally:
+    scope.disconnect()
     stepscope.Disconnect()
