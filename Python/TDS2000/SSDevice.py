@@ -65,24 +65,21 @@ class SSDevice(StepscopeDevice):
         # self.RestoreConfiguration('[Factory]')
 
         self.App.setTab("STEP")
+        self.Step.Cfg.setNoiseMode(BranchStepCfg.NoiseMode.Double)
         self.Step.Cfg.setBaseAxis(BranchStepCfg.BaseAxis.Nanoseconds)
         self.Step.Cfg.setReclen(1250)  # same as Tek scope
         self.Step.Cfg.setAvg(3)
         self.WaitForRunToComplete()
-
 
     def align_and_center_single_pulse(self):
         self._progress_print("Align and center single pulse")
         if self.timing:
             start = time.perf_counter()
 
-        self.App.Stop()
         self.Step.Align(BranchStep.AlignMode.align0101)
-        self.App.Run(runOnceFlag=True)
-        self.WaitForRunToStart()
-        self.WaitForRunToComplete()
+        time.sleep(3)
+        self.App.Stop()
         self.Step.Fit()
-
 
         if self.timing:
             elapsed = time.perf_counter() - start
