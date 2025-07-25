@@ -26,7 +26,7 @@ SWEEP_ACCOMP_TYPES = [True, False]
 DEFAULT_FLAT = 20
 
 
-def consider_accomp_list(arg: str, sweep_list: list) -> list
+def consider_accomp_list(arg: str, sweep_list: list) -> list:
     answer = None
     if arg.strip().upper() == "SWEEP":
         answer = sweep_list
@@ -39,7 +39,7 @@ def consider_accomp_list(arg: str, sweep_list: list) -> list
     return answer
 
 
-def consider_dsp_list(arg: str, sweep_list: list) -> list
+def consider_dsp_list(arg: str, sweep_list: list) -> list:
     answer = None
     if arg.strip().upper() == "SWEEP":
         answer = sweep_list
@@ -52,7 +52,7 @@ def consider_dsp_list(arg: str, sweep_list: list) -> list
     return answer
 
 
-def consider_mode_list(arg: str, sweep_list: list) -> list
+def consider_mode_list(arg: str, sweep_list: list) -> list:
     answer = None
     if arg.strip().upper() == "SWEEP":
         answer = sweep_list
@@ -168,7 +168,8 @@ try:
     dsp_value = args.dsp
     if dsp_value is None:
         dsp_value = input('Enter pulser mode(s) (e.g. "Differential", "Off", "Off Differential" or "sweep")? ')
-        # print(f"entered:[{dsp_value}]")
+
+    print(f"entered:[{dsp_value}]")
 
     dsp_values_list = consider_dsp_list(dsp_value, SWEEP_DSP_TYPES)
 
@@ -179,7 +180,7 @@ try:
         accomp_value = input('Enter AC Compensation value(s) (e.g. "0", "True", "0 1", or "sweep")? ')
         # print(f"entered:[{accomp_value}]")
 
-    accomp_values_list = consider_dsp_list(accomp_value, SWEEP_ACCOMP_TYPES)
+    accomp_values_list = consider_accomp_list(accomp_value, SWEEP_ACCOMP_TYPES)
 
     # ============
 
