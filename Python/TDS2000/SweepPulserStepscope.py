@@ -171,7 +171,8 @@ try:
     dsp_value = args.dsp
     if dsp_value is None:
         dsp_value = input('Enter pulser mode(s) (e.g. "Differential", "Off", "Off Differential" or "sweep")? ')
-        # print(f"entered:[{dsp_value}]")
+
+    print(f"entered:[{dsp_value}]")
 
     dsp_values_list = consider_dsp_list(dsp_value, SWEEP_DSP_TYPES)
 
