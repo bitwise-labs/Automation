@@ -17,16 +17,16 @@ stepscope = SSDevice()
 
 SWEEP_ACCESSORY_PULSES = [1, 2, 4, 8, 16]
 SWEEP_ACCESSORY_AMPLITUDES = [200, 250, 300, 350, 400, 450, 500, 550, 600, 650, 700]
-SWEEP_OTHER_PULSES = [1, 2, 3, 4, 6, 8, 12, 16, 20, 24, 28, 32]
+# SWEEP_ACCESSORY_AMPLITUDES = [200, 300, 400, 500, 600, 700]
+SWEEP_OTHER_PULSES = [1, 2, 4, 8, 16, 32]
 SWEEP_OTHER_AMPLITUDES = [200, 225, 250, 275, 300, 325, 350]
 SWEEP_PULSER_MODES = [BranchPulse.Mode.Local, BranchPulse.Mode.Accessory]
-SWEEP_DSP_TYPES = [BranchStepCfg.DSPMode.Off, BranchStepCfg.DSPMode.Differential,
-                   BranchStepCfg.DSPMode.SEPositive, BranchStepCfg.DSPMode.SENegative]
+SWEEP_DSP_TYPES = [BranchStepCfg.DSPMode.Off, BranchStepCfg.DSPMode.Differential]
 SWEEP_ACCOMP_TYPES = [True, False]
 DEFAULT_FLAT = 20
 
 
-def consider_accomp_list(arg: str, sweep_list: list) -> list
+def consider_accomp_list(arg: str, sweep_list: list) -> list:
     answer = None
     if arg.strip().upper() == "SWEEP":
         answer = sweep_list
@@ -39,7 +39,7 @@ def consider_accomp_list(arg: str, sweep_list: list) -> list
     return answer
 
 
-def consider_dsp_list(arg: str, sweep_list: list) -> list
+def consider_dsp_list(arg: str, sweep_list: list) -> list:
     answer = None
     if arg.strip().upper() == "SWEEP":
         answer = sweep_list
@@ -52,7 +52,7 @@ def consider_dsp_list(arg: str, sweep_list: list) -> list
     return answer
 
 
-def consider_mode_list(arg: str, sweep_list: list) -> list
+def consider_mode_list(arg: str, sweep_list: list) -> list:
     answer = None
     if arg.strip().upper() == "SWEEP":
         answer = sweep_list
@@ -121,20 +121,23 @@ def map2PulserMode(value: str) -> BranchPulse.Mode:
 
 
 try:
+    # might help Tek auto-align on small signals to do large signals first ??
+    SWEEP_ACCESSORY_AMPLITUDES.reverse()
+    SWEEP_OTHER_AMPLITUDES.reverse()
+
     # Create parser object
     parser = argparse.ArgumentParser(description="Command-line parser")
 
     # Add parameters
     parser.add_argument('--ip', "-i", type=str, help='STEPScope IP Address')
     parser.add_argument('--verbose', "-v", action='store_true', help='Enable progress display')
-    parser.add_argument("--length", "-l", type=str, help='Pulse length W value or \"sweep\"')
-    parser.add_argument("--amplitude", "-a", type=str, help='Pulser amplitude mV value or \"sweep\"')
-    parser.add_argument("--attenuator", "-t", type=str, help='Attenuator numeric value (e.g. \"6\")')
+    parser.add_argument("--length", "-l", type=str, help='Pulse length W value or "sweep"')
+    parser.add_argument("--amplitude", "-a", type=str, help='Pulser amplitude mV value or "sweep"')
+    parser.add_argument("--attenuator", "-t", type=str, help='Attenuator numeric value (e.g. "6")')
     parser.add_argument("--directory", "-d", type=str, help='Results directory path')
     parser.add_argument("--clear", "-c", action='store_true', help='Clear directory before beginning')
     parser.add_argument("--mode", "-m", type=str, help='Pulser mode (e.g. "Local" or "Accessory" or "sweep")')
-    parser.add_argument("--dsp", "-s", type=str, default="Differential",
-                        help='DSP Mode (e.g. "Off" or "Differential" or "sweep")')
+    parser.add_argument("--dsp", "-s", type=str, help='DSP Mode (e.g. "Off" or "Differential" or "sweep")')
     parser.add_argument("--accomp", "-p", type=str, help='AC compensation (e.g. "0" or "sweep")')
     parser.add_argument("--flat", "-f", type=int, default=DEFAULT_FLAT, help='Flat spot count of consecutive samples')
     args = parser.parse_args()
@@ -179,7 +182,7 @@ try:
         accomp_value = input('Enter AC Compensation value(s) (e.g. "0", "True", "0 1", or "sweep")? ')
         # print(f"entered:[{accomp_value}]")
 
-    accomp_values_list = consider_dsp_list(accomp_value, SWEEP_ACCOMP_TYPES)
+    accomp_values_list = consider_accomp_list(accomp_value, SWEEP_ACCOMP_TYPES)
 
     # ============
 
@@ -397,19 +400,15 @@ try:
                     try:
                         writer = csv.writer(file)
                         writer.writerow(
-                            ["SN", "DateTime", "Mode", "DSP", "ACComp", "LenW", "LenNS", "AmplSet", "Meas", "Atten",
-                             "MeasNoAtten"])
+                            ["SN", "DateTime", "Mode", "DSP", "ACComp", "LenW", "AmplSet", "Meas", "Atten"])
 
                         for i in range(len(results_ampl_measurement)):
-                            without_attenuator = results_ampl_setting[i] / pow(10.0, attenuator_value / 20.0)
                             writer.writerow([serial_number, date_time, pulser_mode.name, dsp_mode.name,
                                              str(ac_enabled),
                                              str(f"{results_length_setting[i]:.0f}"),
-                                             str(f"{(results_length_setting[i] * 12.8):.3f}"),
                                              str(f"{results_ampl_setting[i]:.0f}"),
                                              str(f"{results_ampl_measurement[i]:.3f}"),
-                                             str(f"{attenuator_value:.0f}"),
-                                             str(f"{without_attenuator:.3f}")]
+                                             str(f"{attenuator_value:.0f}")]
                                             )
                         print(f"Write results to file: {csv_file_name}")
                     finally:

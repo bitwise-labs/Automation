@@ -17,7 +17,8 @@ stepscope = StepscopeDevice()
 
 SWEEP_ACCESSORY_PULSES = [1, 2, 4, 8, 16]
 SWEEP_ACCESSORY_AMPLITUDES = [200, 250, 300, 350, 400, 450, 500, 550, 600, 650, 700]
-SWEEP_OTHER_PULSES = [1, 2, 3, 4, 6, 8, 12, 16, 20, 24, 28, 32]
+# SWEEP_ACCESSORY_AMPLITUDES = [200, 300, 400, 500, 600, 700]
+SWEEP_OTHER_PULSES = [1, 2, 4, 8, 16, 32]
 SWEEP_OTHER_AMPLITUDES = [200, 225, 250, 275, 300, 325, 350]
 DEFAULT_FLAT = 20
 
@@ -68,9 +69,10 @@ def map2PulserMode(value: str) -> BranchPulse.Mode:
 
 try:
 
-    # might help auto-align on small signals ??
+    # might help Tek auto-align on small signals to do large signals first ??
     SWEEP_ACCESSORY_AMPLITUDES.reverse()
     SWEEP_OTHER_AMPLITUDES.reverse()
+
 
 
     # Create parser object
@@ -80,12 +82,12 @@ try:
     parser.add_argument('--ip', "-i", type=str, help='STEPScope IP Address')
     parser.add_argument('--usb', "-u", type=str, default="/dev/usbtmc0", help='USB TMC device path')
     parser.add_argument('--verbose', "-v", action='store_true', help='Enable progress display')
-    parser.add_argument("--length", "-l", type=str, help='Pulse length W value or \"sweep\"')
-    parser.add_argument("--amplitude", "-a", type=str, help='Pulser amplitude mV value or \"sweep\"')
-    parser.add_argument("--attenuator", "-t", type=str, help='Attenuator numeric value (e.g. \"6\")')
+    parser.add_argument("--length", "-l", type=str, help='Pulse length W value or "sweep"')
+    parser.add_argument("--amplitude", "-a", type=str, help='Pulser amplitude mV value or "sweep"')
+    parser.add_argument("--attenuator", "-t", type=str, help='Attenuator numeric value (e.g. "6")')
     parser.add_argument("--directory", "-d", type=str, help='Results directory path')
     parser.add_argument("--clear", "-c", action='store_true', help='Clear directory before beginning')
-    parser.add_argument("--mode", "-m", type=str, help='Pulser mode (e.g. \"Local\" or \"Accessory\")')
+    parser.add_argument("--mode", "-m", type=str, help='Pulser mode (e.g. "Local" or "Accessory")')
     parser.add_argument("--flat", "-f", type=int, default=DEFAULT_FLAT, help='Flat spot count of consecutive samples')
     args = parser.parse_args()
 
@@ -126,7 +128,7 @@ try:
 
     pulse_length_value = args.length
     if pulse_length_value is None:
-        pulse_length_value = input('Enter pulse length W value(s) (e.g. "1", "8 16 32", or "sweep")? ')
+        pulse_length_value = input('Enter pulse length W value(s) (e.g. "1", "1 4 8", or "sweep")? ')
         # print(f"entered:[{pulse_length_value}]")
 
     pulse_lengths_w = consider_sweep_int_list("pulse length", pulse_length_value, using_accessory_flag,
@@ -295,17 +297,14 @@ try:
             try:
                 writer = csv.writer(file)
                 writer.writerow(
-                    ["SN", "DateTime", "Mode", "LenW", "LenNS", "AmplSet", "Meas", "Atten", "MeasNoAtten", ])
+                    ["SN", "DateTime", "Mode", "LenW", "AmplSet", "Meas", "Atten" ])
 
                 for i in range(len(results_ampl_measurement)):
-                    without_attenuator = results_ampl_setting[i] / pow(10.0, attenuator_value / 20.0)
                     writer.writerow([serial_number, date_time, pulser_mode.name,
                                      str(f"{results_length_setting[i]:.0f}"),
-                                     str(f"{(results_length_setting[i] * 12.8):.3f}"),
                                      str(f"{results_ampl_setting[i]:.0f}"),
                                      str(f"{results_ampl_measurement[i]:.3f}"),
-                                     str(f"{attenuator_value:.0f}"),
-                                     str(f"{without_attenuator:.2f}")]
+                                     str(f"{attenuator_value:.0f}")
                                     )
             finally:
                 file.close()

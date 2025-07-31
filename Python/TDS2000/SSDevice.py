@@ -75,11 +75,14 @@ class SSDevice(StepscopeDevice):
         self._progress_print("Align and center single pulse")
         if self.timing:
             start = time.perf_counter()
-
-        self.Step.Align(BranchStep.AlignMode.align0101)
-        time.sleep(3)
         self.App.Stop()
+        time.sleep(2)
+        self.Step.Align(BranchStep.AlignMode.align0101)
+        time.sleep(4)
         self.Step.Fit()
+        time.sleep(1)
+        self.App.Stop()
+
 
         if self.timing:
             elapsed = time.perf_counter() - start
