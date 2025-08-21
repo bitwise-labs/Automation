@@ -202,6 +202,11 @@ char *BranchS11::getBinaryMagn(int *pcount) /* Binary Magnitude Results - Must f
     return QueryBinaryResponse(pcount,"BinaryMagn?\n");
 }
 
+char *BranchS11::getBinaryPhase(int *pcount) /* Binary Magnitude Results in radians - Must free() return value */
+{
+    return QueryBinaryResponse(pcount,"BinaryPhase?\n");
+}
+
 char *BranchS11::getBinaryReflected(int *pcount) /* Binary Reflected Results - Must free() return value */
 {
     return QueryBinaryResponse(pcount,"BinaryReflected?\n");
@@ -608,6 +613,11 @@ char *BranchS21::getBinaryDut(int *pcount) /* Binary Dut Results - Must free() r
 char *BranchS21::getBinaryMagn(int *pcount) /* Binary Magnitude Results - Must free() return value */
 {
     return QueryBinaryResponse(pcount,"BinaryMagn?\n");
+}
+
+char *BranchS21::getBinaryPhase(int *pcount) /* Binary Phase Results in radians - Must free() return value */
+{
+    return QueryBinaryResponse(pcount,"BinaryPhase?\n");
 }
 
 char *BranchS21::getBinaryThrough(int *pcount) /* Binary Through Results - Must free() return value */

@@ -68,14 +68,15 @@ class SSDevice(StepscopeDevice):
         self.Step.Cfg.setNoiseMode(BranchStepCfg.NoiseMode.Double)
         self.Step.Cfg.setBaseAxis(BranchStepCfg.BaseAxis.Nanoseconds)
         self.Step.Cfg.setReclen(1250)  # same as Tek scope
-        self.Step.Cfg.setAvg(3)
+        self.Step.Cfg.setAvg(5)
         self.WaitForRunToComplete()
 
-    def align_and_center_single_pulse(self):
+    def auto_alignment(self):
         self._progress_print("Align and center single pulse")
         if self.timing:
             start = time.perf_counter()
         self.App.Stop()
+        self.Announce.Clear()
         time.sleep(2)
         self.Step.Align(BranchStep.AlignMode.align0101)
         time.sleep(4)
@@ -83,10 +84,9 @@ class SSDevice(StepscopeDevice):
         time.sleep(1)
         self.App.Stop()
 
-
         if self.timing:
             elapsed = time.perf_counter() - start
-            print(f"[TIMING] align_and_center_single_pulse took {elapsed:.3f} sec")
+            print(f"[TIMING] auto_alignment took {elapsed:.3f} sec")
 
     def get_waveform_data(self, name="no_name"):
         self._progress_print("Acquiring waveform data")

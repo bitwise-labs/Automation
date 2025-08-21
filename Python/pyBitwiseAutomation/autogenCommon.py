@@ -646,8 +646,7 @@ class BranchAnnounce(AutomationExtender):
         return self.QueryResponse_int("Sequence?\n")
 
     def Clear(self):
-        """Method for Clear message. Todo: add arguments if needed"""
-        print("BranchAnnounce:Clear(), Todo: add arguments if needed")
+        """Method for Clear message. """
         self.SendCommand("Clear\n")
         return None
 

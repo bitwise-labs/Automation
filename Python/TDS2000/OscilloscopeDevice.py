@@ -58,13 +58,28 @@ class OscilloscopeDevice(TDS2000):
         if self.progress:
             print("[PROGRESS]", msg)
 
-    def setup_channel(self,channel="CH1"):
-        self.write("TRIGGER:MAIN:EDGE:SOURCE "+channel+"\n")
-        self.write(channel+":PROBE 1\n")
+    def setup_channel(self,channel,trigger_channel="CH1"):
+        self._progress_print("Setting up oscilloscope channel "+channel)
 
-    def align_and_center_single_pulse(self,channel="CH1"):
-        self._progress_print("Align and center single pulse on channel "+channel)
+        if channel.upper()=="MATH":
+            self.write("CH1:PROBE 1")
+            self.write("CH2:PROBE 1")
+            self.write("CH1:COUP DC")
+            self.write("CH2:COUP DC")
+            self.write("SELECT:CH1 ON")
+            self.write("SELECT:CH2 ON")
+            self.write('MATH:DEFINE "CH1 - CH2"')
+            self.write("SELECT:MATH ON")
+            self.write("TRIGGER:MAIN:EDGE:SOURCE CH1")
+            self.write(f"TRIGGER:MAIN:EDGE:COUPLING DC")
 
-        self.show_single_pulse_after_autoset()
-        self.scale_vertical_and_recenter("CH1", 2)
-        self.set_averaging(128)
+        else:
+            self.write(f"{channel}:COUP DC")
+            self.write(f"PROBE:{channel} 1")
+            self.write(f"SELECT:{channel} ON")
+            self.write(f"TRIGGER:MAIN:EDGE:SOURCE {trigger_channel}")
+            self.write(f"TRIGGER:MAIN:EDGE:COUPLING DC")
+
+
+
+

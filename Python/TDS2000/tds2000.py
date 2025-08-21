@@ -1,8 +1,12 @@
 import os
 import struct
 import time
-from Waveform import Waveform  # Ensure the Waveform class is available
+import array
+import fcntl
+import select
+from fcntl import F_GETFL, F_SETFL
 
+from Waveform import Waveform  # Ensure the Waveform class is available
 
 class TDS2000:
     def __init__(self):
@@ -44,18 +48,22 @@ class TDS2000:
         if self.progress:
             print("[PROGRESS]", msg)
 
-    def connect(self, scope_path="/dev/usbtmc0"):
-        self.scope_path = scope_path
-        self._progress_print(f"Connecting to scope at {scope_path}")
+    def connect(self, the_scope_path="/dev/usbtmc0"):
+        self.scope_path = the_scope_path
+        self._progress_print(f'Connecting to scope at "{self.scope_path}"')
         try:
             self.fd = os.open(self.scope_path, os.O_RDWR)
-            self.write("*RST\n")
-            self.write("HEAD OFF\n")
-            self.query("*OPC?\n")
+            time.sleep(0.2)
+            # self.flush_input()
+            self._progress_print("Connected to: "+self.query("*IDN?"))
+            self.write("*RST")
+            time.sleep(0.2)
+            self.write("HEAD OFF")
+            self.query("*OPC?")
         except PermissionError:
-            raise PermissionError(f"Cannot open {scope_path}: check permissions.")
+            raise PermissionError(f'Cannot open oscilloscope, check permissions: "chmod a+rw {self.scope_path}"')
         except FileNotFoundError:
-            raise FileNotFoundError(f"{scope_path} not found. Is the scope connected?")
+            raise FileNotFoundError(f"{self.scope_path} not found. Is the scope connected?")
         return True
 
     def disconnect(self):
@@ -69,42 +77,45 @@ class TDS2000:
         if self.fd is None:
             raise ConnectionError("Oscilloscope not connected.")
 
-        if self.timing:
-            start = time.perf_counter()
+        start_s = time.perf_counter()
 
         self._debug_print(f"Writing: {cmd.strip()}")
         os.write(self.fd, cmd.encode())
 
+        elapsed_s = (time.perf_counter() - start_s)
         if self.timing:
-            elapsed_ms = (time.perf_counter() - start) * 1000
-            print(f"[TIMING] \"{cmd.strip()}\" took {elapsed_ms:.2f} ms")
+            print(f"[TIMING] \"{cmd.strip()}\" took {elapsed_s:.3f}s")
 
     def query(self, cmd, delay=0.0, readlen=1024):
         """Send a SCPI query and return the response."""
         if self.fd is None:
             raise ConnectionError("Oscilloscope not connected.")
+
+        start_s = time.perf_counter()
         self.flush_input()
+
+        flush_s = time.perf_counter() - start_s
+        start_s = time.perf_counter()
 
         clean_cmd = cmd.strip()
         self._debug_print(f"Querying: {clean_cmd}")
+        os.write(self.fd, (clean_cmd + "").encode())
 
-        if self.timing:
-            start = time.perf_counter()
+        write_completed_s = (time.perf_counter() - start_s)
+        start_s = time.perf_counter()
 
-        os.write(self.fd, (clean_cmd + "\n").encode())
         time.sleep(delay)
         response = os.read(self.fd, readlen).decode(errors='ignore').strip()
-
+        respond_s = (time.perf_counter() - start_s)
         if self.timing:
-            elapsed_ms = (time.perf_counter() - start) * 1000
-            print(f"[TIMING] \"{clean_cmd}\" took {elapsed_ms:.2f} ms")
+            print(f"[TIMING] \"{clean_cmd}\" took {flush_s:.3f}s to flush, {write_completed_s:.3f}s to write query, {respond_s:.3f}s to respond")
 
         self._debug_print(f"Response: {response}")
-
         return response
 
-    def flush_input(self, max_attempts=5):
-        self._debug_print("Flushing input buffer")
+    def flush_input(self, max_attempts=1):
+        # self._debug_print("Flushing input buffer")
+        start_s = time.perf_counter()
         try:
             for _ in range(max_attempts):
                 data = os.read(self.fd, 512)
@@ -113,75 +124,326 @@ class TDS2000:
         except (BlockingIOError, TimeoutError):
             pass
 
-    def autoset(self):
-        self._progress_print("Running AutoSet")
-        self.write("AUTOSET EXECUTE\n")
-        self.query("*OPC?\n")
-        return True
+        flush_s = time.perf_counter() - start_s
+        if self.timing:
+            print(f"[TIMING] flush_input() took {flush_s:.3f} sec")
+
+
+    def flush_input_new(self, max_wait_s=0.05, poll_step_s=0.005, chunk_size=16384):
+        """Drain pending bytes from /dev/usbtmc* without blocking. Returns total bytes flushed."""
+        start = time.perf_counter()
+        total = 0
+
+        # temporarily put fd in non-blocking mode
+        flags = fcntl.fcntl(self.fd, F_GETFL)
+        try:
+            fcntl.fcntl(self.fd, F_SETFL, flags | os.O_NONBLOCK)
+
+            deadline = start + max_wait_s
+            while True:
+                # is the fd readable right now?
+                r, _, _ = select.select([self.fd], [], [], 0)
+                if not r:
+                    if time.perf_counter() >= deadline:
+                        break
+                    time.sleep(poll_step_s)
+                    continue
+
+                try:
+                    data = os.read(self.fd, chunk_size)
+                except BlockingIOError:
+                    # readable edge but no bytes yet; try again shortly
+                    time.sleep(poll_step_s)
+                    continue
+
+                if not data:
+                    # EOF or nothing more
+                    break
+                total += len(data)
+
+        finally:
+            # restore original flags
+            fcntl.fcntl(self.fd, F_SETFL, flags)
+
+        if self.timing:
+            print(f"[TIMING] flush_input() drained {total} bytes in {time.perf_counter() - start:.3f}s")
+
+        return total
 
     def get_id(self):
         self._progress_print("Getting scope ID")
-        return self.query("*IDN?\n")
+        return self.query("*IDN?")
 
     def set_averaging(self, count=128):
         self._progress_print(f"Setting averaging to {count}")
         if count <= 1:
-            self.write("ACQUIRE:MODE SAMPLE\n")
+            self.write("ACQUIRE:MODE SAMPLE")
         elif 2 <= count <= 512:
-            self.write("ACQUIRE:MODE AVERAGE\n")
-            self.write(f"ACQUIRE:NUMAVG {int(count)}\n")
+            self.write("ACQUIRE:MODE AVERAGE")
+            self.write(f"ACQUIRE:NUMAVG {int(count)}")
         else:
             raise ValueError("Averaging count must be between 2 and 512 (or <=1 to disable).")
 
-    def show_single_pulse_after_autoset(self, multiplier=5):
-        self._progress_print("Executing show_single_pulse_after_autoset")
-        self.autoset()
-        horiz = self.query("HORIZONTAL:SCALE?\n").strip()
-        current_scale = float(horiz)
-        new_scale = current_scale / multiplier
-        self.write(f"HORIZONTAL:SCALE {new_scale:.6e}\n")
-        position = self.query("HORIZONTAL:POSITION?\n").strip()
-        current_position = float(position)
-        new_position = current_position - 2.5 * new_scale
-        self.write(f"HORIZONTAL:POSITION {new_position:.6e}\n")
-        return new_scale
-
-    def scale_vertical_and_recenter(self, channel="CH1", gain=2.0):
-        self._progress_print(f"Scaling {channel} by gain factor: {gain}")
-        scale_str = self.query(f"{channel}:SCALE?\n").strip()
-        current_scale = float(scale_str)
-        trig_str = self.query("TRIGGER:MAIN:LEVEL?\n").strip()
-        trigger_voltage = float(trig_str)
-        new_scale = max(current_scale / gain, 2e-3)
-        self.write(f"{channel}:SCALE {new_scale:.6e}\n")
-        new_position = -trigger_voltage / new_scale
-        self.write(f"{channel}:POSITION {new_position:.6f}\n")
-        return new_scale, new_position
-
     def set_time_cursors(self, channel="CH1", pos1_pct=0.20, pos2_pct=0.70):
         self._progress_print(f"Setting time cursors at {pos1_pct * 100:.1f}% and {pos2_pct * 100:.1f}% of view")
-        self.write("CURSOR:FUNCTION VBARS\n")
+        self.write("CURSOR:FUNCTION VBARS")
         self.write("CURSOR:SELECT:SOURCE " + channel)
-        self.write("CURSOR:TYPE TIME\n")
-        self.write("CURSOR:SELECT BOTH\n")
-        center_sec = float(self.query("HORIZONTAL:POSITION?\n").strip())
-        scale_sec = float(self.query("HORIZONTAL:SCALE?\n").strip())
+        self.write("CURSOR:TYPE TIME")
+        self.write("CURSOR:SELECT BOTH")
+        center_sec = float(self.query("HORIZONTAL:POSITION?").strip())
+        scale_sec = float(self.query("HORIZONTAL:SCALE?").strip())
         full_width = 10.0 * scale_sec
         left_edge = center_sec - full_width / 2.0
         time1 = left_edge + pos1_pct * full_width
         time2 = left_edge + pos2_pct * full_width
-        self.write(f"CURSOR:VBARS:POSITION1 {time1:.6e}\n")
-        self.write(f"CURSOR:VBARS:POSITION2 {time2:.6e}\n")
+        self.write(f"CURSOR:VBARS:POSITION1 {time1:.6e}")
+        self.write(f"CURSOR:VBARS:POSITION2 {time2:.6e}")
 
     def get_cursor_voltages(self):
         self._progress_print("Reading voltage at cursor positions")
-        self.write("CURSOR:TYPE TIME\n")
-        self.write("CURSOR:SELECT BOTH\n")
-        v1_str = self.query("CURSOR:VBARS:HPOS1?\n").strip()
-        v2_str = self.query("CURSOR:VBARS:HPOS2?\n").strip()
+        self.write("CURSOR:TYPE TIME")
+        self.write("CURSOR:SELECT BOTH")
+        v1_str = self.query("CURSOR:VBARS:HPOS1?").strip()
+        v2_str = self.query("CURSOR:VBARS:HPOS2?").strip()
         v1 = float(v1_str)
         v2 = float(v2_str)
         return v1, v2
+
+    def autoset(self,channel="MATH"):
+        self._progress_print("Running AutoSet")
+        time.sleep(0.100)
+        self.write("AUTOSET EXECUTE")
+        time.sleep(0.100)
+        self.write(f"TRIGGER:MAIN:EDGE:COUPLING DC")
+
+    def next_lower_VPD(self,ch_scale:float)->float:
+        VOLTS_PER_DIVISION = [0.005, 0.010, 0.020, 0.050, 0.100, 0.200, 0.500, 1.000, 2.000, 5.000]
+        previous = 5.0
+        for vpd in VOLTS_PER_DIVISION:
+            self._progress_print(f"Search vpd={vpd:.3f}, ch_scale={ch_scale:.3f}")
+
+            if vpd == ch_scale:
+                self._progress_print(f"Found using previous={previous}")
+                break
+            previous = vpd
+
+        return previous
+
+        time_per_division = float((pulse_length_time * pulse_count ) / 10.0)
+        time_per_division = self.calc_fit_tpd(pulse_length_time*pulse_count)
+
+    def calc_fit_vpd(self,ch_vpp:float)->float:
+        VOLTS_PER_DIVISION = [0.005, 0.010, 0.020, 0.050, 0.100, 0.200, 0.500, 1.000, 2.000, 5.000]
+
+        scale = 5.0
+        for vpd in VOLTS_PER_DIVISION:
+            entire_range = 8 * vpd
+            if ch_vpp/0.90 < entire_range:
+                scale = vpd
+                break
+
+        return scale
+
+    def calc_fit_tpd(self,span:float)->float:
+        TIME_PER_DIVISION = [2.5E-9,5E-9,10e-9,2.5E-8,5E-8,10E-8,2.5E-7,5E-7,10E-7]
+
+        #self._progress_print(f"calc_fit_tps(), span={span}")
+
+        scale = 5.0
+        for tpd in TIME_PER_DIVISION:
+            entire_range = 10 * tpd
+            #self._progress_print(f"test {tpd} (compare span/0.9={span/0.90} with entire_range={entire_range}")
+
+            if span/0.90 < entire_range:
+                #self._progress_print(f"select")
+                scale = tpd
+                break
+
+        #self._progress_print(f"return {scale}")
+        return scale
+
+
+
+
+
+
+
+    def poll_completed(self):
+        # self.query("*OPC?")
+        # print(f'ALLEV={self.query("ALLEV?")}')
+
+        s=str("DONE")
+        tsec=30
+        while tsec > 0:
+            state = self.query("TRIGGER:STATE?").strip().upper()
+            self._debug_print(f"ST={state}")
+            if state == "TRIGGER" : # actual sentinel is 9.9e37
+                s=str("ST=FOUND")
+                break
+            time.sleep(0.25)
+            tsec -= 0.25
+
+        if tsec == 0:
+            s=("ST=TIMEOUT")
+
+        self._debug_print(s)
+        time.sleep(0.25) # one extra 250 ms after trigger to settle
+
+    def autoalign_on_pulse(self, channel,pulse_length_time:float,pulse_count:float):
+        self._progress_print("Executing autoalign_on_pulse")
+        self.autoset(channel)
+
+        #VOLTS_PER_DIVISION = [0.005, 0.010, 0.020, 0.050, 0.100, 0.200, 0.500, 1.000, 2.000, 5.000]
+
+        if channel.upper() == "MATH" :
+            # double scale waveform height to ensure triggering
+
+            ch_scale = float(self.query("CH1:SCALE?"))
+            ch_position = float(self.query("CH1:POSITION?"))
+
+            ch_scale = self.next_lower_VPD(ch_scale)
+
+            self._progress_print(f"Prep CH1: pos={ch_position:.3f}, scale={ch_scale:.3f} V/Div")
+            self.write(f"CH1:SCALE {ch_scale}")
+
+            self._progress_print(f"Prep CH2: pos={ch_position:.3f}, scale={ch_scale:.3f} V/Div")
+            self.write(f"CH2:POSITION {ch_position}")
+            self.write(f"CH2:SCALE {ch_scale}")
+
+            self.write("ACQUIRE:MODE AVERAGE")
+            self.write(f"ACQUIRE:NUMAVG 64")
+
+
+            self.write("SELECT:CH1 ON")
+            self.write("SELECT:CH2 ON")
+            self.write("SELECT:MATH ON")
+            self.write("TRIGGER:MAIN:EDGE:SOURCE CH1")
+            self.write(f"TRIGGER:MAIN:EDGE:COUPLING DC")
+            self.write(f"MEASUREMENT:MEAS1:SOURCE CH1")
+            self.write(f"MEASUREMENT:MEAS1:TYPE MINIMUM")
+            self.write(f"MEASUREMENT:MEAS2:SOURCE CH1")
+            self.write(f"MEASUREMENT:MEAS2:TYPE MAXIMUM")
+            self.write(f"MEASUREMENT:MEAS3:SOURCE CH2")
+            self.write(f"MEASUREMENT:MEAS3:TYPE MINIMUM")
+            self.write(f"MEASUREMENT:MEAS4:SOURCE CH2")
+            self.write(f"MEASUREMENT:MEAS4:TYPE MAXIMUM")
+
+            self.poll_completed()
+
+            ch1_vmin = float(self.query("MEASUREMENT:MEAS1:VALUE?"))
+            ch1_vmax = float(self.query("MEASUREMENT:MEAS2:VALUE?"))
+            ch2_vmin = float(self.query("MEASUREMENT:MEAS3:VALUE?"))
+            ch2_vmax = float(self.query("MEASUREMENT:MEAS4:VALUE?"))
+
+            ch1_vpp = ch1_vmax-ch1_vmin
+            ch1_center = (ch1_vmin+ch1_vmax)/2.0
+            ch1_scale = float(self.query("CH1:SCALE?"))
+            ch1_position = float(self.query("CH1:POSITION?"))
+
+            self._progress_print(f"Start CH1: vmin={ch1_vmin:.1f}, vmax={ch1_vmax:.1f}, center={ch1_center:.1f}, vpp={ch1_vpp:.1f}")
+            #self._progress_print(f"Start CH1: pos={ch1_position:.3f}, scale={ch1_scale:.3f}")
+
+            ch2_vpp = ch2_vmax - ch2_vmin
+            ch2_center = (ch2_vmin + ch2_vmax) / 2.0
+            ch2_scale = float(self.query("CH2:SCALE?"))
+            ch2_position = float(self.query("CH2:POSITION?"))
+
+            self._progress_print(f"Start CH2: vmin={ch2_vmin:.1f}, vmax={ch2_vmax:.1f}, center={ch2_center:.1f}, vpp={ch2_vpp:.1f}")
+            #self._progress_print(f"Start CH2:  pos={ch2_position:.3f}, scale={ch2_scale:.3f}")
+
+            max_vpp = max(ch1_vpp,ch2_vpp)
+            #self._progress_print(f"CH search for vpd to accommodate {max_vpp/0.90} V")
+
+            scale = self.calc_fit_vpd(max_vpp)
+
+            position_1 = -ch1_center/scale
+            position_2 = -ch2_center/scale
+
+            self._progress_print(f"Set CH1: pos={position_1:.3f}, scale={scale:.3f} V/Div")
+            self.write(f"CH1:POSITION {position_1}")
+            self.write(f"CH1:SCALE {scale}")
+
+            ch1_scale = float(self.query("CH1:SCALE?"))
+            ch1_position = float(self.query("CH1:POSITION?"))
+            self._progress_print(f"Actual CH1: pos={position_1:.3f}, scale={ch1_scale:.3f} V/Div")
+
+
+            self._progress_print(f"Set CH2: pos={position_2:.3f}, scale={scale:.3f} V/Div")
+            self.write(f"CH2:POSITION {position_2}")
+            self.write(f"CH2:SCALE {scale}")
+
+
+            ch2_scale = float(self.query("CH2:SCALE?"))
+            ch2_position = float(self.query("CH2:POSITION?"))
+            self._progress_print(f"Actual CH2: pos={position_2:.3f}, ch2_scale={scale:.3f} V/Div")
+
+            math_position = ch1_position - ch2_position
+            math_vpp = ch1_vpp + ch2_vpp
+
+            math_scale = self.calc_fit_vpd(math_vpp)
+
+            self._progress_print(f"Set MATH to: pos={math_position:.3f}, scale={math_scale:.3f} V/Div")
+            self.write(f"MATH:VERTICAL:POSITION {math_position}")
+            self.write(f'MATH:VERTICAL:SCALE {math_scale}')
+
+            math_position = float(self.query(f'MATH:VERTICAL:POSITION?'))
+            math_scale = float(self.query(f'MATH:VERTICAL:SCALE?'))
+            self._progress_print(f"Actual MATH settings: pos={math_position:.3f}, scale={math_scale:.3f} V/Div")
+        else:
+
+            ch_scale = float(self.query(f"{channel}:SCALE?"))
+            #ch_position = float(self.query(f"{channel}:POSITION?"))
+
+            ch_scale = self.next_lower_VPD(ch_scale)
+
+
+                    ## doubling height after AUTOSET helps ensure triggering
+            self._progress_print(f"Prep {channel}: scale={ch_scale:.3f} V/Div")
+            self.write(f"{channel}:SCALE {ch_scale}")
+
+            self.write("ACQUIRE:MODE AVERAGE")
+            self.write(f"ACQUIRE:NUMAVG 64")
+
+
+            self.write(f"SELECT:{channel} ON")
+            self.write(f"TRIGGER:MAIN:EDGE:SOURCE {channel}")
+            self.write(f"TRIGGER:MAIN:EDGE:COUPLING DC")
+            self.write(f"MEASUREMENT:MEAS1:SOURCE {channel}")
+            self.write(f"MEASUREMENT:MEAS1:TYPE MINIMUM")
+            self.write(f"MEASUREMENT:MEAS2:SOURCE {channel}")
+            self.write(f"MEASUREMENT:MEAS2:TYPE MAXIMUM")
+
+            self.poll_completed_ex()
+
+            ch_vmin = float(self.query("MEASUREMENT:MEAS1:VALUE?"))
+            ch_vmax = float(self.query("MEASUREMENT:MEAS2:VALUE?"))
+            ch_vpp = ch_vmax-ch_vmin
+            ch_center = (ch_vmin+ch_vmax)/2.0
+            ch_scale = float(self.query(f"{channel}:SCALE?"))
+            ch_position = float(self.query(f"{channel}:POSITION?"))
+            self._progress_print(f"Start {channel}: vmin={ch_vmin:.1f}, vmax={ch_vmax:.1f}, center={ch_center:.1f}, vpp={ch_vpp:.1f}")
+            self._progress_print(f"Start {channel}: pos={ch_position:.3f}, scale={ch_scale:.3f}")
+
+            scale = self.calc_fit_vpd(ch_vpp)
+            position = -ch_center/scale
+
+            self._progress_print(f"Set {channel} position {position:.3f}, scale {scale:.3f}")
+            self.write(f"{channel}:POSITION {position}")
+            self.write(f"{channel}:SCALE {scale}")
+
+            ch_scale = float(self.query(f"{channel}:SCALE?"))
+            ch_position = float(self.query(f"{channel}:POSITION?"))
+            self._progress_print(f"Actual CH: pos={ch_position:.3f}, scale={ch_scale:.3f} V/Div")
+
+        #time_per_division = float((pulse_length_time * pulse_count ) / 10.0)
+        time_per_division = self.calc_fit_tpd(pulse_length_time*pulse_count)
+
+        self._progress_print(f"Set horizontal scale to: {time_per_division}")
+        self.write(f'HORIZONTAL:MAIN:SCALE {time_per_division}')
+
+        actual_time_per_division = float(self.query(f'HORIZONTAL:MAIN:SCALE?'))
+        self._progress_print(f"Actual HSCALE is {actual_time_per_division}")
+        self._progress_print(f"Actual PULSES is {float((actual_time_per_division*10.0)/pulse_length_time):.3f}")
 
     def get_waveform_data(self, channel="CH1", name="no_name"):
         self._progress_print(f"Acquiring waveform from {channel}")

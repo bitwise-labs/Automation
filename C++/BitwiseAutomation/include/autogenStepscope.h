@@ -277,6 +277,7 @@ class BranchS11: /* S11 Application */
 
     char *getBinaryIncident(int *pcount=0); /* Binary Incident Results - Must free() return value */
     char *getBinaryMagn(int *pcount=0); /* Binary Magnitude Results - Must free() return value */
+    char *getBinaryPhase(int *pcount=0); /* Binary Phase Results in radians- Must free() return value */
     char *getBinaryReflected(int *pcount=0); /* Binary Reflected Results - Must free() return value */
     double getElapsedSeconds(); /* Elapsed Time Seconds */
 
@@ -464,6 +465,7 @@ class BranchS21: /* S21 Application */
 
 	char *getBinaryDut(int *pcount=0); /* Binary Dut Results - Must free() return value */
 	char *getBinaryMagn(int *pcount=0); /* Binary Magnitude Results - Must free() return value */
+	char *getBinaryPhase(int *pcount=0); /* Binary Magnitude Results in radians - Must free() return value */
 	char *getBinaryThrough(int *pcount=0); /* Binary Through Results - Must free() return value */
 	double getElapsedSeconds(); /* Elapsed Time Seconds */
 

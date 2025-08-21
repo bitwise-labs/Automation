@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AnalysisUIOptions">
+    <option name="ANALYZE_INJECTED_CODE" value="false" />
+    <option name="SCOPE_TYPE" value="3" />
+  </component>
   <component name="AutoImportSettings">
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
@@ -30,10 +34,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a8c4ec53-24da-45fa-99bc-831ed779b362" name="Default Changelist" comment="make simple change in python code">
+      <change afterPath="$PROJECT_DIR$/TDS2000/Helper.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TDS2000/SweepSParameters.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TDS2000/OscilloscopeDevice.py" beforeDir="false" afterPath="$PROJECT_DIR$/TDS2000/OscilloscopeDevice.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TDS2000/SSDevice.py" beforeDir="false" afterPath="$PROJECT_DIR$/TDS2000/SSDevice.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TDS2000/SuperCSV.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/TDS2000/SweepPulserStepscope.py" beforeDir="false" afterPath="$PROJECT_DIR$/TDS2000/SweepPulserStepscope.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TDS2000/SweepPulserTek.py" beforeDir="false" afterPath="$PROJECT_DIR$/TDS2000/SweepPulserTek.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TDS2000/Waveform.py" beforeDir="false" afterPath="$PROJECT_DIR$/TDS2000/Waveform.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TDS2000/tds2000.py" beforeDir="false" afterPath="$PROJECT_DIR$/TDS2000/tds2000.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyBitwiseAutomation/autogenCommon.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyBitwiseAutomation/autogenCommon.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyBitwiseAutomation/autogenStepscope.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyBitwiseAutomation/autogenStepscope.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -69,40 +81,41 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Python.GuiStepscope.executor": "Run",
-    "Python.Local PulserCharacterization.executor": "Run",
-    "Python.Local SSCharacterization.executor": "Run",
-    "Python.PulserCharacterization.executor": "Run",
-    "Python.SSCharacterization.executor": "Run",
-    "Python.Sweep Stepscope Calibrations.executor": "Run",
-    "Python.SweepPulserStepscope.executor": "Run",
-    "Python.SweepPulserTek.executor": "Run",
-    "Python.SweepPulserTekFmSS.executor": "Run",
-    "Python.TestExampleSS.executor": "Run",
-    "Python.TestPega.executor": "Run",
-    "Python.TestPegaDeploy.executor": "Run",
-    "Python.TestPelaDeploy.executor": "Run",
-    "Python.TestReadback.executor": "Run",
-    "Python.TestSSCommands.executor": "Run",
-    "Python.TestStepscope.executor": "Run",
-    "Python.TestStepscopeResets.executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "master",
-    "last_opened_file_path": "/home/jimw/Projects/Automation/Python/TDS2000",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.lookFeel",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Python.GuiStepscope.executor&quot;: &quot;Run&quot;,
+    &quot;Python.Local PulserCharacterization.executor&quot;: &quot;Run&quot;,
+    &quot;Python.Local SSCharacterization.executor&quot;: &quot;Run&quot;,
+    &quot;Python.PulserCharacterization.executor&quot;: &quot;Run&quot;,
+    &quot;Python.SSCharacterization.executor&quot;: &quot;Run&quot;,
+    &quot;Python.Sweep Stepscope Calibrations.executor&quot;: &quot;Run&quot;,
+    &quot;Python.SweepPulserStepscope.executor&quot;: &quot;Run&quot;,
+    &quot;Python.SweepPulserTek.executor&quot;: &quot;Run&quot;,
+    &quot;Python.SweepPulserTekFmSS.executor&quot;: &quot;Run&quot;,
+    &quot;Python.TestExampleSS.executor&quot;: &quot;Run&quot;,
+    &quot;Python.TestPega.executor&quot;: &quot;Run&quot;,
+    &quot;Python.TestPegaDeploy.executor&quot;: &quot;Run&quot;,
+    &quot;Python.TestPelaDeploy.executor&quot;: &quot;Run&quot;,
+    &quot;Python.TestReadback.executor&quot;: &quot;Run&quot;,
+    &quot;Python.TestSSCommands.executor&quot;: &quot;Run&quot;,
+    &quot;Python.TestStepscope.executor&quot;: &quot;Run&quot;,
+    &quot;Python.TestStepscopeResets.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/jimw/Projects/Automation/Python/TDS2000&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;run.code.analysis.last.selected.profile&quot;: &quot;aDefault&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/TDS2000" />
@@ -116,7 +129,7 @@
       <recent name="C:\Projects\Automation\Python\GuiStepscope" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.GuiStepscope">
+  <component name="RunManager" selected="Python.SweepPulserStepscope">
     <configuration default="true" type="PythonConfigurationType" factoryName="Python">
       <module name="Python" />
       <option name="ENV_FILES" value="" />
@@ -293,7 +306,7 @@
       </envs>
       <option name="SDK_HOME" value="C:\Projects\Automation\Python\venv\Scripts\python.exe" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="false" />
+      <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
@@ -345,7 +358,7 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/TDS2000/SweepPulserStepscope.py" />
-      <option name="PARAMETERS" value="--ip 192.168.2.225 -d &quot;$PROJECT_DIR$/Results/newp00_diff&quot;" />
+      <option name="PARAMETERS" value="--ip 192.168.2.225 --debug --pulser Accessory --amplitude sweep --length sweep --dsp sweep --accomp sweep -d &quot;$PROJECT_DIR$/Results/dsp001&quot;" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
@@ -369,7 +382,7 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/TDS2000/SweepPulserTek.py" />
-      <option name="PARAMETERS" value="--ip 192.168.2.225 -d &quot;$PROJECT_DIR$/Results/newp001&quot;" />
+      <option name="PARAMETERS" value="--ip 192.168.2.225 --verbose --debug --diff --pulser Accessory -d &quot;$PROJECT_DIR$/Results/diff001&quot;" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
@@ -887,16 +900,16 @@
     </configuration>
     <list>
       <item itemvalue="Python.Accessory PulserCharacterization" />
+      <item itemvalue="Python.GuiStepscope" />
       <item itemvalue="Python.Local PulserCharacterization" />
       <item itemvalue="Python.Local SSCharacterization" />
       <item itemvalue="Python.SSCharacterization" />
-      <item itemvalue="Python.GuiStepscope" />
       <item itemvalue="Python.Sweep Stepscope Calibrations" />
+      <item itemvalue="Python.SweepPulserStepscope" />
+      <item itemvalue="Python.SweepPulserTekFmSS" />
+      <item itemvalue="Python.SweepPulserTek" />
       <item itemvalue="Python.TestExampleSS" />
       <item itemvalue="Python.TestPegaDeploy" />
-      <item itemvalue="Python.SweepPulserTek" />
-      <item itemvalue="Python.SweepPulserTekFmSS" />
-      <item itemvalue="Python.SweepPulserStepscope" />
       <item itemvalue="Python.TestPegaRateChange" />
       <item itemvalue="Python.TestPega" />
       <item itemvalue="Python.TestPelaDeploy" />
@@ -910,7 +923,6 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-js-predefined-d6986cc7102b-09060db00ec0-JavaScript-PY-251.26927.74" />
         <option value="bundled-python-sdk-657d8234b839-64d779b69b7a-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-251.26927.74" />
       </set>
     </attachedChunks>
@@ -932,6 +944,12 @@
       <workItem from="1753554567469" duration="18291000" />
       <workItem from="1753725283570" duration="7497000" />
       <workItem from="1753806511162" duration="4965000" />
+      <workItem from="1753974068429" duration="1928000" />
+      <workItem from="1754335911165" duration="15227000" />
+      <workItem from="1754497730734" duration="100000" />
+      <workItem from="1754498143470" duration="3220000" />
+      <workItem from="1754501982701" duration="75090000" />
+      <workItem from="1754840382091" duration="10502000" />
     </task>
     <task id="LOCAL-00001" summary="make simple change in python code">
       <created>1597689495393</created>
@@ -998,13 +1016,13 @@
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/TestPegaRateChange_py$TestStepscope.coverage" NAME="TestStepscope Coverage Results" MODIFIED="1752252563993" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$ProjectFileDir$" />
-    <SUITE FILE_PATH="coverage/TestPegaRateChange_py$SweepPulserStepscope.coverage" NAME="SweepPulserStepscope Coverage Results" MODIFIED="1753895450284" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/TestPegaRateChange_py$SweepPulserStepscope.coverage" NAME="SweepPulserStepscope Coverage Results" MODIFIED="1754849399317" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/TestPegaRateChange_py$SSCharacterization.coverage" NAME="SSCharacterization Coverage Results" MODIFIED="1752447169302" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/TestPegaRateChange_py$SweepPulserTekFmSS.coverage" NAME="SweepPulserTekFmSS Coverage Results" MODIFIED="1753575823392" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/TestPegaRateChange_py$Local_SSCharacterization.coverage" NAME="Local SSCharacterization Coverage Results" MODIFIED="1752443707241" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/TestPegaRateChange_py$PulserCharacterization.coverage" NAME="PulserCharacterization Coverage Results" MODIFIED="1752427171638" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY=" " />
-    <SUITE FILE_PATH="coverage/TestPegaRateChange_py$GuiStepscope.coverage" NAME="GuiStepscope Coverage Results" MODIFIED="1753895743972" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/TestPegaRateChange_py$GuiStepscope.coverage" NAME="GuiStepscope Coverage Results" MODIFIED="1754337004108" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/TestPegaRateChange_py$Local_PulserCharacterization.coverage" NAME="Local PulserCharacterization Coverage Results" MODIFIED="1752431437381" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/TestPegaRateChange_py$SweepPulserTek.coverage" NAME="SweepPulserTek Coverage Results" MODIFIED="1753399036439" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/TestPegaRateChange_py$SweepPulserTek.coverage" NAME="SweepPulserTek Coverage Results" MODIFIED="1754871247823" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

@@ -524,6 +524,10 @@ class BranchS11(AutomationExtender):
         """Get binary Binary Magnitude Results """
         return self.QueryBinaryResponse_float("BinaryMagn?\n")
 
+    def getBinaryPhase(self) -> list:
+        """Get binary Binary Phase Results in radians"""
+        return self.QueryBinaryResponse_float("BinaryPhase?\n")
+
     def getBinaryReflected(self) -> list:
         """Get binary Binary Reflected Results """
         return self.QueryBinaryResponse_float("BinaryReflected?\n")
@@ -901,6 +905,10 @@ class BranchS21(AutomationExtender):
     def getBinaryMagn(self) -> list:
         """Get binary Binary Magnitude Results """
         return self.QueryBinaryResponse_float("BinaryMagn?\n")
+
+    def getBinaryPhase(self) -> list:
+        """Get binary Binary Phase Results in radians"""
+        return self.QueryBinaryResponse_float("BinaryPhase?\n")
 
     def getBinaryThrough(self) -> list:
         """Get binary Binary Through Results """

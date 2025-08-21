@@ -212,6 +212,22 @@ class Waveform:
         self._debug_print(f"X {x_value:.6e} maps to index = {index}")
         return index
 
+    def create_file( self,file_name:str, message:str="")  :
+        self._progress_print(f'Waveform:create_file(), file_name={file_name}, message={message}')
+
+        try:
+            with open(file_name, "w") as f:
+                f.write(f"MESSAGE,{message}\n")
+                f.write("TIME,VOLTS\n")
+                count = len(self._y_values)
+                for index in range(count):
+                    y = self.get_y_value(index)
+                    x = self.calc_x_of_index(index)
+                    f.write(f"{x:.6f},{y:.6f}\n")
+        except IOError as e:
+            print(f"Failed to write to {file_name}: {e}")
+
+
     def search_flat(self, start_index, direction, required_count=20, tolerance=1e-6):
         """
         Search for a flat region starting at `start_index` and moving in `direction` (+1 or -1),
