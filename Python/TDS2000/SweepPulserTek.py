@@ -34,6 +34,8 @@ try:
     parser.add_argument("--pulser", "-p", type=str, help='Pulser mode (e.g. "Local" or "Accessory")')
     parser.add_argument("--flat", "-f", type=int, default=DEFAULT_FLAT, help='Flat spot count of consecutive samples')
     parser.add_argument("--diff", action='store_true', help='Use Ch1-Ch2 Differential')
+    parser.add_argument("--xgain", "-x", type=float, default=1.0, help='Gain multiplied by readings')
+    parser.add_argument("--histogram", "-s", action='store_true',  help='Force histogram level detection')
 
     args = parser.parse_args()
 
@@ -131,6 +133,11 @@ try:
 
     os.makedirs(results_path, exist_ok=True)
 
+    # ====================
+
+    gain = float(args.xgain)
+    print(f"Gain is: {gain:.3f}")
+
     date_time = time.strftime("%y%m%d_%H%M%S")
     file_prefix = str(f'{results_path}{serial_number}_{pulser_mode.name}_{attenuator_value:.0f}dB')
     csv_file_name = str(f'{file_prefix}.csv')
@@ -159,90 +166,94 @@ try:
                     stepscope.Pulse.setLength(pulse_length)
                     time.sleep(0.5)
 
-                scope.autoalign_on_pulse(waveform_channel, pulse_length_time=12.8e-9*pulse_length, pulse_count=2.0)
+                scope.autoalign_on_pulse(waveform_channel, pulse_length_time=12.8e-9*pulse_length, pulse_count=1.5)
                 waveform = scope.get_waveform_data(waveform_channel, name="Scope Pulse")
 
                 print(f"Acquire waveform for W={pulse_length:.0f}, {amplitude} mV, {waveform.count} samples")
+                waveform.appy_gain(gain)
 
                 if plt is not None:
                     plt.close()
 
                 plt.figure()
-                plt.plot(waveform.generate_x_values(), waveform.y_values, color='blue', linewidth=2, label='Waveform')
+                # plt.plot(waveform.generate_x_values(), waveform.y_values, color='blue', linewidth=2, label='Waveform')
 
                 try:
                     midlevel, minimum, maximum = waveform.get_mid_min_max()
                     print(f"Levels: vMin {minimum:.3f}, vMid {midlevel:.3f}, vMax {maximum:.3f}")
 
-                    # one percent, clamped 0.1 to 1.0 mV range
-                    tolerance = max(0.1, min(1.0, abs(maximum - minimum) * 0.01))
-
-                    print(f"Tolerance is: {tolerance:.2f}")
-
-                    falling = waveform.find_edge_crossing(midlevel, "falling", "last")
-                    if falling is None:
-                        save_debug=waveform.debug
-                        waveform.debug = True
-                        waveform.find_edge_crossing(midlevel, "falling", "last")
-                        waveform.debug = save_debug
-                        raise Exception("[No_Falling_Edge_Found]")
-
-                    falling_n = waveform.calc_index_of_x(falling)
-                    high_flat = waveform.search_flat(falling_n, -1, args.flat, tolerance)
-                    if high_flat is None:
-                        save_debug=waveform.debug
-                        waveform.debug = True
-                        waveform.search_flat(falling_n, -1, args.flat, tolerance)
-                        waveform.debug = save_debug
-
-                        waveform.create_file(f'{results_path}/High_flat_spot_not_found.csv', "High flat spot not found")
-                        raise Exception("[High_Flat_Not_Found]")
-
-                    vhigh = waveform.get_y_value(high_flat)
-                    xhigh = waveform.get_x_value(high_flat)
-                    print(f"High n={high_flat:.0f}, X={xhigh:.6f}, Y={vhigh:.6f}")
-                    plt.scatter([xhigh], [vhigh], s=80, color='red', marker='o')
-
-                    falling_y = waveform.get_y_value(falling_n)
-                    print(f"Falling edge: X={falling:.6f}, Y[{falling_n}]={falling_y:.6f}")
+                    # ==========================
 
                     rising = waveform.find_edge_crossing(midlevel, "rising", "last")
                     if rising is None:
-                        save_debug=waveform.debug
-                        waveform.debug = True
-                        waveform.find_edge_crossing(midlevel, "rising", "last")
-                        waveform.debug = save_debug
-
                         raise Exception("[No_Rising_Edge_Found]")
 
                     rising_n = waveform.calc_index_of_x(rising)
                     rising_y = waveform.get_y_value(rising_n)
                     print(f"Rising edge: X={rising:.6f}, Y[{rising_n}]={rising_y:.6f}")
 
-                    low_flat = waveform.search_flat(rising_n, -1, args.flat, tolerance)
-                    if low_flat is None:
-                        save_debug=waveform.debug
-                        waveform.debug = True
-                        waveform.search_flat(rising_n, -1, args.flat, tolerance)
-                        waveform.debug = save_debug
+                    falling = waveform.find_edge_crossing(midlevel, "falling", "last")
+                    if falling is None:
+                        raise Exception("[No_Falling_Edge_Found]")
 
+                    falling_n = waveform.calc_index_of_x(falling)
+                    falling_y = waveform.get_y_value(falling_n)
+                    print(f"Falling edge: X={falling:.6f}, Y[{falling_n}]={falling_y:.6f}")
 
-                        waveform.create_file(f'{results_path}/Low_flat_spot_not_found.csv',"Low flat spot not found")
-                        raise Exception("[Low_Flat_Not_Found]")
+                    # ==========================
 
-                    waveform.create_file(f'{results_path}/Both_levels_found.csv', "Both levels found")
+                    # one percent, clamped 0.1 to 1.0 mV range
+                    tolerance = max(0.1, min(1.0, abs(maximum - minimum) * 0.01))
+                    print(f"Tolerance is: {tolerance:.2f}")
 
-                    vlow = waveform.get_y_value(low_flat)
-                    xlow = waveform.get_x_value(low_flat)
-                    print(f"Low n={low_flat:.1f}, X={xlow:.6f}, Y={vlow:.6f}")
-                    plt.scatter([xlow], [vlow], s=80, color='red', marker='o')
+                    vhigh=None
+                    vlow=None
+
+                    if abs(maximum-minimum)>20.0 or args.histogram:
+                        high_flat = waveform.search_flat(falling_n, -1, args.flat, tolerance)
+                        if high_flat is not None:
+                            vhigh = waveform.get_y_value(high_flat)
+                            xhigh = waveform.get_x_value(high_flat)
+                            print(f"High n={high_flat:.0f}, X={xhigh:.6f}, Y={vhigh:.6f}")
+                            plt.scatter([xhigh], [vhigh], s=80, color='red', marker='o')
+
+                        low_flat = waveform.search_flat(rising_n, -1, args.flat, tolerance)
+                        if low_flat is not None:
+                            vlow = waveform.get_y_value(low_flat)
+                            xlow = waveform.get_x_value(low_flat)
+                            print(f"Low n={low_flat:.1f}, X={xlow:.6f}, Y={vlow:.6f}")
+                            plt.scatter([xlow], [vlow], s=80, color='red', marker='o')
+
+                    if vhigh is None or vlow is None :
+                        print("Try using histogram")
+                        counts, values = waveform.histogram()
+                        if counts is None:
+                            raise Exception( "[Histogram_Levels_Failed]")
+
+                        segm_x = [waveform.get_x_value(0),waveform.get_x_value(waveform.count-1)]
+
+                        for index in range(len(counts)):
+                            if values[index]<midlevel:
+                                vlow = values[index]
+                                print(f"Low Hist index={index}, Y={vlow:.6f}")
+                                plt.plot(segm_x, [vlow,vlow], color='red', linewidth=2, label='vLow')
+                                break
+
+                        for index in range(len(counts)):
+                            if values[index]>midlevel:
+                                vhigh = values[index]
+                                print(f"High Hist index={index}, Y={vhigh:.6f}")
+                                plt.plot(segm_x, [vhigh,vhigh], color='red', linewidth=2, label='vHigh')
+                                break
+
+                    if vhigh is None or vlow is None:
+                        raise Exception("[Unable_To_Locate_Levels]")
+
+                    # ==========================
 
                     amplitude_measurement = float(vhigh - vlow)
                     print(f"Final amplitude is {amplitude_measurement:.3f}")
 
-                    # jpg_file_name = file_prefix + "_w" + str(pulse_length) + "_" + str(amplitude) + "mV.jpg"
-                    jpg_file_name = str(f"{file_prefix}_w{pulse_length:.0f}_{amplitude:.0f}mV.jpg")
-                    print(f"Jpeg file: {jpg_file_name}")
                     good_count += 1
                     message=""
 
@@ -250,6 +261,12 @@ try:
                     print(f'Error during processing: {str(e)}')
                     message=str(e)
                 finally:
+                    # jpg_file_name = file_prefix + "_w" + str(pulse_length) + "_" + str(amplitude) + "mV.jpg"
+                    jpg_file_name = str(f"{file_prefix}_w{pulse_length:.0f}_{amplitude:.0f}mV.jpg")
+                    print(f"Jpeg file: {jpg_file_name}")
+
+                    plt.plot(waveform.generate_x_values(), waveform.y_values, color='blue', linewidth=2,
+                             label='Waveform')
                     plt.xlabel("Time (" + waveform.x_units + ")")
                     plt.ylabel("Voltage (" + waveform.y_units + ")")
 

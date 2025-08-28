@@ -10,8 +10,12 @@ SWEEP_OTHER_AMPLITUDES = [350, 300, 250, 200]
 SWEEP_PULSER_MODES = [BranchPulse.Mode.Local, BranchPulse.Mode.Accessory]
 SWEEP_DSP_TYPES = [BranchStepCfg.DSPMode.Off, BranchStepCfg.DSPMode.Differential]
 SWEEP_ACCOMP_TYPES = [True, False]
-DEFAULT_FLAT = 12   #20
-
+DEFAULT_FLAT = 20
+# SHORT_PAUSE = 0.0
+MEDIUM_PAUSE = 0.25
+LONG_PAUSE = 3.0
+VERY_LONG_PAUSE = 5.0
+SCOPE_AVERAGING = 128
 
 def consider_accomp_list(arg: str, sweep_list: list) -> list:
     if arg.strip().upper() == "SWEEP":

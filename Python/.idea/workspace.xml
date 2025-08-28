@@ -34,18 +34,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a8c4ec53-24da-45fa-99bc-831ed779b362" name="Default Changelist" comment="make simple change in python code">
-      <change afterPath="$PROJECT_DIR$/TDS2000/Helper.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TDS2000/SweepSParameters.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TDS2000/OscilloscopeDevice.py" beforeDir="false" afterPath="$PROJECT_DIR$/TDS2000/OscilloscopeDevice.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TDS2000/SSDevice.py" beforeDir="false" afterPath="$PROJECT_DIR$/TDS2000/SSDevice.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TDS2000/SuperCSV.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TDS2000/SweepPulserStepscope.py" beforeDir="false" afterPath="$PROJECT_DIR$/TDS2000/SweepPulserStepscope.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TDS2000/Helper.py" beforeDir="false" afterPath="$PROJECT_DIR$/TDS2000/Helper.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TDS2000/SweepPulserTek.py" beforeDir="false" afterPath="$PROJECT_DIR$/TDS2000/SweepPulserTek.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TDS2000/Waveform.py" beforeDir="false" afterPath="$PROJECT_DIR$/TDS2000/Waveform.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TDS2000/tds2000.py" beforeDir="false" afterPath="$PROJECT_DIR$/TDS2000/tds2000.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pyBitwiseAutomation/autogenCommon.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyBitwiseAutomation/autogenCommon.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pyBitwiseAutomation/autogenStepscope.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyBitwiseAutomation/autogenStepscope.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -129,7 +122,7 @@
       <recent name="C:\Projects\Automation\Python\GuiStepscope" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.SweepPulserStepscope">
+  <component name="RunManager" selected="Python.SweepPulserTek">
     <configuration default="true" type="PythonConfigurationType" factoryName="Python">
       <module name="Python" />
       <option name="ENV_FILES" value="" />
@@ -382,7 +375,7 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/TDS2000/SweepPulserTek.py" />
-      <option name="PARAMETERS" value="--ip 192.168.2.225 --verbose --debug --diff --pulser Accessory -d &quot;$PROJECT_DIR$/Results/diff001&quot;" />
+      <option name="PARAMETERS" value="--ip 192.168.2.165 --verbose --diff --amplitude 700 --length sweep --pulser Accessory --directory &quot;$PROJECT_DIR$/Results/ss3038_2&quot;" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />

@@ -1,5 +1,6 @@
 from math import floor, ceil
-
+from collections import Counter
+from typing import List, Tuple
 
 class Waveform:
     def __init__(self, name="no_name"):
@@ -142,7 +143,6 @@ class Waveform:
         return mid_val, min_val, max_val
 
     def find_edge_crossing(self, threshold, edge_type="falling", direction="first"):
-
         self._progress_print(f"Find {direction} {edge_type} edge at threshold {threshold:.6f}")
 
         if edge_type not in ("falling", "rising"):
@@ -227,6 +227,51 @@ class Waveform:
         except IOError as e:
             print(f"Failed to write to {file_name}: {e}")
 
+    def histogram(self) -> Tuple[List[int], List[float]]:
+        """
+        Given a list of floats, return two lists:
+          - counts[i] = how many times values[i] occurred
+          - values[i] = the unique float value at that index
+        Sorted by descending by frequency/counts
+        """
+
+        self._progress_print(f"Histogram {len(self._y_values)} items")
+
+        if self._y_values is None or len(self._y_values)==0 :
+            return None, None
+
+        counter = Counter(self._y_values)
+        # sort only by count (descending)
+        items = sorted(counter.items(), key=lambda kv: kv[1], reverse=True)
+        values = [val for val, _ in items]
+        counts = [cnt for _, cnt in items]
+
+        if self.debug:
+            self._debug_print(f"Histogram[{len(values)}] Top-10 Results:")
+            for index in range(min(len(values),10)):
+                self._debug_print(f" H[{index}] = {values[index]} @ {counts[index]}")
+
+        return counts, values
+
+    def search_value(self,value:float,start_index:int, direction:int)->float:
+        self._progress_print(f"Search for value {value}, direction {direction}, start_index {start_index}")
+
+        if self._y_values is None:
+            raise ValueError("Y values is empty")
+
+        if direction not in (+1, -1):
+            raise ValueError("Direction must be +1 or -1")
+
+        answer = None
+        index = start_index
+        while 0 <= index < len(self.y_values):
+            if self._y_values[index]==value:
+                answer = self.get_x_value(index)
+                break
+            index += direction
+
+        return answer
+
 
     def search_flat(self, start_index, direction, required_count=20, tolerance=1e-6):
         """
@@ -275,4 +320,13 @@ class Waveform:
             i += direction
 
         self._debug_print("No flat region found")
+        return None
+
+    def appy_gain(self, gain_value: float):
+        self._progress_print(f"Applying gain of {gain_value:.3f}")
+
+        if self._y_values:
+            self._y_values = [y * gain_value for y in self._y_values]
+            self._debug_print(f"Applied gain={gain_value:.3f}, sample count={len(self._y_values)}")
+
         return None
