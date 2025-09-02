@@ -34,11 +34,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a8c4ec53-24da-45fa-99bc-831ed779b362" name="Default Changelist" comment="make simple change in python code">
+      <change beforePath="$PROJECT_DIR$/../C++/BitwiseAutomation/include/autogenStepscope.h" beforeDir="false" afterPath="$PROJECT_DIR$/../C++/BitwiseAutomation/include/autogenStepscope.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../C++/BitwiseAutomation/src/autogenStepscope.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../C++/BitwiseAutomation/src/autogenStepscope.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TDS2000/Helper.py" beforeDir="false" afterPath="$PROJECT_DIR$/TDS2000/Helper.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TDS2000/SweepPulserTek.py" beforeDir="false" afterPath="$PROJECT_DIR$/TDS2000/SweepPulserTek.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TDS2000/Waveform.py" beforeDir="false" afterPath="$PROJECT_DIR$/TDS2000/Waveform.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TDS2000/tds2000.py" beforeDir="false" afterPath="$PROJECT_DIR$/TDS2000/tds2000.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TDS2000/SweepPulserStepscope.py" beforeDir="false" afterPath="$PROJECT_DIR$/TDS2000/SweepPulserStepscope.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TDS2000/SweepSParameters.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyBitwiseAutomation/autogenStepscope.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyBitwiseAutomation/autogenStepscope.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -74,41 +76,43 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Python.GuiStepscope.executor&quot;: &quot;Run&quot;,
-    &quot;Python.Local PulserCharacterization.executor&quot;: &quot;Run&quot;,
-    &quot;Python.Local SSCharacterization.executor&quot;: &quot;Run&quot;,
-    &quot;Python.PulserCharacterization.executor&quot;: &quot;Run&quot;,
-    &quot;Python.SSCharacterization.executor&quot;: &quot;Run&quot;,
-    &quot;Python.Sweep Stepscope Calibrations.executor&quot;: &quot;Run&quot;,
-    &quot;Python.SweepPulserStepscope.executor&quot;: &quot;Run&quot;,
-    &quot;Python.SweepPulserTek.executor&quot;: &quot;Run&quot;,
-    &quot;Python.SweepPulserTekFmSS.executor&quot;: &quot;Run&quot;,
-    &quot;Python.TestExampleSS.executor&quot;: &quot;Run&quot;,
-    &quot;Python.TestPega.executor&quot;: &quot;Run&quot;,
-    &quot;Python.TestPegaDeploy.executor&quot;: &quot;Run&quot;,
-    &quot;Python.TestPelaDeploy.executor&quot;: &quot;Run&quot;,
-    &quot;Python.TestReadback.executor&quot;: &quot;Run&quot;,
-    &quot;Python.TestSSCommands.executor&quot;: &quot;Run&quot;,
-    &quot;Python.TestStepscope.executor&quot;: &quot;Run&quot;,
-    &quot;Python.TestStepscopeResets.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/jimw/Projects/Automation/Python/TDS2000&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;run.code.analysis.last.selected.profile&quot;: &quot;aDefault&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Python.GuiStepscope.executor": "Run",
+    "Python.Local PulserCharacterization.executor": "Run",
+    "Python.Local SSCharacterization.executor": "Run",
+    "Python.PulserCharacterization.executor": "Run",
+    "Python.SSCharacterization.executor": "Run",
+    "Python.Sweep Stepscope Calibrations.executor": "Run",
+    "Python.SweepPulserStepscope.executor": "Run",
+    "Python.SweepPulserTek.executor": "Run",
+    "Python.SweepPulserTekFmSS.executor": "Run",
+    "Python.TestExampleSS.executor": "Run",
+    "Python.TestPega.executor": "Run",
+    "Python.TestPegaDeploy.executor": "Run",
+    "Python.TestPelaDeploy.executor": "Run",
+    "Python.TestReadback.executor": "Run",
+    "Python.TestSSCommands.executor": "Run",
+    "Python.TestStepscope.executor": "Run",
+    "Python.TestStepscopeResets.executor": "Run",
+    "Python.ss2 SweepPulserStepscope.executor": "Run",
+    "Python.ss3 SweepPulserStepscope.executor": "Run",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "master",
+    "last_opened_file_path": "/home/jimw/Projects/Automation/Python/TDS2000",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "run.code.analysis.last.selected.profile": "aDefault",
+    "settings.editor.selected.configurable": "preferences.lookFeel",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/TDS2000" />
@@ -122,7 +126,7 @@
       <recent name="C:\Projects\Automation\Python\GuiStepscope" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.SweepPulserTek">
+  <component name="RunManager" selected="Python.ss3 SweepPulserStepscope">
     <configuration default="true" type="PythonConfigurationType" factoryName="Python">
       <module name="Python" />
       <option name="ENV_FILES" value="" />
@@ -330,54 +334,6 @@
       <option name="PARAMETERS" value="-ip 192.168.2.45 -cycles 50 -interval 120 -verbose S11" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="true" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="SweepPulserStepscope" type="PythonConfigurationType" factoryName="Python">
-      <module name="Python" />
-      <option name="ENV_FILES" value="" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="SDK_NAME" value="Python 3.13 (Python)" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="false" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/TDS2000/SweepPulserStepscope.py" />
-      <option name="PARAMETERS" value="--ip 192.168.2.225 --debug --pulser Accessory --amplitude sweep --length sweep --dsp sweep --accomp sweep -d &quot;$PROJECT_DIR$/Results/dsp001&quot;" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="SweepPulserTek" type="PythonConfigurationType" factoryName="Python">
-      <module name="Python" />
-      <option name="ENV_FILES" value="" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="SDK_NAME" value="Python 3.13 (Python)" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="false" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/TDS2000/SweepPulserTek.py" />
-      <option name="PARAMETERS" value="--ip 192.168.2.165 --verbose --diff --amplitude 700 --length sweep --pulser Accessory --directory &quot;$PROJECT_DIR$/Results/ss3038_2&quot;" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
       <option name="REDIRECT_INPUT" value="false" />
       <option name="INPUT_FILE" value="" />
@@ -891,6 +847,102 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="ss1 SweepPulserStepscope" type="PythonConfigurationType" factoryName="Python">
+      <module name="Python" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="SDK_NAME" value="Python 3.13 (Python)" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/TDS2000/SweepPulserStepscope.py" />
+      <option name="PARAMETERS" value="--ip 192.168.2.165 --verbose --pulser Accessory --amplitude 700 --length sweep --dsp Off  --accomp 0 -d &quot;$PROJECT_DIR$/Results/ss3038_ss1&quot;" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="ss2 SweepPulserStepscope" type="PythonConfigurationType" factoryName="Python">
+      <module name="Python" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="SDK_NAME" value="Python 3.13 (Python)" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/TDS2000/SweepPulserStepscope.py" />
+      <option name="PARAMETERS" value="--ip 192.168.2.165 --verbose --pulser Accessory --amplitude 700 --length sweep --dsp sweep --accomp sweep -d &quot;$PROJECT_DIR$/Results/ss3038_ss2&quot;" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="ss3 SweepPulserStepscope" type="PythonConfigurationType" factoryName="Python">
+      <module name="Python" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="SDK_NAME" value="Python 3.13 (Python)" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/TDS2000/SweepPulserStepscope.py" />
+      <option name="PARAMETERS" value="--ip 192.168.2.165 --verbose --pulser Accessory --amplitude 700 --length sweep --dsp sweep --accomp sweep -d &quot;$PROJECT_DIR$/Results/ss3038_ss3&quot;" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="tek SweepPulserTek" type="PythonConfigurationType" factoryName="Python">
+      <module name="Python" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="SDK_NAME" value="Python 3.13 (Python)" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/TDS2000/SweepPulserTek.py" />
+      <option name="PARAMETERS" value="--ip 192.168.2.165 --verbose --diff --amplitude 700 --length sweep --pulser Accessory --directory &quot;$PROJECT_DIR$/Results/ss3038_tek&quot;" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <list>
       <item itemvalue="Python.Accessory PulserCharacterization" />
       <item itemvalue="Python.GuiStepscope" />
@@ -898,9 +950,11 @@
       <item itemvalue="Python.Local SSCharacterization" />
       <item itemvalue="Python.SSCharacterization" />
       <item itemvalue="Python.Sweep Stepscope Calibrations" />
-      <item itemvalue="Python.SweepPulserStepscope" />
+      <item itemvalue="Python.ss1 SweepPulserStepscope" />
+      <item itemvalue="Python.ss2 SweepPulserStepscope" />
+      <item itemvalue="Python.ss3 SweepPulserStepscope" />
       <item itemvalue="Python.SweepPulserTekFmSS" />
-      <item itemvalue="Python.SweepPulserTek" />
+      <item itemvalue="Python.tek SweepPulserTek" />
       <item itemvalue="Python.TestExampleSS" />
       <item itemvalue="Python.TestPegaDeploy" />
       <item itemvalue="Python.TestPegaRateChange" />

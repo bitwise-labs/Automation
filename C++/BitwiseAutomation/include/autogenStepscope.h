@@ -62,6 +62,22 @@ class BranchCalib: /* Calibration features */
     void Cancel(); /* Cancel calibration */
     void RunDelay(); /* Run Delay calibration */
     void RunNoise(); /* Run Noise calibration */
+
+    enum class ACMode
+    {
+        Off,
+        Once,
+        Each
+    };
+    static const char *ACMode_Strings[];
+
+    ACMode getACMode();
+    void setACMode( ACMode newValue);
+
+
+
+    bool getDSPEnabled(); /* Enable DSP Calibration (util only) */
+    void setDSPEnabled( bool newValue); /* Enable DSP Calibration (util only) */
 };
 
 /* ================================ */

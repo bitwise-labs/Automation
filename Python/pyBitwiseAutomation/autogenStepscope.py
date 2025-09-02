@@ -80,13 +80,27 @@ class BranchCalib(AutomationExtender):
         self.SendCommand("RunNoise\n")
         return None
 
-    def getACEnabled(self) -> float:
-        """Get Calib ACEnabled """
-        return self.QueryResponse_bool("ACEnabled?\n")
+    class ACMode(Enum):
+        Off = "Off"
+        Once = "Once"
+        Each = "Each"
 
-    def setACEnabled(self, newvalue: bool):
-        """Set Calib ACEnabled """
-        self.SendCommand("ACEnabled " + ("T" if newvalue else "F") + "\n")
+    def getACMode(self) -> ACMode:
+        """Get enum AC Compensation Mode (util only) """
+        return self.ACMode(self.QueryResponse_enum(self.ACMode, "ACMode?\n"))
+
+    def setACMode(self, newvalue: ACMode):
+        """Set enum AC Compensation Mode (util only) """
+        self.SendCommand("ACMode " + newvalue.value + "\n")
+        return None
+
+    def getDSPEnabled(self) -> float:
+        """Get Calib DSPEnabled """
+        return self.QueryResponse_bool("DSPEnabled?\n")
+
+    def setDSPEnabled(self, newvalue: bool):
+        """Set Calib DSPEnabled """
+        self.SendCommand("DSPEnabled " + ("T" if newvalue else "F") + "\n")
 
         return None
 

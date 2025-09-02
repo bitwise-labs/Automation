@@ -11,6 +11,7 @@ import matplotlib.pyplot as plt
 
 from Helper import *
 from TDS2000.SSDevice import SSDevice
+from pyBitwiseAutomation import BranchCalib
 
 stepscope = SSDevice()
 
@@ -29,7 +30,7 @@ try:
     parser.add_argument("--clear", "-c", action='store_true', help='Clear directory before beginning')
     parser.add_argument("--pulser", "-p", type=str, help='Pulser mode (e.g. "Local" or "Accessory" or "sweep")')
     parser.add_argument("--dsp", "-s", type=str, help='DSP Mode (e.g. "Off" or "Differential" or "sweep")')
-    parser.add_argument("--accomp", "-m", type=str, help='AC compensation (e.g. "0" or "sweep")')
+    parser.add_argument("--acmode", "-m", type=str, help='AC calibration mode  (e.g. "Off" or "Once" or "Each" or "sweep")')
     parser.add_argument("--flat", "-f", type=int, default=DEFAULT_FLAT, help='Flat spot count of consecutive samples')
     args = parser.parse_args()
 
@@ -45,10 +46,10 @@ try:
 
     if args.verbose:
         stepscope.progress = True
-        # stepscope.timing = True
 
     if args.debug:
-         stepscope.debug = True
+        stepscope.debug = True
+        stepscope.timing = True
 
     # ============
 
@@ -63,7 +64,7 @@ try:
 
     dsp_value = args.dsp
     if dsp_value is None:
-        dsp_value = input('Enter DSP mode(s) (e.g. "Differential", "Off", "Off Differential" or "sweep")? ')
+        dsp_value = input('Enter DSP mode(s) (e.g. "Off", "Differential", "Uncalibrated", "Off Differential" or "sweep")? ')
 
     # print(f"entered:[{dsp_value}]")
 
@@ -71,12 +72,13 @@ try:
 
     # ============
 
-    accomp_value = args.accomp
-    if accomp_value is None:
-        accomp_value = input(
-            'Enter AC Compensation value(s) (e.g. "0", "True", "0 1", or "sweep")? ')  # print(f"entered:[{accomp_value}]")
+    acmode_value = args.acmode
+    if acmode_value is None:
+        acmode_value = input(
+            'Enter AC calibration mode value(s) (e.g. "Off", "Once", "Each", "Off Once", or "sweep")? ')
+    # print(f"entered:[{acmode_value}]")
 
-    accomp_values_list = consider_accomp_list(accomp_value, SWEEP_ACCOMP_TYPES)
+    acmode_values_list = consider_acmode_list(acmode_value, SWEEP_ACMODE_TYPES)
 
     # ============
 
@@ -138,7 +140,7 @@ try:
     # ========================================================================
 
     for pulser_mode in pulser_mode_values_list:
-        for ac_enabled in accomp_values_list:
+        for ac_mode in acmode_values_list:
             for dsp_mode in dsp_values_list:
                 using_accessory_flag = bool(pulser_mode == stepscope.Pulse.Mode.Accessory)
 
@@ -156,11 +158,17 @@ try:
     Error = False
 
     for pulser_mode in pulser_mode_values_list:
-        for ac_enabled in accomp_values_list:
+        for ac_mode in acmode_values_list:
             for dsp_mode in dsp_values_list:
                 stepscope.Pulse.setMode(pulser_mode)
-                stepscope.Calib.setACEnabled(ac_enabled)
-                stepscope.Step.Cfg.setDSPMode(dsp_mode)
+                stepscope.Calib.setACMode(ac_mode)
+
+                if dsp_mode is None:
+                    stepscope.Calib.setDSPEnabled(False)
+                    stepscope.Step.Cfg.setDSPMode(BranchStepCfg.DSPMode.Differential)
+                else:
+                    stepscope.Calib.setDSPEnabled(True)
+                    stepscope.Step.Cfg.setDSPMode(dsp_mode)
 
                 using_accessory_flag = bool(pulser_mode == stepscope.Pulse.Mode.Accessory)
                 if using_accessory_flag:
@@ -178,8 +186,12 @@ try:
                 amplitudes_mv = consider_sweep_int_list("amplitude", amplitude_value, using_accessory_flag,
                                                         SWEEP_ACCESSORY_AMPLITUDES, SWEEP_OTHER_AMPLITUDES)
 
+                dsp_mode_name = "Uncalibrated"
+                if dsp_mode is not None:
+                    dsp_mode_name = dsp_mode.name
+
                 file_prefix = str(
-                    f'{results_path}{serial_number}_{pulser_mode.name}_{attenuator_value:.0f}dB_{dsp_mode.name[:4]}_AC{int(ac_enabled)}')
+                    f'{results_path}{serial_number}_{pulser_mode.name}_{attenuator_value:.0f}dB_{dsp_mode_name[:4]}_AC{ac_mode.name}')
                 csv_file_name = str(f'{file_prefix}.csv')
 
                 results_ampl_setting = []
@@ -192,7 +204,7 @@ try:
                             run_progress += 1
 
                             print(
-                                f"Working on {run_progress}-of-{run_count}: Pulser {pulser_mode.name}, ACComp {ac_enabled}, DSP {dsp_mode.name}, W{pulse_length:.0f}, {amplitude:.0f} mV")
+                                f"Working on {run_progress}-of-{run_count}: Pulser {pulser_mode.name}, AC {ac_mode.name}, DSP {dsp_mode_name}, W{pulse_length:.0f}, {amplitude:.0f} mV")
 
                             for retry in range(2):
                                 if using_accessory_flag:
@@ -294,7 +306,7 @@ try:
                                 plt.ylabel("Voltage (" + waveform.y_units + ")")
 
                                 plt.suptitle(
-                                    f"{waveform.name} - {serial_number}\n{pulser_mode.name}, Atten {attenuator_value:.0f}dB, DSP {dsp_mode.name[:4]}, AC{int(ac_enabled)}, W{pulse_length:.0f}, {amplitude:.0f} mV")
+                                    f"{waveform.name} - {serial_number}\n{pulser_mode.name}, Atten {attenuator_value:.0f}dB, DSP {dsp_mode_name[:4]}, ACComp {ac_mode.name}, W{pulse_length:.0f}, {amplitude:.0f} mV")
 
                                 plt.grid(True)
                                 # plt.legend()
@@ -319,7 +331,7 @@ try:
                         writer.writerow(["SN", "DateTime", "Mode", "DSP", "ACComp", "LenW", "AmplSet", "Meas", "Atten"])
 
                         for i in range(len(results_ampl_measurement)):
-                            writer.writerow([serial_number, date_time, pulser_mode.name, dsp_mode.name, str(ac_enabled),
+                            writer.writerow([serial_number, date_time, pulser_mode.name, dsp_mode_name, str(ac_mode.name),
                                              str(f"{results_length_setting[i]:.0f}"),
                                              str(f"{results_ampl_setting[i]:.0f}"),
                                              str(f"{results_ampl_measurement[i]:.3f}"), str(f"{attenuator_value:.0f}")])
@@ -336,4 +348,7 @@ try:
     print(f'Completed.  {good_count}-of-{run_count} Okay')
 
 finally:
+    stepscope.Calib.setACMode(BranchCalib.ACMode.Once)
+    stepscope.Calib.setDSPEnabled(True)
+
     stepscope.Disconnect()

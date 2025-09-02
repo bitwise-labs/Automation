@@ -78,6 +78,34 @@ void BranchCalib::RunNoise() /* Run Noise calibration */
     SendCommand("RunNoise\n");
 }
 
+const char *BranchCalib::ACMode_Strings[] =
+{
+    "Off",
+    "Once",
+    "Each",
+    0
+};
+
+BranchCalib::ACMode BranchCalib::getACMode()
+{
+    return (ACMode)QueryResponse_enum(ACMode_Strings,"ACMode?\n");
+}
+
+void BranchCalib::setACMode(ACMode newValue )
+{
+    SendCommand("ACMode \"%s\"\n",ACMode_Strings[(int)newValue]);
+}
+
+bool BranchCalib::getDSPEnabled() /* Enable DSP Calibration not (util only) */
+{
+    return QueryResponse_bool("DSPEnabled?\n");
+}
+
+void BranchCalib::setDSPEnabled( bool newValue) /* Enable DSP Calibration (util only) */
+{
+    SendCommand("DSPEnabled %c\n",newValue?'T':'F');
+}
+
 /* ================================================================ */
 
 double BranchPulse::getAccAmplMV() /* Accessory pulser amplitude */
