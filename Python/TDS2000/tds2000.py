@@ -274,11 +274,12 @@ class TDS2000:
         self._progress_print(f"Executing set_trigger {channel}, vhigh={vhigh}, vlow={vlow}")
         self.write(f"TRIGGER:MAIN:MODE NORMAL")
 
+        # omit:
         # set trigger level very close to bottom so if Even cells and significantly different
         # then odd cells, only one will trigger.  This has been observed on short "W" with
         # low p-p amplitude tests.
 
-        RATIO_FM_LOW_TO_HIGH = 0.05
+        RATIO_FM_LOW_TO_HIGH = 0.50
         trigger_level = vlow + RATIO_FM_LOW_TO_HIGH * abs(vhigh-vlow)
         self._debug_print("Set trigger level to: {trigger_level}")
         self.write(f"TRIGGER:MAIN:LEVEL {trigger_level}")

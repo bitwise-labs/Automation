@@ -167,6 +167,7 @@ try:
                     time.sleep(0.5)
 
                 scope.autoalign_on_pulse(waveform_channel, pulse_length_time=12.8e-9*pulse_length, pulse_count=1.5)
+                time.sleep(LONG_PAUSE)   # wait for averages to accumulate
                 waveform = scope.get_waveform_data(waveform_channel, name="Scope Pulse")
 
                 print(f"Acquire waveform for W={pulse_length:.0f}, {amplitude} mV, {waveform.count} samples")

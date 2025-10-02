@@ -15,7 +15,7 @@ DEFAULT_FLAT = 20
 MEDIUM_PAUSE = 0.25
 LONG_PAUSE = 3.0
 VERY_LONG_PAUSE = 5.0
-SCOPE_AVERAGING = 128
+SCOPE_AVERAGING = 32
 
 def consider_acmode_list(arg: str, sweep_list: list) -> list:
     answer = None
