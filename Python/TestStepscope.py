@@ -30,23 +30,112 @@
 # ================================================================================
 
 from pyBitwiseAutomation import *
+import argparse
 import sys
-import math
+
+
+VERBOSE_FLAG = False
+DEBUG_FLAG = False
+
+
+class StepscopeConnectionError(Exception):
+    pass
+
+
+def print_histogram(title: str, values: list, max_bins: int = 10):
+    print("\n" + title + " histogram")
+
+    if len(values) == 0:
+        print("  No values recorded")
+        return
+
+    value_min = min(values)
+    value_max = max(values)
+
+    # Special case if all values are identical.
+    if value_min == value_max:
+        print("  {:10.2f} | {} {}".format(
+            value_min,
+            "#" * min(len(values), 50),
+            len(values)))
+        return
+
+    bin_count = min(max_bins, len(values))
+    bin_width = (value_max - value_min) / bin_count
+    counts = [0] * bin_count
+
+    for value in values:
+        bin_number = int((value - value_min) / bin_width)
+
+        # The maximum value falls exactly on the upper boundary.
+        if bin_number >= bin_count:
+            bin_number = bin_count - 1
+
+        counts[bin_number] += 1
+
+    largest_count = max(counts)
+
+    for bin_number, count in enumerate(counts):
+        range_from = value_min + bin_number * bin_width
+        range_to = range_from + bin_width
+
+        if count == 0:
+            bar = ""
+        else:
+            bar_length = max(
+                1,
+                int(round(50.0 * count / largest_count))
+            )
+            bar = "#" * bar_length
+
+        if bin_number == bin_count - 1:
+            range_text = "[{:8.2f}, {:8.2f}]".format(
+                range_from, range_to)
+        else:
+            range_text = "[{:8.2f}, {:8.2f})".format(
+                range_from, range_to)
+
+        print("  {} | {:50s} {}".format(
+            range_text, bar, count))
 
 
 def test_Stepscope(ip_address: str, stopOnError: bool, run: int):
+    global VERBOSE_FLAG
+    global DEBUG_FLAG
+
     Stepscope = StepscopeDevice()
+    connected = False
+
     try:
-        Stepscope.Connect(ip_address)
+        #
+        # Debugging must be enabled before Connect().
+        #
+        try:
+            if DEBUG_FLAG:
+                Stepscope.setDebugging(True)
+
+            Stepscope.Connect(ip_address)
+            connected = True
+
+        except Exception as error:
+            print("ERROR connecting to Stepscope at {}: {}".format(
+                ip_address, error))
+
+            # Connection errors are treated specially because the caller
+            # must stop all subsequent loops.
+            raise StepscopeConnectionError(ip_address) from error
 
         serialNumber = Stepscope.Const.getSN()
 
-        print("Stepscope TEST")
-        print("IP Address........" + ip_address)
-        print("Serial number....." + serialNumber)
-        print("Build............." + Stepscope.Sys.getBuild())
-        print("Architecture......" + Stepscope.Sys.getArchitecture())
-        print("StopOnError......." + str(stopOnError))
+        if VERBOSE_FLAG:
+            print("\nStepscope TEST")
+            print("Loop.............." + str(run))
+            print("IP Address........" + ip_address)
+            print("Serial number....." + serialNumber)
+            print("Build............." + Stepscope.Sys.getBuild())
+            print("Architecture......" + Stepscope.Sys.getArchitecture())
+            print("StopOnError......." + str(stopOnError))
+            print("Debug............." + str(DEBUG_FLAG))
 
         Stepscope.Stop()
         Stepscope.RestoreConfiguration("[factory]")
@@ -57,16 +146,22 @@ def test_Stepscope(ip_address: str, stopOnError: bool, run: int):
 
         Stepscope.Tdr.Window.Enabled = False    # 03-15-2024 (begin)
         Stepscope.Tdr.Window.setRange(0.0, 1e6)
+
         value_from = Stepscope.Tdr.Window.getRange(0)
         value_to = Stepscope.Tdr.Window.getRange(1)
-        print("TDR Window range is set to: " + str(value_from) + " - " + str(value_to))
-        Stepscope.Tdr.Window.Clear()   # 03-15-2024 (end)
+
+        if VERBOSE_FLAG:
+            print("TDR Window range is set to: " +
+                  str(value_from) + " - " + str(value_to))
+
+        Stepscope.Tdr.Window.Clear()            # 03-15-2024 (end)
 
         Stepscope.App.setTab("STEP")
 
         Stepscope.Step.Cfg.setReclen(1024)
 
-        Stepscope.Step.Align(BranchStep.AlignMode.align0101)
+        Stepscope.Step.Align(
+            BranchStep.AlignMode.align0101)
 
         Stepscope.WaitForRunToComplete(90)
         Stepscope.App.Stop()
@@ -74,67 +169,220 @@ def test_Stepscope(ip_address: str, stopOnError: bool, run: int):
 
         data = Stepscope.Step.getBinary()
 
-        if len(data) > 0:
-            minimum = data[0]
-            maximum = data[0]
+        if len(data) == 0:
+            print("ERROR: No step response data returned from {}".format(
+                ip_address))
+            return True, None, None, None
 
-            for n in range(1, len(data)):
-                if data[n] < minimum:
-                    minimum = data[n]
-                if data[n] > maximum:
-                    maximum = data[n]
+        minimum = min(data)
+        maximum = max(data)
+        amplitude = maximum - minimum
 
-            print("Minimum....." + "{:.2f}".format(minimum))
-            print("Maximum....." + "{:.2f}".format(maximum))
-            print("Amplitude..." + "{:.2f}".format(maximum - minimum))
-        else:
-            print("No step response data returned")
-            pass
+        if VERBOSE_FLAG:
+            print("Minimum...........{:.2f}".format(minimum))
+            print("Maximum...........{:.2f}".format(maximum))
+            print("Amplitude.........{:.2f}".format(amplitude))
+
+        return False, minimum, maximum, amplitude
+
+    except StepscopeConnectionError:
+        #
+        # Let the connection error propagate to main(), where it will
+        # terminate the looping operation.
+        #
+        raise
+
+    except Exception as error:
+        print("ERROR testing Stepscope at {} on loop {}: {}".format(
+            ip_address, run, error))
+
+        return True, None, None, None
+
     finally:
-        Stepscope.Disconnect()
+        if connected:
+            try:
+                Stepscope.Disconnect()
+
+            except Exception as error:
+                print(
+                    "ERROR disconnecting from Stepscope at {}: {}".format(
+                        ip_address, error))
+
         Stepscope = None
-    return None
 
 
-if __name__ == '__main__':
-    print("TestStepscope, Version 1.2\n")
+def parse_arguments():
+    parser = argparse.ArgumentParser(
+        description="Run the Stepscope STEP response test.")
+
+    parser.add_argument(
+        "-loop", "--loop",
+        action="store_true",
+        help="repeat tests until Ctrl-C is pressed")
+
+    parser.add_argument(
+        "-debug", "--debug",
+        action="store_true",
+        help="enable Stepscope automation debugging")
+
+    parser.add_argument(
+        "-verbose", "--verbose",
+        action="store_true",
+        help="display device and per-loop measurement values")
+
+    parser.add_argument(
+        "-stop", "--stop",
+        action="store_true",
+        help="stop after the first test failure")
+
+    parser.add_argument(
+        "ip_addresses",
+        metavar="IP",
+        nargs="+",
+        help="Stepscope IP address")
+
+    args = parser.parse_args()
+
+    if len(args.ip_addresses) > 32:
+        parser.error(
+            "too many IP addresses; maximum is 32")
+
+    return args
+
+
+def main():
+    global VERBOSE_FLAG
+    global DEBUG_FLAG
+
+    print("TestStepscope, Version 1.3\n")
 
     # Version 1.1 ...            ... original
     # Version 1.2 ... 03-15-2024 ... add "Window" features
+    # Version 1.3 ... 08-18-2026 ... add loop/debug/verbose and histograms
 
-    stopOnError = False
-    ipCount = 0
-    repeat = 1
-    ip = [32]
+    args = parse_arguments()
 
-    i = 1
-    while i < len(sys.argv):
-        if sys.argv[i] == "-stop":
-            stopOnError = True
-        elif sys.argv[i] == "-repeat":
-            repeat = int(sys.argv[i + 1])
-            i = i + 1
-        elif ipCount < 32:
-            ip[ipCount] = sys.argv[i]
-            ipCount = ipCount + 1
-        else:
-            print("Too many IP addresses, maximum is 32")
-            exit()
+    VERBOSE_FLAG = args.verbose
+    DEBUG_FLAG = args.debug
 
-        i = i + 1
+    minimum_values = []
+    maximum_values = []
+    amplitude_values = []
 
-    if ipCount == 0 or repeat < 1:
-        print("Usage:  TestStepscope [options] IP0 IP1 ... IPn")
-        print("Options:  -stop ..... stop on first error")
-        print("          -repeat N.. number of tests for each IP")
-        exit()
+    test_count = 0
+    failure_count = 0
+
+    loop_number = 1
+
+    fatal_connection_error = False
+    stopped_on_error = False
 
     try:
-        for ip_address in ip:
-            for k in range(1, repeat + 1):
-                test_Stepscope(ip_address, stopOnError, k)
+        while True:
+
+            #
+            # One loop is one complete pass through all IP addresses.
+            #
+            for ip_address in args.ip_addresses:
+
+                if VERBOSE_FLAG:
+                    print(
+                        "\n"
+                        "============================================================"
+                    )
+                    print(
+                        "Loop {} - {}".format(
+                            loop_number, ip_address)
+                    )
+                    print(
+                        "============================================================"
+                    )
+
+                failure, minimum, maximum, amplitude = test_Stepscope(
+                    ip_address,
+                    args.stop,
+                    loop_number)
+
+                test_count += 1
+
+                if failure:
+                    failure_count += 1
+
+                else:
+                    minimum_values.append(minimum)
+                    maximum_values.append(maximum)
+                    amplitude_values.append(amplitude)
+
+                if VERBOSE_FLAG:
+                    print("Loop result:")
+                    print("  Failure.....{}".format(failure))
+
+                    if not failure:
+                        print(
+                            "  Minimum.....{:.2f}".format(
+                                minimum))
+                        print(
+                            "  Maximum.....{:.2f}".format(
+                                maximum))
+                        print(
+                            "  Amplitude...{:.2f}".format(
+                                amplitude))
+
+                if failure and args.stop:
+                    stopped_on_error = True
+                    break
+
+            #
+            # Without -loop, run exactly one pass.
+            #
+            if stopped_on_error or not args.loop:
+                break
+
+            loop_number += 1
+
+    except StepscopeConnectionError:
+        fatal_connection_error = True
+
+        print(
+            "\nConnection failure encountered; "
+            "stopping all loops.")
 
     except KeyboardInterrupt:
         print("\nCtrl-C encountered")
+
+    #
+    # Always produce the accumulated results, including after Ctrl-C.
+    #
+    print("\n============================================================")
+    print("Final results")
+    print("============================================================")
+    print("Tests completed.........{}".format(test_count))
+    print("Failures................{}".format(failure_count))
+    print("Successful measurements.{}".format(
+        len(minimum_values)))
+
+    print_histogram(
+        "Minimum",
+        minimum_values)
+
+    print_histogram(
+        "Maximum",
+        maximum_values)
+
+    print_histogram(
+        "Amplitude",
+        amplitude_values)
+
+    if fatal_connection_error:
+        return 1
+
+    if stopped_on_error:
+        return 1
+
+    return 0
+
+
+if __name__ == '__main__':
+    sys.exit(main())
 
 # EOF

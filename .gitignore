@@ -3,3 +3,4 @@ RemoteSystemsTempFiles/
 *.cfg
 C++/.vs/
 Python/Results/
+Python/dist/

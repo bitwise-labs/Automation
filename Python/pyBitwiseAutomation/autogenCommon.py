@@ -306,10 +306,10 @@ class BranchPatt(AutomationExtender):
         Ch1 = "Ch1"
         Dual = "Dual"
 
-    def Deploy(self, ch: PatternChannel, filename: str, bitShift: int = 0):
+    def Deploy(self, ch: PatternChannel, filename: str, bitShift: int = 0, trycount: int = 4):
         """Method for Deploy pattern"""
 
-        self.SendCommand("Deploy " + ch.value + " " + str(bitShift) + " \"" + filename + "\"\n")
+        self.SendCommand("Deploy " + ch.value + " " + str(bitShift) + " \"" + filename + "\"" + str(trycount) + "\n")
         return None
 
     def Fetch(self, filePath: str) -> bytes:

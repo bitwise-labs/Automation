@@ -33,127 +33,202 @@
 from pyBitwiseAutomation import *
 import sys
 import math
+import os
+import time
+
+# ================================================================================
+# Global script options
+# ================================================================================
+
+verbose_flag = False
+prbs_flag = False
+debug_flag = False
+help_flag = False
+tries = 4  ## 4 is default (min=1, max=20)
+prbs_file_names = ["Prbs/invPrbs11.patt", "Prbs/invPrbs07.patt", "Prbs/prbs11.patt", "Prbs/prbs07.patt"]
+standard_file_names = ["1100.patt", "10.patt"]
 
 
 def test_PegaDeploy(
         ip_address: str,
         loop_count: int = 1,
-        verbose_flag: bool = False,
-        prbs_flag: bool = False,
         data_rate_ghz: float = 5.5,
         channel: BranchPatt.PatternChannel = BranchPatt.PatternChannel.Ch0
-) -> int:
-    # returns number of errors encountered
+) -> tuple[int, str, bool]:
+    # returns:
+    #   number of errors encountered
+    #   test status string: '_'=Okay, 'X'=Error, '?'=not completed
+    #   True if interrupted by Ctrl-C
 
-    print("ip_addr=" + ip_address + ", loop=" + str(loop_count) +
-          ", drate=" + str(data_rate_ghz) + ", ch=" + str(channel) +", prbs="+str(prbs_flag))
+    global verbose_flag
+    global debug_flag
+    global help_flag
+    global prbs_flag
+    global prbs_file_names
+    global standard_file_names
+    global tries
 
-    errors = 0
     Pega = PegaDevice()
     channel_num = 0 if channel == BranchPatt.PatternChannel.Ch0 else 1
+    file_names = prbs_file_names if prbs_flag else standard_file_names
+
     counter = 0
+    errors = 0
+    interrupted = False
+
+    # Start with every test unknown.
+    # Each position is replaced by '_' or 'X' as its test completes.
+    test_status = ["?"] * loop_count
 
     try:
-        ## Pega.setDebugging(verbose_flag)
+        Pega.setDebugging(debug_flag)
         Pega.Connect(ip_address)
+        Pega.PG.WaitForClockToSettle()
+        ed_enabled = Pega.ED.getEnabled()
 
         if verbose_flag:
             print("PEGA DEPLOY TEST")
             print("IP Address........" + ip_address)
             print("Serial number....." + Pega.Const.getSN())
             print("Build............." + Pega.Sys.getBuild())
-            # print("Architecture......" + Pega.Sys.getArchitecture())
-            print("Loop.............." + str(loop_count))
-            print("Verbose..........." + str(verbose_flag))
-            print("Data rate GHz....." + str(data_rate_ghz))
+            print("Temperature: {:.2f}".format(Pega.getTemperatureC()))
             print("Channel..........." + str(channel))
+            print("Data rate GHz....." + f"{data_rate_ghz:.1f}")
+            print("Loop.............." + str(loop_count))
+            print("PRBS mode........." + str(prbs_flag))
+            print("ED enable........." + str(ed_enabled))
+            print("Try count........." + str(tries))
 
-        # Pega.RestoreConfiguration("[factory]")
         Pega.PG.setAllOn(1)
+        Pega.PG.setPattern(0, Pega.PG.Pattern.Prbs15)
+        Pega.PG.setPattern(1, Pega.PG.Pattern.Prbs15)
+
         Pega.Syn.setDataRateGbps(data_rate_ghz)
         Pega.PG.WaitForClockToSettle(data_rate_ghz / 2.0)
 
-        pg_clk = Pega.Syn.getDataRateGbps()
-        print("Operating data rate: " + str(pg_clk) + " Gbps")
+        if ed_enabled:
+            try:
+                Pega.ED.AlignData()
+                Pega.ED.WaitForAlignmentToComplete()
 
-        temp_c = Pega.getTemperatureC()
-        print("Temperature: {:.2f}".format(temp_c))
+            except Exception as e:
+                print("Error auto-aligning data pattern")
 
-        fnames = []
-        if prbs_flag:
-            fnames.append("Prbs/prbs13.patt")
-            fnames.append("Prbs/prbs15.patt")
-        else:
-            fnames.append("1100.patt")
-            fnames.append("10.patt")
-
-        Pega.PG.setPattern(channel_num, Pega.PG.Pattern.User)
+        if verbose_flag:
+            print(
+                "Operating data rate: "
+                + f"{Pega.Syn.getDataRateGbps():.1f}"
+                + " Gbps"
+            )
 
         while counter < loop_count:
             time_start = time.time()
             error_msg = "Okay"
+            file_name = file_names[counter % len(file_names)]
+
+            Pega.PG.setPattern(channel_num, Pega.PG.Pattern.Prbs15)
+
             try:
-                time.sleep(0.5)
-                Pega.Patt.Deploy(channel, fnames[counter % len(fnames)], 0)
+                Pega.Patt.Deploy(channel, file_name, 0, tries)
 
             except Exception as e:
                 errors += 1
                 error_msg = "Error"
 
-            counter += 1
+                if verbose_flag:
+                    print("Error encountered during deployment:", str(e))
+
+            # We now know the result of this deployment.
+            if error_msg == "Error":
+                test_status[counter] = "X"
+            else:
+                test_status[counter] = "_"
+
+            Pega.PG.setPattern(channel_num, Pega.PG.Pattern.User)
+
+            test_column = "na"
+            if ed_enabled:
+                Pega.ED.WaitForDetPattToSettle()
+                test_column = Pega.ED.getDetPatt().name
+
             time_elapsed = time.time() - time_start
 
-            print(str(channel) +
-                  ", " + str(data_rate_ghz) + " Gbps" +
-                  ", loop=" + str(counter) +
-                  ", " + error_msg +
-                  ", " + "{:.2f}".format(time_elapsed) + " sec" +
-                  ", file=" + fnames[counter % len(fnames)]
-                  )
+            print(
+                channel.name +
+                ", " + f"{data_rate_ghz:.1f}" +
+                ", " + str(counter) +
+                ", " + error_msg +
+                ", " + "{:.2f}".format(time_elapsed) +
+                ", " + os.path.basename(file_name) +
+                ", " + test_column
+            )
+
+            counter += 1
+
+    except KeyboardInterrupt:
+        interrupted = True
+        print("\nCtrl-C encountered")
 
     finally:
         Pega.Disconnect()
         Pega = None
 
-    return errors
+    return errors, "".join(test_status), interrupted
 
 
 if __name__ == '__main__':
-    print("TestPegaDeploy, Version 1.1\n")
+    print("TestPegaDeploy, Version 1.5\n")
 
     loop = 1
     ip = ""
-    verbose = False
     data_rate = []
     channel = []
     step = 1.0
     to = -1.0
     fm = -1.0
-    prbs = False
+    tries = 4  # default is 4
+    help = False
 
     i = 1
     while i < len(sys.argv):
-        ## print("argv[" + str(i) + "] = " + sys.argv[i])
+        # print("argv[" + str(i) + "] = " + sys.argv[i])
 
         if sys.argv[i] == "-loop":
             loop = int(sys.argv[i + 1])
             i += 1
+
         elif sys.argv[i] == "-verbose":
-            verbose = True
+            verbose_flag = True
+
+        elif sys.argv[i] == "-help":
+            help_flag = True
+
         elif sys.argv[i] == "-prbs":
-            prbs = True
+            prbs_flag = True
+
+        elif sys.argv[i] == "-debug":
+            debug_flag = True
+
         elif sys.argv[i] == "-drate":
             data_rate.append(float(sys.argv[i + 1]))
             i += 1
+
+        elif sys.argv[i] == "-tries":
+            tries = float(sys.argv[i + 1])
+            i += 1
+
         elif sys.argv[i] == "-fm":
             fm = float(sys.argv[i + 1])
             i += 1
+
         elif sys.argv[i] == "-to":
             to = float(sys.argv[i + 1])
             i += 1
+
         elif sys.argv[i] == "-step":
             step = float(sys.argv[i + 1])
             i += 1
+
         elif sys.argv[i] == "-ch":
             if int(sys.argv[i + 1]) == 0:
                 channel.append(BranchPatt.PatternChannel.Ch0)
@@ -162,24 +237,29 @@ if __name__ == '__main__':
             else:
                 print("Unknown channel number. Must be 0 or 1")
             i += 1
+
         elif ip == "":
             ip = sys.argv[i]
+
         else:
             print("Unknown command-line argument: " + sys.argv[i])
 
         i += 1
 
-    if ip == "" or loop < 1:
+    if ip == "" or loop < 1 or help_flag:
         print("Usage:  TestPegaDeploy [options] <ip-address>")
         print("Options:  -loop N .... set looping count (dflt 1)")
-        print("          -prbs ...... use longer prbs files")
+        print("          -prbs ...... use longer PRBS pattern files")
         print("          -drate F ... set data rate in GHz (multiple allowed)")
         print("          -fm F ...... data rate range beginning")
         print("          -to F ...... data rate range ending")
         print("          -step F .... data rate range step factor (Dflt 1)")
         print("          -ch N ...... set channel 0 or 1 to test (multiple allowed)")
-        print("          -verbose ... set verbose mode for debugging")
-        exit()
+        print("          -verbose ... display messages while running")
+        print("          -debug   ... display automation transaction debugging messages")
+        print("          -tries N ... set max number of deployment attempts")
+        print("          -help ...... display this help message")
+        sys.exit(0)
 
     if len(channel) == 0:
         channel.append(BranchPatt.PatternChannel.Ch0)
@@ -192,27 +272,56 @@ if __name__ == '__main__':
 
     if len(data_rate) == 0:
         print("No data rates specified")
-        exit()
+        sys.exit(0)
 
     summary = []
     total_errors = 0
+    stop_requested = False
+
+    # Start stopwatch for the entire channel/data-rate sweep.
+    sweep_start_time = time.perf_counter()
 
     try:
         for ch in channel:
             for dr in data_rate:
-                errors_encountered = test_PegaDeploy(ip, loop, verbose, prbs, dr, ch)
-                total_errors = total_errors + errors_encountered
-                summary.append(errors_encountered)
+
+                errors_encountered, status_string, interrupted = \
+                    test_PegaDeploy(ip, loop, dr, ch)
+
+                total_errors += errors_encountered
+
+                # Keep the complete information for this channel/data-rate pair.
+                summary.append(
+                    (ch, dr, errors_encountered, status_string)
+                )
+
+                if interrupted:
+                    stop_requested = True
+                    break
+
+            if stop_requested:
+                break
 
     except KeyboardInterrupt:
         print("\nCtrl-C encountered")
 
-    print("Error summary:")
+    # Stop stopwatch and format elapsed time as HH:MM:SS.ss.
+    sweep_elapsed = time.perf_counter() - sweep_start_time
+    hours = int(sweep_elapsed // 3600)
+    minutes = int((sweep_elapsed % 3600) // 60)
+    seconds = sweep_elapsed % 60
 
-    for n in range(len(summary)):
-        print(str(channel[int(n / len(data_rate))]) +
-              ", " + str(data_rate[int(n % len(data_rate))]) + " Gbps" +
-              ", Errors=" + str(summary[n]))
+    print("\nError summary:")
+    print("IP Address: " + ip)
+    print(f"Elapsed time: {hours:02d}:{minutes:02d}:{seconds:05.2f}")
+
+    for ch, dr, errors_encountered, status_string in summary:
+        print(
+            f"{ch.name:<3} "
+            f"{dr:5.1f} GHz  "
+            f"Errors={errors_encountered:2d}  "
+            f"{status_string}"
+        )
 
     print("Total errors: " + str(total_errors))
 
